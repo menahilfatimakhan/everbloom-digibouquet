@@ -1,0 +1,20 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="fern-leaflet" d="M0,0 C6,-2 11,-6 10,-12 C9,-16 3,-16 0,-11 C-3,-16 -9,-16 -10,-12 C-11,-6 -6,-2 0,0 Z"/>
+  </defs>
+  <path d="M80,150 C78,120 78,60 80,18" fill="none" stroke="var(--color-line)" stroke-width="2" stroke-linecap="round"/>
+  <g fill="var(--greenery-fill)" stroke="var(--color-line)" stroke-width="1.25" stroke-linejoin="round">
+    <use href="#fern-leaflet" transform="translate(80,138) scale(1.1)"/>
+    <use href="#fern-leaflet" transform="translate(66,126) scale(1.0) rotate(-12)"/>
+    <use href="#fern-leaflet" transform="translate(94,122) scale(1.0) rotate(12)"/>
+    <use href="#fern-leaflet" transform="translate(64,108) scale(0.95) rotate(-16)"/>
+    <use href="#fern-leaflet" transform="translate(96,104) scale(0.95) rotate(16)"/>
+    <use href="#fern-leaflet" transform="translate(68,88) scale(0.85) rotate(-14)"/>
+    <use href="#fern-leaflet" transform="translate(92,84) scale(0.85) rotate(14)"/>
+    <use href="#fern-leaflet" transform="translate(72,66) scale(0.75) rotate(-10)"/>
+    <use href="#fern-leaflet" transform="translate(88,62) scale(0.75) rotate(10)"/>
+    <use href="#fern-leaflet" transform="translate(76,44) scale(0.6) rotate(-8)"/>
+    <use href="#fern-leaflet" transform="translate(84,40) scale(0.6) rotate(8)"/>
+    <use href="#fern-leaflet" transform="translate(80,22) scale(0.5)"/>
+  </g>
+</svg>

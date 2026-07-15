@@ -1,0 +1,32 @@
+{
+  "name": "everbloom-digibouquet",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "new-flower": "node tools/new-flower.mjs"
+  },
+  "dependencies": {
+    "@astrojs/vercel": "^8.0.0",
+    "astro": "^5.0.0",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.18",
+    "lz-string": "^1.5.0",
+    "nanoid": "^5.0.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.0"
+  }
+}

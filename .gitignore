@@ -1,0 +1,22 @@
+# Environment
+.env
+.env.local
+
+# Temp / scratch files
+.tmp/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+.vercel/
+
+# Test artifacts
+test-results/
+playwright-report/
+
+# OS
+.DS_Store
+Thumbs.db

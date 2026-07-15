@@ -1,0 +1,7 @@
+<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+  <path d="M60,10 L260,10 L200,205 C185,215 135,215 120,205 Z"
+        fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M96,60 L224,60" fill="none" stroke="var(--color-line)" stroke-width="1.5" opacity="0.5"/>
+  <path d="M104,110 L216,110" fill="none" stroke="var(--color-line)" stroke-width="1.5" opacity="0.5"/>
+  <path d="M112,160 L208,160" fill="none" stroke="var(--color-line)" stroke-width="1.5" opacity="0.5"/>
+</svg>

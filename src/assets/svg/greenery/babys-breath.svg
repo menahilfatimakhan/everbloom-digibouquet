@@ -1,0 +1,20 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="var(--color-line)" stroke-width="1.25" stroke-linecap="round">
+    <path d="M80,148 L80,90"/>
+    <path d="M80,120 L58,84"/>
+    <path d="M80,110 L102,78"/>
+    <path d="M80,96 L68,58"/>
+    <path d="M80,90 L94,54"/>
+    <path d="M80,96 L84,42"/>
+  </g>
+  <g fill="var(--greenery-fill)" stroke="var(--color-line)" stroke-width="1.25">
+    <circle cx="58" cy="84" r="5"/>
+    <circle cx="102" cy="78" r="5"/>
+    <circle cx="68" cy="58" r="4.5"/>
+    <circle cx="94" cy="54" r="4.5"/>
+    <circle cx="84" cy="42" r="5"/>
+    <circle cx="80" cy="90" r="4"/>
+    <circle cx="74" cy="70" r="3.5"/>
+    <circle cx="90" cy="66" r="3.5"/>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "eucalyptus",
+    "name": "Eucalyptus",
+    "fill": "#8FAE96",
+    "fillDeep": "#6E8F76"
+  },
+  {
+    "id": "fern",
+    "name": "Fern",
+    "fill": "#4F7A52",
+    "fillDeep": "#365A39"
+  },
+  {
+    "id": "ruscus",
+    "name": "Ruscus",
+    "fill": "#3E6B4A",
+    "fillDeep": "#294A32"
+  },
+  {
+    "id": "seeded-grass",
+    "name": "Seeded Grass",
+    "fill": "#A9A66B",
+    "fillDeep": "#88854F"
+  },
+  {
+    "id": "babys-breath",
+    "name": "Baby's Breath",
+    "fill": "#F5F1E8",
+    "fillDeep": "#E3DCC8"
+  }
+]

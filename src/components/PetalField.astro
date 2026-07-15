@@ -1,0 +1,85 @@
+---
+import petalArt from '../assets/svg/decorative/petal.svg?raw';
+
+interface Props {
+  count?: number;
+}
+
+const { count = 10 } = Astro.props;
+---
+
+<div class="petal-field" data-petal-field data-petal-svg={petalArt} data-petal-count={count} aria-hidden="true"></div>
+
+<style>
+  .petal-field {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .petal-field :global(.petal) {
+    position: absolute;
+    width: 1.4rem;
+    height: 1.4rem;
+    opacity: 0.75;
+    will-change: transform;
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+
+  function initPetalField(root: HTMLElement) {
+    const svgMarkup = root.dataset.petalSvg ?? '';
+    const count = Number(root.dataset.petalCount ?? '10');
+    if (!svgMarkup) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const bounds = root.getBoundingClientRect();
+    const height = Math.max(bounds.height, 480);
+
+    for (let i = 0; i < count; i++) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'petal';
+      wrapper.innerHTML = svgMarkup;
+      wrapper.style.left = `${Math.random() * 100}%`;
+      wrapper.style.top = `${-10 - Math.random() * 20}%`;
+      root.appendChild(wrapper);
+
+      if (reduceMotion) {
+        wrapper.style.opacity = '0.35';
+        continue;
+      }
+
+      const fallDuration = 16 + Math.random() * 14;
+      const swayDuration = 3 + Math.random() * 3;
+      const rotateDuration = 6 + Math.random() * 6;
+
+      gsap.set(wrapper, { rotate: Math.random() * 360 });
+      gsap.to(wrapper, {
+        y: height + 80,
+        duration: fallDuration,
+        repeat: -1,
+        delay: -Math.random() * fallDuration,
+        ease: 'none',
+      });
+      gsap.to(wrapper, {
+        x: `+=${28 + Math.random() * 24}`,
+        duration: swayDuration,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
+      gsap.to(wrapper, {
+        rotate: `+=${Math.random() > 0.5 ? 180 : -180}`,
+        duration: rotateDuration,
+        repeat: -1,
+        ease: 'none',
+      });
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-petal-field]').forEach(initPetalField);
+</script>

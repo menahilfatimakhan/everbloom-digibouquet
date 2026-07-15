@@ -1,0 +1,44 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="ranun-petal" d="M80,80 C69,76 62,63 66,49 C70,38 90,38 94,49 C98,63 91,76 80,80 Z"/>
+  </defs>
+  <circle cx="80" cy="82" r="48" fill="var(--bloom-fill-deep)" opacity="0.22"/>
+  <g fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#ranun-petal" transform="rotate(0 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(30 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(60 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(90 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(120 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(150 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(180 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(210 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(240 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(270 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(300 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(330 80 80)"/>
+  </g>
+  <g transform="translate(80,80) scale(0.72) translate(-80,-80)" fill="var(--bloom-fill-deep)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#ranun-petal" transform="rotate(15 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(55 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(95 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(135 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(175 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(215 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(255 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(295 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(335 80 80)"/>
+  </g>
+  <g transform="translate(80,80) scale(0.46) translate(-80,-80)" fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#ranun-petal" transform="rotate(30 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(90 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(150 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(210 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(270 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(330 80 80)"/>
+  </g>
+  <g transform="translate(80,80) scale(0.22) translate(-80,-80)" fill="var(--bloom-fill-deep)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#ranun-petal" transform="rotate(0 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(120 80 80)"/>
+    <use href="#ranun-petal" transform="rotate(240 80 80)"/>
+  </g>
+</svg>

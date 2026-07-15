@@ -1,0 +1,122 @@
+[
+  {
+    "id": "rose",
+    "name": "Rose",
+    "meaning": "Deep love and admiration.",
+    "footprintRadius": 40,
+    "layerBias": "front",
+    "fill": "#E2496B",
+    "fillDeep": "#B02F52",
+    "center": "#7C2039"
+  },
+  {
+    "id": "peony",
+    "name": "Peony",
+    "meaning": "Romance, honor, and a happy marriage.",
+    "footprintRadius": 46,
+    "layerBias": "front",
+    "fill": "#F1A8C4",
+    "fillDeep": "#DE7FA5",
+    "center": "#C25E88"
+  },
+  {
+    "id": "ranunculus",
+    "name": "Ranunculus",
+    "meaning": "I am dazzled by your charm.",
+    "footprintRadius": 38,
+    "layerBias": "mid",
+    "fill": "#F0876B",
+    "fillDeep": "#D65F45",
+    "center": "#A83F2C"
+  },
+  {
+    "id": "anemone",
+    "name": "Anemone",
+    "meaning": "Anticipation and protection against ill will.",
+    "footprintRadius": 36,
+    "layerBias": "mid",
+    "fill": "#F4EEE6",
+    "fillDeep": "#E4DAEA",
+    "center": "#2E2A4A"
+  },
+  {
+    "id": "carnation",
+    "name": "Carnation",
+    "meaning": "Fascination and distinction.",
+    "footprintRadius": 34,
+    "layerBias": "mid",
+    "fill": "#E8639A",
+    "fillDeep": "#C2447A",
+    "center": "#8F2E5B"
+  },
+  {
+    "id": "dahlia",
+    "name": "Dahlia",
+    "meaning": "Inner strength and lasting commitment.",
+    "footprintRadius": 42,
+    "layerBias": "front",
+    "fill": "#A6314F",
+    "fillDeep": "#7C2039",
+    "center": "#4E1223"
+  },
+  {
+    "id": "sunflower",
+    "name": "Sunflower",
+    "meaning": "Warmth, loyalty, and adoration.",
+    "footprintRadius": 48,
+    "layerBias": "front",
+    "fill": "#F4C430",
+    "fillDeep": "#DFA700",
+    "center": "#6B4423"
+  },
+  {
+    "id": "gerbera-daisy",
+    "name": "Gerbera Daisy",
+    "meaning": "Cheerfulness and lifelong friendship.",
+    "footprintRadius": 36,
+    "layerBias": "mid",
+    "fill": "#F2664F",
+    "fillDeep": "#D6482F",
+    "center": "#F4C430"
+  },
+  {
+    "id": "tulip",
+    "name": "Tulip",
+    "meaning": "Perfect and undying love.",
+    "footprintRadius": 30,
+    "layerBias": "mid",
+    "fill": "#C0398D",
+    "fillDeep": "#9B2870",
+    "center": "#6E1B4E"
+  },
+  {
+    "id": "lily",
+    "name": "Lily",
+    "meaning": "Renewal, purity, and devotion.",
+    "footprintRadius": 40,
+    "layerBias": "front",
+    "fill": "#F7DCE4",
+    "fillDeep": "#EFAFC4",
+    "center": "#C77B96"
+  },
+  {
+    "id": "orchid",
+    "name": "Orchid",
+    "meaning": "Rare and delicate beauty.",
+    "footprintRadius": 34,
+    "layerBias": "mid",
+    "fill": "#8E5DC2",
+    "fillDeep": "#6B3FA0",
+    "center": "#EFD9A8"
+  },
+  {
+    "id": "delphinium",
+    "name": "Delphinium",
+    "meaning": "An open heart and lightness of being.",
+    "footprintRadius": 26,
+    "layerBias": "back",
+    "fill": "#5B6FD6",
+    "fillDeep": "#3E4FB0",
+    "center": "#28337D"
+  }
+]

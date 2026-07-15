@@ -1,0 +1,6 @@
+[
+  { "id": "monospace", "name": "Typewriter", "family": "'Space Mono', monospace", "googleFont": null },
+  { "id": "caveat", "name": "Handwritten", "family": "'Caveat', cursive", "googleFont": "Caveat:wght@500;700" },
+  { "id": "homemade-apple", "name": "Ink Pen", "family": "'Homemade Apple', cursive", "googleFont": "Homemade+Apple" },
+  { "id": "playfair", "name": "Formal Script", "family": "'Playfair Display', serif", "googleFont": "Playfair+Display:ital@1" }
+]

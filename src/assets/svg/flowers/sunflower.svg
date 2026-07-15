@@ -1,0 +1,36 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="sun-petal" d="M80,80 C73,66 71,42 80,6 C89,42 87,66 80,80 Z"/>
+  </defs>
+  <circle cx="80" cy="80" r="58" fill="var(--bloom-fill-deep)" opacity="0.2"/>
+  <g fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#sun-petal" transform="rotate(0 80 80)"/>
+    <use href="#sun-petal" transform="rotate(22.5 80 80)"/>
+    <use href="#sun-petal" transform="rotate(45 80 80)"/>
+    <use href="#sun-petal" transform="rotate(67.5 80 80)"/>
+    <use href="#sun-petal" transform="rotate(90 80 80)"/>
+    <use href="#sun-petal" transform="rotate(112.5 80 80)"/>
+    <use href="#sun-petal" transform="rotate(135 80 80)"/>
+    <use href="#sun-petal" transform="rotate(157.5 80 80)"/>
+    <use href="#sun-petal" transform="rotate(180 80 80)"/>
+    <use href="#sun-petal" transform="rotate(202.5 80 80)"/>
+    <use href="#sun-petal" transform="rotate(225 80 80)"/>
+    <use href="#sun-petal" transform="rotate(247.5 80 80)"/>
+    <use href="#sun-petal" transform="rotate(270 80 80)"/>
+    <use href="#sun-petal" transform="rotate(292.5 80 80)"/>
+    <use href="#sun-petal" transform="rotate(315 80 80)"/>
+    <use href="#sun-petal" transform="rotate(337.5 80 80)"/>
+  </g>
+  <circle cx="80" cy="80" r="28" fill="var(--bloom-center)" stroke="var(--color-line)" stroke-width="2.5"/>
+  <g fill="var(--bloom-fill-deep)" opacity="0.7">
+    <circle cx="80" cy="80" r="2"/>
+    <circle cx="90" cy="76" r="2"/>
+    <circle cx="94" cy="86" r="2"/>
+    <circle cx="86" cy="94" r="2"/>
+    <circle cx="74" cy="92" r="2"/>
+    <circle cx="66" cy="82" r="2"/>
+    <circle cx="70" cy="70" r="2"/>
+    <circle cx="82" cy="68" r="2"/>
+    <circle cx="80" cy="80" r="9" fill="none" stroke="var(--bloom-fill-deep)" stroke-width="1.5" opacity="0.6"/>
+  </g>
+</svg>

@@ -1,0 +1,78 @@
+---
+import logoMark from '../../assets/svg/decorative/logo-mark.svg?raw';
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__brand">
+      <span class="site-header__mark" set:html={logoMark} />
+      <span class="site-header__wordmark">
+        <span class="wordmark">Everbloom</span>
+        <span class="site-header__by">by Meena</span>
+      </span>
+    </a>
+    <a class="btn btn-primary site-header__cta" href="/build">Build a Bouquet</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    padding-block: var(--space-4);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .site-header__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    text-decoration: none;
+    color: var(--color-ink);
+  }
+
+  .site-header__mark {
+    width: 2.5rem;
+    height: 2.85rem;
+    flex-shrink: 0;
+  }
+
+  .site-header__mark :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .site-header__wordmark {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .site-header__wordmark .wordmark {
+    font-size: 1.75rem;
+    color: var(--color-ink-purple);
+  }
+
+  .site-header__by {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-purple-soft);
+  }
+
+  .site-header__cta {
+    font-size: 0.75rem;
+    padding: 0.65rem 1.2rem;
+  }
+
+  @media (max-width: 30rem) {
+    .site-header__cta span {
+      display: none;
+    }
+  }
+</style>

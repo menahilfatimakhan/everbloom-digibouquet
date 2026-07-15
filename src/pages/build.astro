@@ -1,0 +1,555 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import StepProgress from '../components/StepProgress.astro';
+import {
+  FLOWERS,
+  PRESENTATION,
+  OCCASIONS,
+  CARD_FONTS,
+  FLOWER_SVGS,
+} from '../builder/assetRegistry';
+import { MIN_BLOOMS, MAX_BLOOMS, CARD_LIMITS } from '../builder/state/schema';
+import '../styles/components/reveal.css';
+---
+
+<BaseLayout title="Build a Bouquet">
+  <StepProgress current={1} />
+
+  <main class="builder container" data-builder>
+    <!-- STEP 1: PICK BLOOMS -->
+    <section class="builder-step" data-step="1">
+      <p class="eyebrow">Step 1</p>
+      <h1>Pick {MIN_BLOOMS}–{MAX_BLOOMS} Blooms</h1>
+      <p class="builder-step__hint">Tap a flower to add it. Tap a chip below to remove it.</p>
+
+      <div class="occasion-row" data-occasion-row>
+        <span class="occasion-row__label">Occasion (optional):</span>
+        {
+          OCCASIONS.map((o) => (
+            <button type="button" class="occasion-chip" data-occasion={o.id}>
+              {o.label}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="flower-grid" data-flower-grid>
+        {
+          FLOWERS.map((f) => (
+            <button type="button" class="flower-card" data-species={f.id} aria-label={`Add ${f.name}`}>
+              <span
+                class="flower-card__art"
+                style={`--bloom-fill:${f.fill};--bloom-fill-deep:${f.fillDeep};--bloom-center:${f.center}`}
+                set:html={FLOWER_SVGS[f.id]}
+              />
+              <span class="flower-card__badge" data-qty-badge hidden>0</span>
+              <span class="flower-card__name">{f.name}</span>
+              <span class="flower-card__meaning">{f.meaning}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="tally" data-tally>
+        <div class="tally__chips" data-tally-chips></div>
+        <p class="tally__count" data-tally-count></p>
+      </div>
+
+      <div class="builder-nav">
+        <span />
+        <button type="button" class="btn btn-primary" data-next disabled>Next: Arrange</button>
+      </div>
+    </section>
+
+    <!-- STEP 2: ARRANGE -->
+    <section class="builder-step" data-step="2" hidden>
+      <p class="eyebrow">Step 2</p>
+      <h1>Customize Your Bouquet</h1>
+      <div class="arrange-controls">
+        <button type="button" class="btn btn-primary" data-reshuffle>Try a New Arrangement</button>
+        <button type="button" class="btn" data-change-greenery>Change Greenery</button>
+      </div>
+      <div class="arrange-stage">
+        <svg class="arrange-stage__svg" data-bouquet-svg viewBox="0 0 400 400"></svg>
+      </div>
+      <div class="builder-nav">
+        <button type="button" class="btn" data-back>Back</button>
+        <button type="button" class="btn btn-primary" data-next>Next: Write the Card</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: WRITE THE CARD -->
+    <section class="builder-step" data-step="3" hidden>
+      <p class="eyebrow">Step 3</p>
+      <h1>Write the Card</h1>
+
+      <div class="card-editor">
+        <div class="card-editor__fields">
+          <label class="field">
+            <span>Dear</span>
+            <input type="text" data-card-field="greeting" maxlength={CARD_LIMITS.greeting} placeholder="Beloved" />
+          </label>
+          <label class="field">
+            <span>Message</span>
+            <textarea data-card-field="message" maxlength={CARD_LIMITS.message} rows="5" placeholder="I have so much to tell you..."></textarea>
+          </label>
+          <label class="field">
+            <span>Sincerely</span>
+            <input type="text" data-card-field="signature" maxlength={CARD_LIMITS.signature} placeholder="Secret Admirer" />
+          </label>
+
+          <div class="field">
+            <span>Card lettering</span>
+            <div class="font-picker" data-font-picker>
+              {
+                CARD_FONTS.map((f) => (
+                  <button type="button" class="font-chip" data-font={f.id} style={`font-family:${f.family}`}>
+                    {f.name}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <span>Signature doodle (optional)</span>
+            <div class="doodle-pad-wrap">
+              <svg class="doodle-pad" data-doodle-pad viewBox="0 0 300 100"></svg>
+              <button type="button" class="btn btn-ghost" data-doodle-clear>Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-preview" data-card-preview>
+          <p class="card-preview__greeting"><span>Dear</span> <em data-preview-greeting>Beloved</em>,</p>
+          <p class="card-preview__message" data-preview-message>I have so much to tell you, but only this much space on this card! Still, you must know...</p>
+          <p class="card-preview__sign"><span>Sincerely,</span><br /><em data-preview-signature>Secret Admirer</em></p>
+          <svg class="card-preview__doodle" data-preview-doodle viewBox="0 0 300 100"></svg>
+        </div>
+      </div>
+
+      <div class="builder-nav">
+        <button type="button" class="btn" data-back>Back</button>
+        <button type="button" class="btn btn-primary" data-next>Next: Send</button>
+      </div>
+    </section>
+
+    <!-- STEP 4: SEND -->
+    <section class="builder-step" data-step="4" hidden>
+      <p class="eyebrow">Step 4</p>
+      <h1>Send Your Bouquet</h1>
+
+      <div class="send-layout">
+        <div class="send-options">
+          <div class="field">
+            <span>Presentation</span>
+            <div class="chip-row" data-wrap-vase-toggle>
+              <button type="button" class="chip" data-presentation-type="wrap">Wrapped</button>
+              <button type="button" class="chip" data-presentation-type="vase">In a Vase</button>
+            </div>
+          </div>
+          <div class="field" data-wrap-options>
+            <span>Wrap</span>
+            <div class="chip-row">
+              {PRESENTATION.wraps.map((w) => <button type="button" class="chip" data-wrap={w.id}>{w.name}</button>)}
+            </div>
+          </div>
+          <div class="field" data-vase-options hidden>
+            <span>Vase</span>
+            <div class="chip-row">
+              {PRESENTATION.vases.map((v) => <button type="button" class="chip" data-vase={v.id}>{v.name}</button>)}
+            </div>
+          </div>
+          <div class="field">
+            <span>Ribbon</span>
+            <div class="chip-row">
+              {PRESENTATION.ribbons.map((r) => <button type="button" class="chip" data-ribbon={r.id}>{r.name}</button>)}
+            </div>
+          </div>
+          <div class="field">
+            <span>Color Theme</span>
+            <div class="chip-row" data-theme-row>
+              {
+                PRESENTATION.themes.map((t) => (
+                  <button type="button" class="theme-swatch" data-theme={t.id} style={`--swatch:${t.accent}`} aria-label={t.name} />
+                ))
+              }
+            </div>
+          </div>
+
+          <div class="send-actions">
+            <button type="button" class="btn" data-preview-reveal>Preview the Reveal</button>
+            <button type="button" class="btn" data-download-keepsake>Download Keepsake Image</button>
+            <button type="button" class="btn btn-primary" data-create-link>Create Shareable Link</button>
+          </div>
+
+          <div class="send-result" data-send-result hidden>
+            <p>Your bouquet is ready to send:</p>
+            <div class="send-result__link-row">
+              <input type="text" readonly data-send-link />
+              <button type="button" class="btn" data-copy-link>Copy</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="send-stage">
+          <svg class="send-stage__svg" data-send-bouquet-svg viewBox="0 0 400 400"></svg>
+        </div>
+      </div>
+
+      <div class="builder-nav">
+        <button type="button" class="btn" data-back>Back</button>
+        <span />
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .builder {
+    padding-block: var(--space-8) var(--space-16);
+    min-height: 60vh;
+  }
+
+  .builder-step h1 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  }
+
+  .builder-step__hint {
+    font-size: 0.85rem;
+    color: var(--color-ink-purple-soft);
+  }
+
+  .occasion-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-4) 0;
+  }
+
+  .occasion-row__label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-ink-purple-soft);
+    margin-right: var(--space-2);
+  }
+
+  .occasion-chip {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-ink-purple-pale);
+    background: transparent;
+    color: var(--color-ink-purple);
+    cursor: pointer;
+    transition: background 0.2s var(--step-ease), transform 0.2s var(--step-ease);
+  }
+
+  .occasion-chip:hover {
+    transform: translateY(-1px);
+  }
+
+  .occasion-chip[data-active='true'] {
+    background: var(--color-ink-purple);
+    color: var(--color-paper-card);
+  }
+
+  .flower-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    margin-block: var(--space-6);
+  }
+
+  @media (min-width: 30rem) {
+    .flower-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .flower-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .flower-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    background: var(--color-paper-card);
+    border: 1.5px solid var(--color-ink-purple-pale);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    cursor: pointer;
+    text-align: center;
+    touch-action: manipulation;
+    transition: transform 0.18s var(--step-ease), border-color 0.18s var(--step-ease), box-shadow 0.18s var(--step-ease);
+  }
+
+  .flower-card:hover {
+    transform: translateY(-3px) rotate(-1deg);
+    border-color: var(--color-ink-purple);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .flower-card:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .flower-card[data-selected='true'] {
+    border-color: var(--color-ink-purple);
+    background: var(--color-ink-purple-pale);
+  }
+
+  .flower-card__art {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .flower-card__art :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .flower-card__badge {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    background: var(--color-ink-purple);
+    color: var(--color-paper-card);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flower-card__name {
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .flower-card__meaning {
+    font-size: 0.68rem;
+    font-style: italic;
+    color: var(--color-ink-purple-soft);
+    line-height: 1.3;
+  }
+
+  .tally {
+    min-height: 3.5rem;
+    padding-block: var(--space-4);
+    border-top: 1px dashed var(--color-ink-purple-pale);
+  }
+
+  .tally__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .tally__count {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-ink-purple);
+    margin: 0;
+  }
+
+  .builder-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-8);
+  }
+
+  .arrange-controls {
+    display: flex;
+    gap: var(--space-3);
+    margin-block: var(--space-4);
+  }
+
+  .arrange-stage,
+  .send-stage {
+    display: flex;
+    justify-content: center;
+    min-height: 22rem;
+  }
+
+  .arrange-stage__svg,
+  .send-stage__svg {
+    width: min(100%, 26rem);
+  }
+
+  .card-editor {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin-block: var(--space-6);
+  }
+
+  @media (min-width: 55rem) {
+    .card-editor {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: var(--space-4);
+    font-size: 0.8rem;
+    color: var(--color-ink-purple-soft);
+  }
+
+  .field input,
+  .field textarea {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    background: var(--color-paper-card);
+    border: 1.5px solid var(--color-ink-purple-pale);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.8rem;
+    resize: vertical;
+  }
+
+  .field input:focus-visible,
+  .field textarea:focus-visible {
+    outline: 2px solid var(--color-focus);
+    border-color: var(--color-ink-purple);
+  }
+
+  .font-picker,
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .font-chip,
+  .chip {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-ink-purple-pale);
+    background: var(--color-paper-card);
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  .font-chip[data-active='true'],
+  .chip[data-active='true'] {
+    border-color: var(--color-ink-purple);
+    background: var(--color-ink-purple-pale);
+  }
+
+  .theme-swatch {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--swatch);
+    border: 2px solid transparent;
+    cursor: pointer;
+  }
+
+  .theme-swatch[data-active='true'] {
+    border-color: var(--color-ink);
+  }
+
+  .doodle-pad-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
+  }
+
+  .doodle-pad {
+    width: 100%;
+    max-width: 20rem;
+    height: 6rem;
+    background: var(--color-paper-card);
+    border: 1.5px dashed var(--color-ink-purple-pale);
+    border-radius: var(--radius-sm);
+    touch-action: none;
+    cursor: crosshair;
+  }
+
+  .card-preview {
+    position: relative;
+    background: var(--color-paper-card);
+    border-radius: var(--radius-md);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-card);
+    align-self: start;
+  }
+
+  .card-preview p {
+    margin: 0 0 var(--space-4);
+  }
+
+  .card-preview__greeting em,
+  .card-preview__sign em {
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  .card-preview__doodle {
+    width: 100%;
+    height: 3.5rem;
+  }
+
+  .send-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 55rem) {
+    .send-layout {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .send-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+
+  .send-result {
+    margin-top: var(--space-4);
+    font-size: 0.85rem;
+  }
+
+  .send-result__link-row {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .send-result__link-row input {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--color-ink-purple-pale);
+  }
+</style>
+
+<script>
+  import { initBuilder } from '../builder/index';
+  initBuilder();
+</script>

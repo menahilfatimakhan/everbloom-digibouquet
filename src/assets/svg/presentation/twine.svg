@@ -1,0 +1,9 @@
+<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="var(--presentation-fill)" stroke-width="4" stroke-linecap="round">
+    <path d="M60,30 L140,50"/>
+    <path d="M60,50 L140,30"/>
+    <path d="M58,60 L142,60"/>
+  </g>
+  <path d="M84,78 L74,110 L88,102 Z" fill="var(--presentation-fill)"/>
+  <path d="M116,78 L126,110 L112,102 Z" fill="var(--presentation-fill)"/>
+</svg>

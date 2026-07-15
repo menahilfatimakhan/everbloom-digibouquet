@@ -1,0 +1,21 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="delph-petal" d="M0,0 C-5,-3 -7,-9 -4,-14 C-2,-17 2,-17 4,-14 C7,-9 5,-3 0,0 Z"/>
+    <g id="delph-floret" fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
+      <use href="#delph-petal" transform="rotate(0)"/>
+      <use href="#delph-petal" transform="rotate(72)"/>
+      <use href="#delph-petal" transform="rotate(144)"/>
+      <use href="#delph-petal" transform="rotate(216)"/>
+      <use href="#delph-petal" transform="rotate(288)"/>
+      <circle r="2.2" fill="var(--bloom-center)"/>
+    </g>
+  </defs>
+  <line x1="80" y1="150" x2="80" y2="20" stroke="var(--color-line)" stroke-width="2" stroke-linecap="round"/>
+  <g transform="translate(80,138) scale(1.15)"><use href="#delph-floret"/></g>
+  <g transform="translate(68,116) scale(1.05)"><use href="#delph-floret"/></g>
+  <g transform="translate(92,100) scale(0.95)"><use href="#delph-floret"/></g>
+  <g transform="translate(72,80) scale(0.85)"><use href="#delph-floret"/></g>
+  <g transform="translate(88,60) scale(0.72)"><use href="#delph-floret"/></g>
+  <g transform="translate(78,40) scale(0.6)"><use href="#delph-floret"/></g>
+  <g transform="translate(82,22) scale(0.46)"><use href="#delph-floret"/></g>
+</svg>

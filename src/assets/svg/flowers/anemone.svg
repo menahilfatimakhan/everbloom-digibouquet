@@ -1,0 +1,23 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="anemone-petal" d="M80,80 C58,76 46,58 52,38 C58,20 102,20 108,38 C114,58 102,76 80,80 Z"/>
+  </defs>
+  <circle cx="80" cy="82" r="52" fill="var(--bloom-fill-deep)" opacity="0.2"/>
+  <g fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#anemone-petal" transform="rotate(0 80 80)"/>
+    <use href="#anemone-petal" transform="rotate(60 80 80)"/>
+    <use href="#anemone-petal" transform="rotate(120 80 80)"/>
+    <use href="#anemone-petal" transform="rotate(180 80 80)"/>
+    <use href="#anemone-petal" transform="rotate(240 80 80)"/>
+    <use href="#anemone-petal" transform="rotate(300 80 80)"/>
+  </g>
+  <circle cx="80" cy="80" r="15" fill="var(--bloom-center)"/>
+  <g fill="var(--bloom-fill)">
+    <circle cx="80" cy="66" r="2.2"/>
+    <circle cx="92.1" cy="73" r="2.2"/>
+    <circle cx="92.1" cy="87" r="2.2"/>
+    <circle cx="80" cy="94" r="2.2"/>
+    <circle cx="67.9" cy="87" r="2.2"/>
+    <circle cx="67.9" cy="73" r="2.2"/>
+  </g>
+</svg>

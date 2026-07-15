@@ -1,0 +1,17 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <ellipse id="euc-leaf" cx="0" cy="0" rx="13" ry="9"/>
+  </defs>
+  <line x1="80" y1="146" x2="80" y2="24" stroke="var(--color-line)" stroke-width="2" stroke-linecap="round"/>
+  <g fill="var(--greenery-fill)" stroke="var(--color-line)" stroke-width="1.75" stroke-linejoin="round">
+    <use href="#euc-leaf" transform="translate(64,128) rotate(-35)"/>
+    <use href="#euc-leaf" transform="translate(96,120) rotate(35)"/>
+    <use href="#euc-leaf" transform="translate(62,104) rotate(-40)"/>
+    <use href="#euc-leaf" transform="translate(98,96) rotate(40)"/>
+    <use href="#euc-leaf" transform="translate(64,80) rotate(-35)"/>
+    <use href="#euc-leaf" transform="translate(96,72) rotate(35)"/>
+    <use href="#euc-leaf" transform="translate(66,56) rotate(-30) scale(0.85)"/>
+    <use href="#euc-leaf" transform="translate(94,48) rotate(30) scale(0.85)"/>
+    <use href="#euc-leaf" transform="translate(80,30) scale(0.7)"/>
+  </g>
+</svg>

@@ -1,0 +1,51 @@
+[
+  {
+    "id": "birthday",
+    "label": "Birthday",
+    "suggestedTheme": "sunset-blush",
+    "suggestedBlooms": [
+      { "species": "gerbera-daisy", "qty": 3 },
+      { "species": "ranunculus", "qty": 3 },
+      { "species": "sunflower", "qty": 2 }
+    ]
+  },
+  {
+    "id": "anniversary",
+    "label": "Anniversary",
+    "suggestedTheme": "classic-red",
+    "suggestedBlooms": [
+      { "species": "rose", "qty": 5 },
+      { "species": "peony", "qty": 3 }
+    ]
+  },
+  {
+    "id": "sympathy",
+    "label": "Sympathy",
+    "suggestedTheme": "ivory-sage",
+    "suggestedBlooms": [
+      { "species": "lily", "qty": 3 },
+      { "species": "anemone", "qty": 3 },
+      { "species": "delphinium", "qty": 2 }
+    ]
+  },
+  {
+    "id": "congrats",
+    "label": "Congrats",
+    "suggestedTheme": "lavender-dream",
+    "suggestedBlooms": [
+      { "species": "orchid", "qty": 3 },
+      { "species": "tulip", "qty": 3 },
+      { "species": "delphinium", "qty": 2 }
+    ]
+  },
+  {
+    "id": "just-because",
+    "label": "Just Because",
+    "suggestedTheme": "lavender-dream",
+    "suggestedBlooms": [
+      { "species": "anemone", "qty": 3 },
+      { "species": "carnation", "qty": 3 },
+      { "species": "ranunculus", "qty": 2 }
+    ]
+  }
+]

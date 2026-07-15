@@ -1,0 +1,34 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="carn-petal" d="M80,80 C76,75 73,68 76,61 C71,59 69,52 73,46 C68,44 67,36 72,30 C76,24 84,24 88,30 C93,36 92,44 87,46 C91,52 89,59 84,61 C87,68 84,75 80,80 Z"/>
+  </defs>
+  <circle cx="80" cy="82" r="50" fill="var(--bloom-fill-deep)" opacity="0.22"/>
+  <g fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#carn-petal" transform="rotate(0 80 80)"/>
+    <use href="#carn-petal" transform="rotate(25.7 80 80)"/>
+    <use href="#carn-petal" transform="rotate(51.4 80 80)"/>
+    <use href="#carn-petal" transform="rotate(77.1 80 80)"/>
+    <use href="#carn-petal" transform="rotate(102.8 80 80)"/>
+    <use href="#carn-petal" transform="rotate(128.5 80 80)"/>
+    <use href="#carn-petal" transform="rotate(154.2 80 80)"/>
+    <use href="#carn-petal" transform="rotate(180 80 80)"/>
+    <use href="#carn-petal" transform="rotate(205.7 80 80)"/>
+    <use href="#carn-petal" transform="rotate(231.4 80 80)"/>
+    <use href="#carn-petal" transform="rotate(257.1 80 80)"/>
+    <use href="#carn-petal" transform="rotate(282.8 80 80)"/>
+    <use href="#carn-petal" transform="rotate(308.5 80 80)"/>
+    <use href="#carn-petal" transform="rotate(334.2 80 80)"/>
+  </g>
+  <g transform="translate(80,80) scale(0.58) translate(-80,-80)" fill="var(--bloom-fill-deep)" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#carn-petal" transform="rotate(12 80 80)"/>
+    <use href="#carn-petal" transform="rotate(48 80 80)"/>
+    <use href="#carn-petal" transform="rotate(84 80 80)"/>
+    <use href="#carn-petal" transform="rotate(120 80 80)"/>
+    <use href="#carn-petal" transform="rotate(156 80 80)"/>
+    <use href="#carn-petal" transform="rotate(192 80 80)"/>
+    <use href="#carn-petal" transform="rotate(228 80 80)"/>
+    <use href="#carn-petal" transform="rotate(264 80 80)"/>
+    <use href="#carn-petal" transform="rotate(300 80 80)"/>
+    <use href="#carn-petal" transform="rotate(336 80 80)"/>
+  </g>
+</svg>

@@ -1,0 +1,50 @@
+:root {
+  /* Paper / background */
+  --color-paper: #fbf3e7;
+  --color-paper-deep: #f3e8d6;
+  --color-paper-card: #fffdf8;
+
+  /* Ink / brand purple, sampled from the Everbloom logo mark */
+  --color-ink: #2f1f42;
+  --color-ink-purple: #6b2fa0;
+  --color-ink-purple-deep: #4b1f73;
+  --color-ink-purple-soft: #9c6fc9;
+  --color-ink-purple-pale: #e9defa;
+
+  --color-line: var(--color-ink-purple);
+  --color-focus: var(--color-ink-purple);
+
+  /* Theme accent defaults (overridden per chosen presentation theme) */
+  --color-accent: var(--color-ink-purple);
+  --color-accent-deep: var(--color-ink-purple-deep);
+
+  /* Type */
+  --font-script: 'Playfair Display', 'Iowan Old Style', serif;
+  --font-wordmark: 'Pinyon Script', var(--font-script);
+  --font-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --step-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.75rem;
+
+  --shadow-soft: 0 12px 32px -16px rgba(75, 31, 115, 0.35);
+  --shadow-card: 0 18px 48px -20px rgba(47, 31, 66, 0.4);
+}
+
+/*
+  Everbloom's cream-paper-and-purple-ink look is the brand identity, not a
+  "light theme" — it stays constant regardless of OS color-scheme preference,
+  the way a printed stationery brand would.
+*/

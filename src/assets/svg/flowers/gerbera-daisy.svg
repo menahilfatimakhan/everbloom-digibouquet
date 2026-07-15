@@ -1,0 +1,23 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="gerbera-petal" d="M80,80 C75,71 73,52 80,20 C87,52 85,71 80,80 Z"/>
+  </defs>
+  <circle cx="80" cy="80" r="52" fill="var(--bloom-fill-deep)" opacity="0.2"/>
+  <g fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#gerbera-petal" transform="rotate(0 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(25.7 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(51.4 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(77.1 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(102.8 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(128.5 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(154.2 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(180 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(205.7 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(231.4 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(257.1 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(282.8 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(308.5 80 80)"/>
+    <use href="#gerbera-petal" transform="rotate(334.2 80 80)"/>
+  </g>
+  <circle cx="80" cy="80" r="17" fill="var(--bloom-center)" stroke="var(--color-line)" stroke-width="2.5"/>
+</svg>

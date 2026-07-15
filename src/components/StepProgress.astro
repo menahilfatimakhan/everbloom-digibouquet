@@ -1,0 +1,135 @@
+---
+interface Props {
+  current: 1 | 2 | 3 | 4;
+}
+
+const { current } = Astro.props;
+
+const steps = [
+  { n: 1, label: 'Pick' },
+  { n: 2, label: 'Arrange' },
+  { n: 3, label: 'Write' },
+  { n: 4, label: 'Send' },
+] as const;
+---
+
+<nav class="step-progress" aria-label="Bouquet builder progress" data-step-progress data-current={current}>
+  <ol class="step-progress__list">
+    {
+      steps.map((step) => (
+        <li
+          class="step-progress__item"
+          data-step={step.n}
+          data-state={step.n < current ? 'done' : step.n === current ? 'active' : 'upcoming'}
+        >
+          <span class="step-progress__dot" aria-hidden="true">
+            {step.n < current ? '✓' : step.n}
+          </span>
+          <span class="step-progress__label">{step.label}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="step-progress__track" aria-hidden="true">
+    <div class="step-progress__fill" data-step-progress-fill></div>
+  </div>
+</nav>
+
+<style>
+  .step-progress {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--color-paper) 92%, transparent);
+    backdrop-filter: blur(6px);
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--color-ink-purple-pale);
+  }
+
+  .step-progress__list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: var(--space-8);
+    margin: 0 0 var(--space-2);
+    padding: 0;
+  }
+
+  .step-progress__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-purple-soft);
+  }
+
+  .step-progress__dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-ink-purple-pale);
+    font-size: 0.75rem;
+    transition: background 0.3s var(--step-ease), border-color 0.3s var(--step-ease), color 0.3s var(--step-ease);
+  }
+
+  .step-progress__item[data-state='active'] {
+    color: var(--color-ink-purple);
+  }
+
+  .step-progress__item[data-state='active'] .step-progress__dot {
+    background: var(--color-ink-purple);
+    border-color: var(--color-ink-purple);
+    color: var(--color-paper-card);
+  }
+
+  .step-progress__item[data-state='done'] {
+    color: var(--color-ink-purple);
+  }
+
+  .step-progress__item[data-state='done'] .step-progress__dot {
+    border-color: var(--color-ink-purple);
+    color: var(--color-ink-purple);
+  }
+
+  .step-progress__track {
+    max-width: 30rem;
+    margin: 0 auto;
+    height: 3px;
+    background: var(--color-ink-purple-pale);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .step-progress__fill {
+    height: 100%;
+    width: 0%;
+    background: var(--color-ink-purple);
+    border-radius: 999px;
+    transition: width 0.5s var(--step-ease);
+  }
+
+  @media (max-width: 30rem) {
+    .step-progress__list {
+      gap: var(--space-4);
+    }
+    .step-progress__label {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function paintFill(root: HTMLElement) {
+    const current = Number(root.dataset.current ?? '1');
+    const fill = root.querySelector<HTMLElement>('[data-step-progress-fill]');
+    if (fill) fill.style.width = `${((current - 1) / 3) * 100}%`;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-step-progress]').forEach(paintFill);
+</script>

@@ -1,0 +1,35 @@
+---
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import '../../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  minimalChrome?: boolean;
+}
+
+const {
+  title,
+  description = 'Everbloom Digibouquet — build a custom bouquet bloom by bloom and send it as an animated keepsake.',
+  minimalChrome = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} · Everbloom</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} · Everbloom`} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22><text y=%2215%22 font-size=%2216%22>💐</text></svg>" />
+  </head>
+  <body>
+    {!minimalChrome && <SiteHeader />}
+    <slot />
+    {!minimalChrome && <SiteFooter />}
+  </body>
+</html>

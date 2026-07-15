@@ -1,0 +1,205 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import PetalField from '../components/PetalField.astro';
+import { composeLayout, flattenForRender } from '../builder/composition/layoutEngine';
+import { placementsToSvgBody } from '../builder/composition/renderPlacements';
+import {
+  FLOWER_META,
+  FLOWER_SVGS,
+  GREENERY_SVGS,
+  flowerCssVars,
+  greeneryCssVars,
+} from '../builder/assetRegistry';
+
+const showcaseState = {
+  blooms: [
+    { species: 'peony', qty: 3 },
+    { species: 'ranunculus', qty: 2 },
+    { species: 'anemone', qty: 2 },
+    { species: 'delphinium', qty: 2 },
+  ],
+  arrangementSeed: 8271,
+  greenery: 'eucalyptus',
+};
+
+const showcaseLayout = composeLayout(showcaseState, FLOWER_META);
+const showcasePlacements = flattenForRender(showcaseLayout);
+const showcaseStems = `<path d="${showcaseLayout.stemsPath}" fill="none" stroke="#4f7a52" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>`;
+const showcaseSvgBody =
+  showcaseStems +
+  placementsToSvgBody(
+    showcasePlacements,
+    (p) => (p.kind === 'bloom' ? FLOWER_SVGS[p.assetId] : GREENERY_SVGS[p.assetId]),
+    (p) => (p.kind === 'bloom' ? flowerCssVars(p.assetId) : greeneryCssVars(p.assetId))
+  );
+
+const steps = [
+  { n: 1, label: 'Pick Blooms', copy: 'Choose 6–10 flowers, one at a time. Watch your tally grow.' },
+  { n: 2, label: 'Arrange', copy: 'We compose your bouquet. Reshuffle it or swap the greenery.' },
+  { n: 3, label: 'Write the Card', copy: 'A greeting, a message, a signature — in your own words.' },
+  { n: 4, label: 'Send', copy: 'Get a link. They open it to a bouquet that blooms open on screen.' },
+];
+---
+
+<BaseLayout title="Everbloom Digibouquet">
+  <section class="hero">
+    <PetalField count={14} />
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">Digital bouquets, built bloom by bloom</p>
+        <h1 class="hero__headline">
+          <span class="wordmark">Everbloom</span> never wilts.
+        </h1>
+        <p class="hero__sub">
+          Pick your blooms, watch them arrange themselves into a bouquet, write the card,
+          and send it as a link. Whoever opens it watches it bloom — today, and every time
+          they open it again.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn-primary" href="/build">Build a Bouquet</a>
+          <a class="btn btn-ghost" href="#how-it-works">See how it works</a>
+        </div>
+      </div>
+      <div class="hero__showcase" aria-hidden="true">
+        <svg viewBox={showcaseLayout.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
+      </div>
+    </div>
+  </section>
+
+  <section id="how-it-works" class="steps-preview">
+    <div class="container">
+      <p class="eyebrow" style="text-align:center">How it works</p>
+      <h2 style="text-align:center">Four steps to a bouquet that keeps</h2>
+      <ol class="steps-preview__grid">
+        {
+          steps.map((step) => (
+            <li class="steps-preview__card">
+              <span class="steps-preview__number">{step.n}</span>
+              <h3>{step.label}</h3>
+              <p>{step.copy}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="steps-preview__cta">
+        <a class="btn btn-primary" href="/build">Start Building</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: var(--space-12) var(--space-16);
+    overflow: hidden;
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .hero__inner {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+
+  .hero__headline {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.05;
+    margin-bottom: var(--space-4);
+  }
+
+  .hero__headline .wordmark {
+    display: block;
+    font-size: clamp(3.5rem, 9vw, 6rem);
+    color: var(--color-ink-purple);
+  }
+
+  .hero__sub {
+    max-width: 34rem;
+    font-size: 1rem;
+    color: var(--color-ink);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+
+  .hero__showcase {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero__bouquet {
+    width: min(100%, 26rem);
+    filter: drop-shadow(0 24px 40px rgba(75, 31, 115, 0.18));
+  }
+
+  .steps-preview {
+    padding-block: var(--space-16);
+    background: var(--color-paper-deep);
+  }
+
+  .steps-preview__grid {
+    list-style: none;
+    margin: var(--space-12) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 48rem) {
+    .steps-preview__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .steps-preview__card {
+    background: var(--color-paper-card);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-soft);
+    text-align: left;
+  }
+
+  .steps-preview__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--color-ink-purple-pale);
+    color: var(--color-ink-purple);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+  }
+
+  .steps-preview__card h3 {
+    font-size: 1.15rem;
+    margin-bottom: var(--space-2);
+  }
+
+  .steps-preview__card p {
+    font-size: 0.85rem;
+    color: var(--color-ink-purple-soft);
+    margin: 0;
+  }
+
+  .steps-preview__cta {
+    text-align: center;
+    margin-top: var(--space-12);
+  }
+</style>

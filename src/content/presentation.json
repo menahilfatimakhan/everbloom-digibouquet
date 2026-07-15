@@ -1,0 +1,22 @@
+{
+  "wraps": [
+    { "id": "kraft-cone", "name": "Kraft Paper Cone", "fill": "#C9A574", "fillDeep": "#AD8A5C" },
+    { "id": "tissue-bundle", "name": "Tissue Bundle", "fill": "#F0E4D8", "fillDeep": "#DCCBB6" },
+    { "id": "stems-tied", "name": "Stems Tied, No Wrap", "fill": "transparent", "fillDeep": "transparent" }
+  ],
+  "vases": [
+    { "id": "glass-bud", "name": "Glass Bud Vase", "fill": "#DCE7E2", "fillDeep": "#B9CFC7" },
+    { "id": "ceramic-pitcher", "name": "Ceramic Pitcher", "fill": "#E8DCC8", "fillDeep": "#CBB894" }
+  ],
+  "ribbons": [
+    { "id": "satin-bow", "name": "Satin Bow", "fill": "#6B2FA0" },
+    { "id": "twine", "name": "Twine & Raffia", "fill": "#8A7455" },
+    { "id": "none", "name": "No Ribbon", "fill": "transparent" }
+  ],
+  "themes": [
+    { "id": "lavender-dream", "name": "Lavender Dream", "accent": "#8E5DC2", "accentDeep": "#6B3FA0", "paper": "#F7F2FA" },
+    { "id": "sunset-blush", "name": "Sunset Blush", "accent": "#E8927A", "accentDeep": "#D46F55", "paper": "#FDF1EA" },
+    { "id": "ivory-sage", "name": "Ivory & Sage", "accent": "#8CA07E", "accentDeep": "#6E8360", "paper": "#F7F5EC" },
+    { "id": "classic-red", "name": "Classic Red", "accent": "#B23350", "accentDeep": "#8C2440", "paper": "#FBF0EC" }
+  ]
+}

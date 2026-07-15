@@ -1,0 +1,15 @@
+<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="orchid-wing" d="M80,80 C64,72 52,56 54,40 C56,26 76,22 80,36 C84,22 104,26 106,40 C108,56 96,72 80,80 Z"/>
+  </defs>
+  <circle cx="80" cy="82" r="50" fill="var(--bloom-fill-deep)" opacity="0.18"/>
+  <g fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round">
+    <use href="#orchid-wing" transform="rotate(-24 80 80)"/>
+    <use href="#orchid-wing" transform="rotate(24 80 80)"/>
+    <use href="#orchid-wing" transform="rotate(-108 80 80) scale(1,0.92)"/>
+    <use href="#orchid-wing" transform="rotate(108 80 80) scale(1,0.92)"/>
+  </g>
+  <path d="M80,80 C68,88 62,106 80,118 C98,106 92,88 80,80 Z" fill="var(--bloom-fill-deep)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round"/>
+  <ellipse cx="80" cy="98" rx="8" ry="6" fill="var(--bloom-center)"/>
+  <circle cx="80" cy="82" r="6" fill="var(--bloom-center)" stroke="var(--color-line)" stroke-width="1.5"/>
+</svg>

@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import PetalField from '../../components/PetalField.astro';
+import '../../styles/components/reveal.css';
+import { getKv } from '../../lib/kv';
+import { isValidBouquetState } from '../../builder/state/schema';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const raw = id ? await getKv().get(id) : null;
+
+let state: unknown = null;
+if (raw) {
+  try {
+    const record = JSON.parse(raw);
+    if (isValidBouquetState(record.state)) state = record.state;
+  } catch {
+    state = null;
+  }
+}
+---
+
+<BaseLayout title={state ? 'A Bouquet For You' : 'Bouquet Not Found'}>
+  <section class="reveal-page">
+    <PetalField count={10} />
+    <div class="container reveal-page__inner">
+      {
+        state ? (
+          <>
+            <p class="eyebrow" style="text-align:center">Someone sent you a bouquet</p>
+            <h1 style="text-align:center">An Everbloom bouquet, just for you.</h1>
+            <div data-reveal-mount></div>
+            <script is:inline type="application/json" id="bouquet-state" set:html={JSON.stringify(state)} />
+            <script>
+              import { mountReveal } from '../../builder/reveal/revealAnimation';
+              const dataEl = document.getElementById('bouquet-state');
+              const mount = document.querySelector<HTMLElement>('[data-reveal-mount]');
+              if (dataEl && mount) {
+                const state = JSON.parse(dataEl.textContent ?? 'null');
+                if (state) mountReveal(mount, state);
+              }
+            </script>
+          </>
+        ) : (
+          <div class="reveal-page__missing">
+            <p class="eyebrow" style="text-align:center">Hm — this bouquet couldn't be found</p>
+            <h1 style="text-align:center">This link has wilted.</h1>
+            <p style="text-align:center">
+              The bouquet you're looking for may have an incorrect link. Everbloom bouquets themselves
+              never wilt — but a broken link can't hold one.
+            </p>
+            <p style="text-align:center">
+              <a class="btn btn-primary" href="/build">Build your own bouquet</a>
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .reveal-page {
+    position: relative;
+    padding-block: var(--space-12) var(--space-16);
+    min-height: 70vh;
+  }
+
+  .reveal-page__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .reveal-page__missing {
+    max-width: 30rem;
+    margin: var(--space-12) auto 0;
+  }
+</style>

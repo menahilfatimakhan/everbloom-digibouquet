@@ -1,0 +1,9 @@
+<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+  <g fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M100,60 C90,40 55,30 30,42 C14,50 14,74 30,82 C55,94 90,80 100,60 Z"/>
+    <path d="M100,60 C110,40 145,30 170,42 C186,50 186,74 170,82 C145,94 110,80 100,60 Z"/>
+  </g>
+  <circle cx="100" cy="60" r="12" fill="var(--presentation-fill-deep)" stroke="var(--color-line)" stroke-width="2.5"/>
+  <path d="M92,68 L78,108 L94,100 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M108,68 L122,108 L106,100 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round"/>
+</svg>
