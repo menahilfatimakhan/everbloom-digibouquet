@@ -24,6 +24,23 @@
   --color-lilac-mist: #f4ecfb;
   --color-mauve-dust: #b98fae;
   --color-peach: #f0c9a0;
+  /* Soft blush pink — the third leg of the lilac/peach/blush trio, borrowed
+     from the warmer floral-shop inspo. Used sparingly to blend the two
+     existing accents together in gradient washes and blob shapes, never as
+     a standalone surface color. */
+  --color-blush: #f6d9dd;
+  --color-blush-soft: #fbeef0;
+
+  /* Organic blob gradient — the rounded, layered color-shapes look from the
+     inspo references, built from tokens already in the palette so it reads
+     as "more of this theme," not a new one. */
+  --gradient-blob: radial-gradient(
+      circle at 30% 30%,
+      var(--color-peach) 0%,
+      transparent 60%
+    ),
+    radial-gradient(circle at 70% 65%, var(--color-blush) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, var(--color-lilac) 0%, transparent 70%);
 
   --color-line: var(--color-ink-purple);
   --color-focus: var(--color-ink-purple);

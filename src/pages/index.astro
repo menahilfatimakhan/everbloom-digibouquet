@@ -51,6 +51,7 @@ const steps = [
         </div>
       </div>
       <div class="hero__showcase" aria-hidden="true">
+        <div class="hero__blob"></div>
         <svg viewBox={showcase.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
       </div>
     </div>
@@ -126,11 +127,43 @@ const steps = [
   }
 
   .hero__showcase {
+    position: relative;
     display: flex;
     justify-content: center;
   }
 
+  /* Organic color-blob behind the bouquet, echoing the rounded shape-blocks
+     in the floral-shop inspo — soft, blurred, and built from palette tokens
+     so it reads as an extension of the existing lilac/peach accent, not a
+     new motif. */
+  .hero__blob {
+    position: absolute;
+    inset: -8% -4%;
+    z-index: -1;
+    border-radius: 62% 38% 55% 45% / 48% 42% 58% 52%;
+    background: var(--gradient-blob);
+    opacity: 0.55;
+    filter: blur(6px);
+    animation: blob-drift 16s var(--step-ease) infinite alternate;
+  }
+
+  @keyframes blob-drift {
+    0% {
+      border-radius: 62% 38% 55% 45% / 48% 42% 58% 52%;
+    }
+    100% {
+      border-radius: 42% 58% 40% 60% / 58% 45% 55% 42%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__blob {
+      animation: none;
+    }
+  }
+
   .hero__bouquet {
+    position: relative;
     width: min(100%, 26rem);
     filter: drop-shadow(0 24px 40px rgba(140, 100, 170, 0.2));
   }
@@ -141,7 +174,12 @@ const steps = [
      the number badge as the one "borrowed warmth" touch from the inspo. */
   .steps-preview {
     padding-block: var(--space-20);
-    background: linear-gradient(180deg, var(--color-lilac-mist), var(--color-paper) 85%);
+    background: linear-gradient(
+      180deg,
+      var(--color-lilac-mist),
+      var(--color-blush-soft) 45%,
+      var(--color-paper) 85%
+    );
   }
 
   .steps-preview__grid {

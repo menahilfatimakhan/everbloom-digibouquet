@@ -21,7 +21,8 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   background-image: radial-gradient(circle at 20% 20%, rgba(201, 174, 232, 0.16), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(240, 201, 160, 0.1), transparent 40%);
+    radial-gradient(circle at 80% 0%, rgba(240, 201, 160, 0.12), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(246, 217, 221, 0.14), transparent 50%);
 }
 
 img,
