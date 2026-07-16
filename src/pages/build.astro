@@ -44,7 +44,12 @@ import '../styles/components/cardThemes.css';
         {
           FLOWERS.map((f) => (
             <div class="flower-card" role="group" aria-label={f.name} data-species={f.id}>
-              <button type="button" class="flower-card__add" aria-label={`Add ${f.name}`}>
+              <button
+                type="button"
+                class="flower-card__add"
+                aria-label={`Add ${f.name} — means ${MEANING_BY_ID[f.id]}`}
+                data-flower-info={f.id}
+              >
                 <span
                   class="flower-card__art"
                   style={`--bloom-fill:${f.fill};--bloom-fill-deep:${f.fillDeep};--bloom-center:${f.center}`}
@@ -52,15 +57,6 @@ import '../styles/components/cardThemes.css';
                 />
                 <span class="flower-card__badge" data-qty-badge hidden>0</span>
                 <span class="flower-card__name">{f.name}</span>
-              </button>
-              <button
-                type="button"
-                class="flower-card__info"
-                aria-label={`What does ${f.name} mean?`}
-                data-flower-info={f.id}
-              >
-                ⓘ
-                <span class="visually-hidden">{MEANING_BY_ID[f.id]}</span>
               </button>
             </div>
           ))
@@ -86,6 +82,7 @@ import '../styles/components/cardThemes.css';
         <button type="button" class="btn btn-primary" data-reshuffle>Try a New Arrangement</button>
         <button type="button" class="btn" data-change-greenery>Change Greenery</button>
       </div>
+      <p class="arrange-hint">Drag any flower to fine-tune its spot.</p>
       <div class="arrange-stage">
         <svg class="arrange-stage__svg" data-bouquet-svg viewBox="0 0 400 400"></svg>
       </div>
@@ -176,20 +173,7 @@ import '../styles/components/cardThemes.css';
 
       <div class="send-layout">
         <div class="send-options">
-          <div class="field">
-            <span>Presentation</span>
-            <div class="chip-row" data-wrap-vase-toggle>
-              <button type="button" class="chip" data-presentation-type="wrap">Wrapped</button>
-              <button type="button" class="chip" data-presentation-type="vase">In a Vase</button>
-            </div>
-          </div>
-          <div class="field" data-wrap-options>
-            <span>Wrap</span>
-            <div class="chip-row">
-              {PRESENTATION.wraps.map((w) => <button type="button" class="chip" data-wrap={w.id}>{w.name}</button>)}
-            </div>
-          </div>
-          <div class="field" data-vase-options hidden>
+          <div class="field" data-vase-options>
             <span>Vase</span>
             <div class="chip-row">
               {PRESENTATION.vases.map((v) => <button type="button" class="chip" data-vase={v.id}>{v.name}</button>)}
@@ -396,28 +380,6 @@ import '../styles/components/cardThemes.css';
     font-size: 0.85rem;
   }
 
-  .flower-card__info {
-    position: absolute;
-    top: 0.4rem;
-    left: 0.4rem;
-    width: 1.4rem;
-    height: 1.4rem;
-    border-radius: 50%;
-    border: 1.5px solid var(--color-ink-purple-pale);
-    background: var(--color-paper-card);
-    color: var(--color-ink-purple-soft);
-    font-size: 0.7rem;
-    line-height: 1;
-    cursor: pointer;
-    touch-action: manipulation;
-  }
-
-  .flower-card__info:hover,
-  .flower-card__info:focus-visible {
-    border-color: var(--color-ink-purple);
-    color: var(--color-ink-purple);
-  }
-
   .tally {
     min-height: 3.5rem;
     padding-block: var(--space-4);
@@ -451,6 +413,13 @@ import '../styles/components/cardThemes.css';
     margin-block: var(--space-4);
   }
 
+  .arrange-hint {
+    font-size: 0.85rem;
+    color: var(--color-ink-purple);
+    opacity: 0.65;
+    margin: 0 0 var(--space-2);
+  }
+
   .arrange-stage,
   .send-stage {
     display: flex;
@@ -461,6 +430,15 @@ import '../styles/components/cardThemes.css';
   .arrange-stage__svg,
   .send-stage__svg {
     width: min(100%, 26rem);
+  }
+
+  .arrange-stage__svg :global(.placement--bloom) {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .arrange-stage__svg :global(.placement--bloom:active) {
+    cursor: grabbing;
   }
 
   .card-editor {

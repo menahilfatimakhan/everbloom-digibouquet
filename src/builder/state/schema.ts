@@ -44,6 +44,13 @@ export interface BouquetState {
   occasion: string | null;
   presentation: PresentationState;
   card: CardState;
+  /** Manual drag-to-reposition overrides for bloom placements, keyed by the
+   * placement's `id` (e.g. `bloom-rose-2`). Cleared whenever the underlying
+   * bloom composition or arrangement seed changes, since placement ids aren't
+   * stable across those changes. Added after v1 shipped; intentionally does
+   * NOT bump SCHEMA_VERSION (see hydrateBouquetState below) for the same
+   * reason `card.theme` didn't. */
+  arrangementOverrides: Record<string, { x: number; y: number }>;
 }
 
 export function createInitialState(): BouquetState {
@@ -54,9 +61,9 @@ export function createInitialState(): BouquetState {
     arrangementSeed: Math.floor(Math.random() * 2 ** 31),
     occasion: null,
     presentation: {
-      type: 'wrap',
-      wrap: 'kraft-cone',
-      vase: null,
+      type: 'vase',
+      wrap: null,
+      vase: 'glass-bud',
       ribbon: 'satin-bow',
       theme: 'lavender-dream',
     },
@@ -68,6 +75,7 @@ export function createInitialState(): BouquetState {
       theme: 'classic-cream',
       doodle: null,
     },
+    arrangementOverrides: {},
   };
 }
 
@@ -114,6 +122,18 @@ export function isValidBouquetState(value: unknown): value is BouquetState {
 export function hydrateBouquetState(state: BouquetState): BouquetState {
   if (!state.card.theme) {
     state = { ...state, card: { ...state.card, theme: 'classic-cream' } };
+  }
+  if (!state.arrangementOverrides) {
+    state = { ...state, arrangementOverrides: {} };
+  }
+  // Presentation is vase-only now; older tokens/records may still carry
+  // `type: 'wrap'` from before that option was removed — normalize on read
+  // so nothing downstream has to special-case the retired wrap path.
+  if (state.presentation.type !== 'vase' || !state.presentation.vase) {
+    state = {
+      ...state,
+      presentation: { ...state.presentation, type: 'vase', vase: state.presentation.vase ?? 'glass-bud' },
+    };
   }
   return state;
 }

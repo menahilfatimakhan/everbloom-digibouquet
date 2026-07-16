@@ -11,24 +11,25 @@ import {
   greeneryCssVars,
 } from '../assetRegistry';
 
-// Wrap/vase art is authored on a 320x320 viewBox. A wrap's "neck" (where
-// stems gather) sits at local (160,250); a vase's rim (where the flowers
-// should appear to emerge from) sits at local (160,130). These boxes place
-// each so that anchor point lands at the right spot relative to the bouquet
-// composition's own CENTER (see layoutEngine.ts). Sized generously (scale
-// ~0.95) so the wrap's flared opening actually spans wider than the
-// bloom fan's worst-case spread — a too-narrow wrap left blooms visually
-// floating outside it.
-const WRAP_BOX = { x: 68, y: 63, w: 304, h: 304 };
+// Vase art is authored on a 320x320 viewBox; its rim (where the flowers
+// should appear to emerge from) sits at local (160,130). This box places
+// that anchor point at the right spot relative to the bouquet composition's
+// own CENTER (see layoutEngine.ts).
 const VASE_BOX = { x: 68, y: 135, w: 304, h: 304 };
 // Ribbon art is authored on a 200x130 viewBox with its knot at local (100,65).
-const RIBBON_BOX = { x: 155, y: 243, w: 130, h: 84.5 };
+// Sized+positioned so that knot anchor lands just above the vase rim (which
+// itself sits at composed y≈258.5, see VASE_BOX above) — tied around the
+// stems as they gather, rather than the old wrap-neck placement lower down.
+// Deliberately smaller than a statement bow for a cuter accent look.
+const RIBBON_BOX = { x: 164, y: 227.8, w: 112, h: 72.8 };
 
-function wrapVaseGroup(assetId: string, kind: 'wrap' | 'vase'): string {
+function vaseGroup(assetId: string): string {
   const raw = PRESENTATION_SVGS[assetId];
   if (!raw) return '';
-  const box = kind === 'vase' ? VASE_BOX : WRAP_BOX;
-  return raw.replace('<svg ', `<svg x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" overflow="visible" `);
+  return raw.replace(
+    '<svg ',
+    `<svg x="${VASE_BOX.x}" y="${VASE_BOX.y}" width="${VASE_BOX.w}" height="${VASE_BOX.h}" overflow="visible" `
+  );
 }
 
 function ribbonGroup(assetId: string, accent: string, accentDeep: string): string {
@@ -64,15 +65,11 @@ export function composePresentedBouquet(state: BouquetState): PresentedBouquet {
     (p) => (p.kind === 'bloom' ? flowerCssVars(p.assetId) : greeneryCssVars(p.assetId))
   );
 
-  const materialId = presentation.type === 'wrap' ? presentation.wrap : presentation.vase;
-  const materialContent =
-    presentation.type === 'wrap'
-      ? PRESENTATION.wraps.find((w) => w.id === materialId)
-      : PRESENTATION.vases.find((v) => v.id === materialId);
-  const materialSvg =
-    materialId && materialContent
-      ? `<g class="placement placement--material" style="--presentation-fill:${materialContent.fill};--presentation-fill-deep:${materialContent.fillDeep}">${wrapVaseGroup(materialId, presentation.type)}</g>`
-      : '';
+  const vaseId = presentation.vase ?? PRESENTATION.vases[0].id;
+  const vaseContent = PRESENTATION.vases.find((v) => v.id === vaseId);
+  const materialSvg = vaseContent
+    ? `<g class="placement placement--material" style="--presentation-fill:${vaseContent.fill};--presentation-fill-deep:${vaseContent.fillDeep}">${vaseGroup(vaseId)}</g>`
+    : '';
 
   const ribbonSvg = presentation.ribbon ? ribbonGroup(presentation.ribbon, theme.accent, theme.accentDeep) : '';
 

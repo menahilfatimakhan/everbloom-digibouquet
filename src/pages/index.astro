@@ -8,15 +8,16 @@ const showcaseState: BouquetState = {
   v: SCHEMA_VERSION,
   blooms: [
     { species: 'peony', qty: 3 },
-    { species: 'ranunculus', qty: 2 },
-    { species: 'anemone', qty: 2 },
+    { species: 'tulip', qty: 2 },
+    { species: 'rose', qty: 2 },
     { species: 'delphinium', qty: 2 },
   ],
   arrangementSeed: 8271,
   greenery: 'eucalyptus',
   occasion: null,
-  presentation: { type: 'wrap', wrap: 'kraft-cone', vase: null, ribbon: 'satin-bow', theme: 'lavender-dream' },
+  presentation: { type: 'vase', wrap: null, vase: 'glass-bud', ribbon: 'satin-bow', theme: 'lavender-dream' },
   card: { greeting: '', message: '', signature: '', font: 'monospace', theme: 'classic-cream', doodle: null },
+  arrangementOverrides: {},
 };
 
 const showcase = composePresentedBouquet(showcaseState);

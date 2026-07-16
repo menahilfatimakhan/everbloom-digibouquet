@@ -44,7 +44,6 @@ export const FLOWERS = flowersData as FlowerContent[];
 export const GREENERY = greeneryData as GreeneryContent[];
 export const FLORIOGRAPHY = floriographyData as FloriographyEntry[];
 export const PRESENTATION = presentationData as {
-  wraps: { id: string; name: string; fill: string; fillDeep: string }[];
   vases: { id: string; name: string; fill: string; fillDeep: string }[];
   ribbons: { id: string; name: string; fill: string }[];
   themes: { id: string; name: string; accent: string; accentDeep: string; paper: string }[];

@@ -1,15 +1,14 @@
-<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <path id="tulip-petal" d="M80,118 C58,110 52,78 60,50 C65,30 95,30 100,50 C108,78 102,110 80,118 Z"/>
-  </defs>
-  <g transform="translate(80,84) scale(0.86) translate(-80,-84)" fill="var(--bloom-fill-deep)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
-    <use href="#tulip-petal" transform="rotate(35 80 80)"/>
-    <use href="#tulip-petal" transform="rotate(155 80 80)"/>
-    <use href="#tulip-petal" transform="rotate(275 80 80)"/>
-  </g>
-  <g fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round">
-    <use href="#tulip-petal" transform="rotate(0 80 80)"/>
-    <use href="#tulip-petal" transform="rotate(120 80 80)"/>
-    <use href="#tulip-petal" transform="rotate(240 80 80)"/>
-  </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 2 176 200" role="img" aria-label="tulip"><defs><radialGradient id="tl1-tulip" cx="0.5" cy="0.45" r="0.62"><stop offset="0" stop-color="#F9B6C6"/><stop offset="1" stop-color="#E8657F"/></radialGradient><radialGradient id="tl2-tulip" cx="0.5" cy="0.45" r="0.62"><stop offset="0" stop-color="#FBC0CE"/><stop offset="1" stop-color="#E97C93"/></radialGradient><radialGradient id="tlb-tulip" cx="0.5" cy="0.45" r="0.62"><stop offset="0" stop-color="#F8D06A"/><stop offset="1" stop-color="#EBA032"/></radialGradient>
+  <filter id="wc-tulip" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="3" seed="17" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="ink-tulip" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="20" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="wash-tulip" x="-40%" y="-40%" width="180%" height="180%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="4" seed="28" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.1"/>
+  </filter></defs><g filter="url(#wash-tulip)" opacity="0.42"><ellipse cx="100" cy="102" rx="46" ry="58" fill="#F1AEBE"/></g><g filter="url(#wc-tulip)" style="mix-blend-mode:multiply"><g transform="translate(86.0,140.0) rotate(-14.0)"><path d="M0 0 C-17.0 -12.4,-17.0 -48.4,0 -62.0 C17.0 -48.4,17.0 -12.4,0 0 Z" fill="url(#tl2-tulip)"/></g><g transform="translate(114.0,140.0) rotate(14.0)"><path d="M0 0 C-17.0 -12.4,-17.0 -48.4,0 -62.0 C17.0 -48.4,17.0 -12.4,0 0 Z" fill="url(#tl2-tulip)"/></g><g transform="translate(100.0,140.0) rotate(0.0)"><path d="M0 0 C-20.0 -14.0,-20.0 -54.6,0 -70.0 C20.0 -54.6,20.0 -14.0,0 0 Z" fill="url(#tl1-tulip)"/></g></g><ellipse cx="100" cy="114" rx="9" ry="14" fill="url(#tlb-tulip)" filter="url(#wc-tulip)" opacity="0.85"/><g filter="url(#ink-tulip)"><g transform="translate(86.0,140.0) rotate(-14.0)"><path d="M0 0 C-17.0 -12.4,-17.0 -48.4,0 -62.0 C17.0 -48.4,17.0 -12.4,0 0 Z" fill="none" stroke="#2c2724" stroke-width="2" stroke-linejoin="round"/></g><g transform="translate(114.0,140.0) rotate(14.0)"><path d="M0 0 C-17.0 -12.4,-17.0 -48.4,0 -62.0 C17.0 -48.4,17.0 -12.4,0 0 Z" fill="none" stroke="#2c2724" stroke-width="2" stroke-linejoin="round"/></g><g transform="translate(100.0,140.0) rotate(0.0)"><path d="M0 0 C-20.0 -14.0,-20.0 -54.6,0 -70.0 C20.0 -54.6,20.0 -14.0,0 0 Z" fill="none" stroke="#2c2724" stroke-width="2" stroke-linejoin="round"/></g></g><path d="M100 140 q3 22 0 44" fill="none" stroke="#5c7a3a" stroke-width="3" filter="url(#ink-tulip)"/></svg>

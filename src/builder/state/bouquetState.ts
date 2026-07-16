@@ -43,18 +43,22 @@ export function createBouquetStore(initial?: BouquetState) {
     return state.blooms.reduce((sum, b) => sum + b.qty, 0);
   }
 
+  // Bloom-set or arrangement-seed changes shift every downstream placement
+  // id (see layoutEngine.ts's `bloom-${species}-${index}`), so any manual
+  // drag overrides keyed by the old ids would silently apply to the wrong
+  // flower — every mutator below that changes either resets overrides too.
   function addBloom(speciesId: string) {
     if (totalQty() >= MAX_BLOOMS) return;
     const existing = state.blooms.find((b) => b.species === speciesId);
     const blooms = existing
       ? state.blooms.map((b) => (b.species === speciesId ? { ...b, qty: b.qty + 1 } : b))
       : [...state.blooms, { species: speciesId, qty: 1 }];
-    state = { ...state, blooms };
+    state = { ...state, blooms, arrangementOverrides: {} };
     notify();
   }
 
   function removeSpecies(speciesId: string) {
-    state = { ...state, blooms: state.blooms.filter((b) => b.species !== speciesId) };
+    state = { ...state, blooms: state.blooms.filter((b) => b.species !== speciesId), arrangementOverrides: {} };
     notify();
   }
 
@@ -68,6 +72,7 @@ export function createBouquetStore(initial?: BouquetState) {
     state = {
       ...state,
       blooms: state.blooms.map((b) => (b.species === speciesId ? { ...b, qty: b.qty - 1 } : b)),
+      arrangementOverrides: {},
     };
     notify();
   }
@@ -78,7 +83,15 @@ export function createBouquetStore(initial?: BouquetState) {
   }
 
   function reshuffleArrangement() {
-    state = { ...state, arrangementSeed: Math.floor(Math.random() * 2 ** 31) };
+    state = { ...state, arrangementSeed: Math.floor(Math.random() * 2 ** 31), arrangementOverrides: {} };
+    notify();
+  }
+
+  function setArrangementOverride(placementId: string, position: { x: number; y: number }) {
+    state = {
+      ...state,
+      arrangementOverrides: { ...state.arrangementOverrides, [placementId]: position },
+    };
     notify();
   }
 
@@ -95,6 +108,7 @@ export function createBouquetStore(initial?: BouquetState) {
       presentation: { ...state.presentation, theme },
       arrangementSeed: Math.floor(Math.random() * 2 ** 31),
       card: cardMessage !== undefined ? { ...state.card, message: cardMessage } : state.card,
+      arrangementOverrides: {},
     };
     notify();
   }
@@ -120,6 +134,7 @@ export function createBouquetStore(initial?: BouquetState) {
     decrementBloom,
     setGreenery,
     reshuffleArrangement,
+    setArrangementOverride,
     applyOccasion,
     setPresentation,
     setCard,

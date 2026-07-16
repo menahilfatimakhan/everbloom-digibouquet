@@ -1,15 +1,14 @@
-<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <path id="orchid-wing" d="M80,80 C64,72 52,56 54,40 C56,26 76,22 80,36 C84,22 104,26 106,40 C108,56 96,72 80,80 Z"/>
-  </defs>
-  <circle cx="80" cy="82" r="50" fill="var(--bloom-fill-deep)" opacity="0.18"/>
-  <g fill="var(--bloom-fill)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round" stroke-linecap="round">
-    <use href="#orchid-wing" transform="rotate(-24 80 80)"/>
-    <use href="#orchid-wing" transform="rotate(24 80 80)"/>
-    <use href="#orchid-wing" transform="rotate(-108 80 80) scale(1,0.92)"/>
-    <use href="#orchid-wing" transform="rotate(108 80 80) scale(1,0.92)"/>
-  </g>
-  <path d="M80,80 C68,88 62,106 80,118 C98,106 92,88 80,80 Z" fill="var(--bloom-fill-deep)" stroke="var(--color-line)" stroke-width="2.25" stroke-linejoin="round"/>
-  <ellipse cx="80" cy="98" rx="8" ry="6" fill="var(--bloom-center)"/>
-  <circle cx="80" cy="82" r="6" fill="var(--bloom-center)" stroke="var(--color-line)" stroke-width="1.5"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 4 200 200" role="img" aria-label="orchid"><defs><radialGradient id="or1-orchid" cx="0.5" cy="0.45" r="0.62"><stop offset="0" stop-color="#F5ECF9"/><stop offset="1" stop-color="#CBA4E0"/></radialGradient><radialGradient id="or2-orchid" cx="0.5" cy="0.45" r="0.62"><stop offset="0" stop-color="#EFE0F6"/><stop offset="1" stop-color="#C295DA"/></radialGradient><radialGradient id="orl-orchid" cx="0.5" cy="0.45" r="0.62"><stop offset="0" stop-color="#B06FD0"/><stop offset="1" stop-color="#7A34A6"/></radialGradient>
+  <filter id="wc-orchid" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="3" seed="61" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="ink-orchid" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="64" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="wash-orchid" x="-40%" y="-40%" width="180%" height="180%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.011" numOctaves="4" seed="72" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="12" xChannelSelector="R" yChannelSelector="G"/>
+    <feGaussianBlur stdDeviation="1.1"/>
+  </filter></defs><g filter="url(#wash-orchid)" opacity="0.42"><ellipse cx="100" cy="104" rx="58" ry="58" fill="#E4CFF0"/></g><g filter="url(#wc-orchid)" style="mix-blend-mode:multiply"><g transform="translate(100.0,106.0) rotate(-40.0)"><path d="M0 0 C-20.0 -9.2,-20.0 -35.9,0 -46.0 C20.0 -35.9,20.0 -9.2,0 0 Z" fill="url(#or2-orchid)"/></g><g transform="translate(100.0,106.0) rotate(40.0)"><path d="M0 0 C-20.0 -9.2,-20.0 -35.9,0 -46.0 C20.0 -35.9,20.0 -9.2,0 0 Z" fill="url(#or2-orchid)"/></g><g transform="translate(100.0,106.0) rotate(-90.0)"><path d="M0 0 C-13.0 -17.5,-7.2 -46.0,0 -50.0 C7.2 -46.0,13.0 -17.5,0 0 Z" fill="url(#or1-orchid)"/></g><g transform="translate(100.0,106.0) rotate(90.0)"><path d="M0 0 C-13.0 -17.5,-7.2 -46.0,0 -50.0 C7.2 -46.0,13.0 -17.5,0 0 Z" fill="url(#or1-orchid)"/></g><g transform="translate(100.0,106.0) rotate(0.0)"><path d="M0 0 C-13.0 -17.5,-7.2 -46.0,0 -50.0 C7.2 -46.0,13.0 -17.5,0 0 Z" fill="url(#or1-orchid)"/></g></g><g filter="url(#wc-orchid)" style="mix-blend-mode:multiply"><path d="M100 112 C80 124,84 152,100 146 C116 152,120 124,100 112 Z" fill="url(#orl-orchid)"/></g><g filter="url(#ink-orchid)"><g transform="translate(100.0,106.0) rotate(-40.0)"><path d="M0 0 C-20.0 -9.2,-20.0 -35.9,0 -46.0 C20.0 -35.9,20.0 -9.2,0 0 Z" fill="none" stroke="#2c2724" stroke-width="1.7" stroke-linejoin="round"/></g><g transform="translate(100.0,106.0) rotate(40.0)"><path d="M0 0 C-20.0 -9.2,-20.0 -35.9,0 -46.0 C20.0 -35.9,20.0 -9.2,0 0 Z" fill="none" stroke="#2c2724" stroke-width="1.7" stroke-linejoin="round"/></g><g transform="translate(100.0,106.0) rotate(-90.0)"><path d="M0 0 C-13.0 -17.5,-7.2 -46.0,0 -50.0 C7.2 -46.0,13.0 -17.5,0 0 Z" fill="none" stroke="#2c2724" stroke-width="1.7" stroke-linejoin="round"/></g><g transform="translate(100.0,106.0) rotate(90.0)"><path d="M0 0 C-13.0 -17.5,-7.2 -46.0,0 -50.0 C7.2 -46.0,13.0 -17.5,0 0 Z" fill="none" stroke="#2c2724" stroke-width="1.7" stroke-linejoin="round"/></g><g transform="translate(100.0,106.0) rotate(0.0)"><path d="M0 0 C-13.0 -17.5,-7.2 -46.0,0 -50.0 C7.2 -46.0,13.0 -17.5,0 0 Z" fill="none" stroke="#2c2724" stroke-width="1.7" stroke-linejoin="round"/></g><path d="M100 112 C80 124,84 152,100 146 C116 152,120 124,100 112 Z" fill="none" stroke="#2c2724" stroke-width="1.7"/><circle cx="100" cy="126" r="3" fill="#F3D98C"/><circle cx="96" cy="132" r="1.4" fill="#5a2680"/><circle cx="104" cy="132" r="1.4" fill="#5a2680"/></g></svg>

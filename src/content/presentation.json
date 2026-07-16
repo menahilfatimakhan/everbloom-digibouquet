@@ -1,9 +1,4 @@
 {
-  "wraps": [
-    { "id": "kraft-cone", "name": "Kraft Paper Cone", "fill": "#C9A574", "fillDeep": "#AD8A5C" },
-    { "id": "tissue-bundle", "name": "Tissue Bundle", "fill": "#F0E4D8", "fillDeep": "#DCCBB6" },
-    { "id": "stems-tied", "name": "Stems Tied, No Wrap", "fill": "transparent", "fillDeep": "transparent" }
-  ],
   "vases": [
     { "id": "glass-bud", "name": "Glass Bud Vase", "fill": "#DCE7E2", "fillDeep": "#B9CFC7" },
     { "id": "ceramic-pitcher", "name": "Ceramic Pitcher", "fill": "#E8DCC8", "fillDeep": "#CBB894" }

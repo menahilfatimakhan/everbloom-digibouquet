@@ -11,9 +11,9 @@
     </g>
   </g>
   <g data-bow-part="tail-left" style="transform-origin: 88px 90px">
-    <path d="M88,90 L70,124 L86,116 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M88,90 L76,114 L87,108 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round"/>
   </g>
   <g data-bow-part="tail-right" style="transform-origin: 112px 90px">
-    <path d="M112,90 L130,124 L114,116 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M112,90 L124,114 L113,108 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round"/>
   </g>
 </svg>

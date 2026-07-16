@@ -47,15 +47,15 @@ test('an occasion preset pre-fills the card message field, not just the preview'
   await expect(page.locator('[data-preview-message]')).toHaveText(messageValue);
 });
 
-test('the floriography info button shows a tooltip without adding the flower', async ({ page }) => {
+test('hovering a flower shows its meaning without adding it', async ({ page }) => {
   await page.goto('/build');
 
   const badge = page.locator('.flower-card[data-species="tulip"] [data-qty-badge]');
   await expect(badge).toBeHidden();
 
-  await page.locator('.flower-card[data-species="tulip"] .flower-card__info').click();
+  await page.locator('.flower-card[data-species="tulip"] .flower-card__add').hover();
   await expect(page.locator('.floriography-tooltip')).toContainText('love');
-  await expect(badge).toBeHidden(); // info tap must never add the flower
+  await expect(badge).toBeHidden(); // hover must never add the flower
 
   await page.locator('.flower-card[data-species="tulip"] .flower-card__add').click();
   await expect(badge).toBeVisible();

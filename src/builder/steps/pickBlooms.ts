@@ -26,7 +26,6 @@ export function initPickBlooms(store: BouquetStore, root: HTMLElement) {
   grid.querySelectorAll<HTMLElement>('.flower-card').forEach((card) => {
     const species = card.dataset.species;
     const addBtn = card.querySelector<HTMLElement>('.flower-card__add');
-    const infoBtn = card.querySelector<HTMLElement>('.flower-card__info');
     if (!species || !addBtn) return;
 
     attachHoverPop(addBtn, 1.05);
@@ -38,12 +37,10 @@ export function initPickBlooms(store: BouquetStore, root: HTMLElement) {
       store.addBloom(species);
     });
 
-    // Two independent sibling controls on purpose: "add this flower" and
-    // "show its meaning" must never be able to trigger each other.
-    if (infoBtn) {
-      const meaning = MEANING_BY_ID[species];
-      if (meaning) attachFloriographyTooltip(infoBtn, meaning);
-    }
+    // Hover/focus shows the meaning right on the flower itself; touch-toggle
+    // is off here since the same tap already adds the flower to the bouquet.
+    const meaning = MEANING_BY_ID[species];
+    if (meaning) attachFloriographyTooltip(addBtn, meaning, { touchToggle: false });
   });
 
   root.querySelectorAll<HTMLElement>('.occasion-chip').forEach((chip) => {

@@ -54,9 +54,21 @@ function ensureOutsideListener() {
   window.addEventListener('scroll', () => hideTooltip(), { passive: true, capture: true });
 }
 
-/** Hover (mouse/pen) or focus shows it; tap toggles it; anything else
- * dismisses it. `trigger` can be any Element — HTML button or SVG group. */
-export function attachFloriographyTooltip(trigger: Element, meaning: string) {
+/** Hover (mouse/pen) or focus shows it; tap toggles it (unless disabled);
+ * anything else dismisses it. `trigger` can be any Element — HTML button or
+ * SVG group.
+ *
+ * `touchToggle` defaults to on (needed on the reveal page, where a bloom has
+ * no other tap action, so touch users need *some* way to see its meaning).
+ * Pass `false` when `trigger` is also a tap-to-act control (e.g. the Pick
+ * step's add-to-bouquet button) — toggling a tooltip open on the same tap
+ * that adds the flower would fight the add action instead of complementing
+ * it, so touch users there just get the plain add behavior, hover-only info. */
+export function attachFloriographyTooltip(
+  trigger: Element,
+  meaning: string,
+  { touchToggle = true }: { touchToggle?: boolean } = {}
+) {
   ensureOutsideListener();
 
   trigger.addEventListener('pointerenter', (evt) => {
@@ -69,13 +81,15 @@ export function attachFloriographyTooltip(trigger: Element, meaning: string) {
   });
   trigger.addEventListener('focus', () => showTooltip(trigger, meaning));
   trigger.addEventListener('blur', () => hideTooltip());
-  trigger.addEventListener('pointerup', (evt) => {
-    if ((evt as PointerEvent).pointerType !== 'touch') return;
-    evt.stopPropagation();
-    if (activeTrigger === trigger && tooltipEl && !tooltipEl.hidden) {
-      hideTooltip();
-    } else {
-      showTooltip(trigger, meaning);
-    }
-  });
+  if (touchToggle) {
+    trigger.addEventListener('pointerup', (evt) => {
+      if ((evt as PointerEvent).pointerType !== 'touch') return;
+      evt.stopPropagation();
+      if (activeTrigger === trigger && tooltipEl && !tooltipEl.hidden) {
+        hideTooltip();
+      } else {
+        showTooltip(trigger, meaning);
+      }
+    });
+  }
 }

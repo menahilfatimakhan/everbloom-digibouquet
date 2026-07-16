@@ -14,40 +14,39 @@ export interface SilhouettePreset {
   rotationJitter: number;
 }
 
-// Kept deliberately calm and contained: earlier values let blooms fan out
-// close to the horizontal, so a wrap/vase graphic (sized to hold a compact
-// dome of flowers) couldn't visually contain the spread — blooms floated
-// outside it. Staying within roughly ±20° of vertical keeps the whole
-// arrangement inside the wrap's opening at any seed.
+// Presentation is vase-only now (no wrap opening to stay narrow enough to
+// fit inside), so the fan can use a fuller arc than before — blooms just
+// need to emerge plausibly above the vase rim, not be contained by it.
+// Actual even coverage of this arc comes from layoutEngine.ts's stratified
+// angle assignment, not from these ranges alone.
 export const SILHOUETTE_PRESETS: SilhouettePreset[] = [
   {
     id: 'dome',
-    layerRadius: { back: 152, mid: 124, front: 96 },
-    angleRange: [-158, -22],
+    layerRadius: { back: 168, mid: 136, front: 104 },
+    angleRange: [-172, -8],
     angleFactor: (angleDeg) => 1 - 0.1 * Math.cos((angleDeg * Math.PI) / 180),
-    jitter: [0.94, 1.04],
-    rotationJitter: 7,
+    jitter: [0.92, 1.06],
+    rotationJitter: 9,
   },
   {
     id: 'cascade',
-    layerRadius: { back: 156, mid: 128, front: 98 },
-    angleRange: [-158, -14],
+    layerRadius: { back: 172, mid: 140, front: 106 },
+    angleRange: [-172, 6],
     angleFactor: (angleDeg) => {
-      // A gentle extra reach on one side for a soft drape — subtle enough
-      // that nothing drifts outside the bouquet's overall silhouette.
-      const drape = angleDeg > -50 ? 1 + ((angleDeg + 50) / 36) * 0.12 : 1;
+      // A gentle extra reach on one side for a soft drape.
+      const drape = angleDeg > -55 ? 1 + ((angleDeg + 55) / 61) * 0.2 : 1;
       return drape;
     },
-    jitter: [0.92, 1.05],
-    rotationJitter: 8,
+    jitter: [0.9, 1.08],
+    rotationJitter: 10,
   },
   {
     id: 'wild',
-    layerRadius: { back: 160, mid: 130, front: 100 },
-    angleRange: [-164, -16],
+    layerRadius: { back: 176, mid: 142, front: 108 },
+    angleRange: [-176, -4],
     angleFactor: () => 1,
-    jitter: [0.88, 1.08],
-    rotationJitter: 10,
+    jitter: [0.85, 1.12],
+    rotationJitter: 13,
   },
 ];
 
