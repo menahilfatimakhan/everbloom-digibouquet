@@ -2,8 +2,8 @@
   {
     "id": "classic-cream",
     "name": "Classic Cream",
-    "paper": "#FFFDF8",
-    "paperDeep": "#F3E8D6",
+    "paper": "#FFFDF9",
+    "paperDeep": "#F6EEE3",
     "ink": "#2F1F42",
     "borderColor": "#6B2FA0",
     "edge": "clean"
@@ -11,8 +11,8 @@
   {
     "id": "torn-vintage",
     "name": "Torn Vintage",
-    "paper": "#EFE3C8",
-    "paperDeep": "#DCC89C",
+    "paper": "#F2E8D0",
+    "paperDeep": "#E3D0AC",
     "ink": "#4A3826",
     "borderColor": "transparent",
     "edge": "torn"
@@ -22,8 +22,8 @@
     "name": "Midnight",
     "paper": "#241934",
     "paperDeep": "#150E20",
-    "ink": "#F4EEFA",
-    "borderColor": "#B79AE0",
+    "ink": "#F6F1FB",
+    "borderColor": "#C9AEE8",
     "edge": "clean"
   }
 ]

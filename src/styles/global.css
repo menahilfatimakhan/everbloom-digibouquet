@@ -20,8 +20,8 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  background-image: radial-gradient(circle at 20% 20%, rgba(107, 47, 160, 0.05), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(107, 47, 160, 0.04), transparent 40%);
+  background-image: radial-gradient(circle at 20% 20%, rgba(201, 174, 232, 0.16), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(240, 201, 160, 0.1), transparent 40%);
 }
 
 img,

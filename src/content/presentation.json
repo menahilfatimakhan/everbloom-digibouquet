@@ -9,9 +9,9 @@
     { "id": "none", "name": "No Ribbon", "fill": "transparent" }
   ],
   "themes": [
-    { "id": "lavender-dream", "name": "Lavender Dream", "accent": "#8E5DC2", "accentDeep": "#6B3FA0", "paper": "#F7F2FA" },
-    { "id": "sunset-blush", "name": "Sunset Blush", "accent": "#E8927A", "accentDeep": "#D46F55", "paper": "#FDF1EA" },
-    { "id": "ivory-sage", "name": "Ivory & Sage", "accent": "#8CA07E", "accentDeep": "#6E8360", "paper": "#F7F5EC" },
-    { "id": "classic-red", "name": "Classic Red", "accent": "#B23350", "accentDeep": "#8C2440", "paper": "#FBF0EC" }
+    { "id": "lavender-dream", "name": "Lavender Dream", "accent": "#8E5DC2", "accentDeep": "#6B3FA0", "paper": "#F8F3FC" },
+    { "id": "sunset-blush", "name": "Sunset Blush", "accent": "#E8927A", "accentDeep": "#D46F55", "paper": "#FCF0E6" },
+    { "id": "ivory-sage", "name": "Ivory & Sage", "accent": "#8CA07E", "accentDeep": "#6E8360", "paper": "#F8F6EF" },
+    { "id": "classic-red", "name": "Classic Red", "accent": "#B23350", "accentDeep": "#8C2440", "paper": "#FBF1ED" }
   ]
 }

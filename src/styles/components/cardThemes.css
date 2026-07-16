@@ -35,7 +35,7 @@
 }
 
 .card-surface[data-card-theme='midnight'] {
-  box-shadow: 0 18px 48px -20px rgba(183, 154, 224, 0.4);
+  box-shadow: 0 26px 56px -26px rgba(201, 174, 232, 0.42);
   border: 1px solid var(--card-border-color, transparent);
 }
 

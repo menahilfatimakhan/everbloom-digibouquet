@@ -1,18 +1,29 @@
 :root {
-  /* Paper / background */
-  --color-paper: #fbf3e7;
-  --color-paper-deep: #f3e8d6;
-  --color-paper-card: #fffdf8;
+  /* Paper / background — lightened a touch from the original for more
+     "airy" whitespace; still warm cream, not white. */
+  --color-paper: #fdf8f1;
+  --color-paper-deep: #f6eee3;
+  --color-paper-card: #fffdf9;
   /* Sampled from the real Everbloom stamp badge — used to tie brand-lavender
      sections back to the logo without going full-lavender everywhere. */
   --color-lavender-pale: #ecdff5;
 
-  /* Ink / brand purple, sampled from the Everbloom logo mark */
+  /* Ink / brand purple, sampled from the Everbloom logo mark — unchanged,
+     this is the brand anchor (CTAs, headings, focus rings). */
   --color-ink: #2f1f42;
   --color-ink-purple: #6b2fa0;
   --color-ink-purple-deep: #4b1f73;
   --color-ink-purple-soft: #9c6fc9;
-  --color-ink-purple-pale: #e9defa;
+  --color-ink-purple-pale: #efe6fa;
+
+  /* THEME REFRESH — new soft-palette tokens (branch: theme-refresh).
+     Gentler lilac/mauve/peach for section washes, card fills, and small
+     accent touches; never replaces --color-ink-purple as the brand/CTA
+     color, only supplements it. */
+  --color-lilac: #c9aee8;
+  --color-lilac-mist: #f4ecfb;
+  --color-mauve-dust: #b98fae;
+  --color-peach: #f0c9a0;
 
   --color-line: var(--color-ink-purple);
   --color-focus: var(--color-ink-purple);
@@ -37,13 +48,17 @@
   --space-8: 2rem;
   --space-12: 3rem;
   --space-16: 4rem;
+  --space-20: 5rem;
 
   --radius-sm: 0.5rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.75rem;
+  --radius-md: 1.15rem;
+  --radius-lg: 2rem;
 
-  --shadow-soft: 0 12px 32px -16px rgba(75, 31, 115, 0.35);
-  --shadow-card: 0 18px 48px -20px rgba(47, 31, 66, 0.4);
+  /* Softer, more diffused than the original — a lighter mauve tint instead
+     of near-black-purple, and a wider/lower spread for a "resting on air"
+     look rather than a hard drop shadow. */
+  --shadow-soft: 0 20px 40px -22px rgba(140, 100, 170, 0.28);
+  --shadow-card: 0 26px 56px -26px rgba(110, 75, 140, 0.24);
 }
 
 /*

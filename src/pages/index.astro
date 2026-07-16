@@ -81,7 +81,7 @@ const steps = [
 <style>
   .hero {
     position: relative;
-    padding-block: var(--space-12) var(--space-16);
+    padding-block: var(--space-16) var(--space-20);
     overflow: hidden;
   }
 
@@ -132,12 +132,16 @@ const steps = [
 
   .hero__bouquet {
     width: min(100%, 26rem);
-    filter: drop-shadow(0 24px 40px rgba(75, 31, 115, 0.18));
+    filter: drop-shadow(0 24px 40px rgba(140, 100, 170, 0.2));
   }
 
+  /* THEME REFRESH example section (theme-refresh branch) — softer lilac-mist
+     wash instead of the flatter lavender-pale, larger/rounder cards with a
+     lighter shadow, more generous spacing, and a small peach accent ring on
+     the number badge as the one "borrowed warmth" touch from the inspo. */
   .steps-preview {
-    padding-block: var(--space-16);
-    background: var(--color-lavender-pale);
+    padding-block: var(--space-20);
+    background: linear-gradient(180deg, var(--color-lilac-mist), var(--color-paper) 85%);
   }
 
   .steps-preview__grid {
@@ -146,7 +150,7 @@ const steps = [
     padding: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-6);
+    gap: var(--space-8);
   }
 
   @media (min-width: 48rem) {
@@ -157,10 +161,16 @@ const steps = [
 
   .steps-preview__card {
     background: var(--color-paper-card);
-    border-radius: var(--radius-md);
-    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8) var(--space-6);
     box-shadow: var(--shadow-soft);
     text-align: left;
+    transition: transform 0.25s var(--step-ease), box-shadow 0.25s var(--step-ease);
+  }
+
+  .steps-preview__card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card);
   }
 
   .steps-preview__number {
@@ -170,11 +180,12 @@ const steps = [
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
-    background: var(--color-ink-purple-pale);
+    background: var(--color-lilac-mist);
     color: var(--color-ink-purple);
+    border: 1.5px solid var(--color-peach);
     font-family: var(--font-mono);
     font-weight: 700;
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
   }
 
   .steps-preview__card h3 {
@@ -186,6 +197,7 @@ const steps = [
     font-size: 0.85rem;
     color: var(--color-ink-purple-soft);
     margin: 0;
+    line-height: 1.65;
   }
 
   .steps-preview__cta {
