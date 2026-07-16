@@ -1,9 +1,23 @@
-<svg viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
-  <g fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round">
-    <path d="M100,60 C90,40 55,30 30,42 C14,50 14,74 30,82 C55,94 90,80 100,60 Z"/>
-    <path d="M100,60 C110,40 145,30 170,42 C186,50 186,74 170,82 C145,94 110,80 100,60 Z"/>
+<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bow-sheen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- tails, behind the loops -->
+  <path d="M94,66 L74,122 C82,120 90,122 96,128 L102,70 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M106,66 L126,122 C118,120 110,122 104,128 L98,70 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round"/>
+  <!-- loops -->
+  <g stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M100,65 C92,42 62,30 36,40 C16,48 14,74 32,84 C54,96 88,84 100,65 Z" fill="var(--presentation-fill)"/>
+    <path d="M100,65 C108,42 138,30 164,40 C184,48 186,74 168,84 C146,96 112,84 100,65 Z" fill="var(--presentation-fill)"/>
   </g>
-  <circle cx="100" cy="60" r="12" fill="var(--presentation-fill-deep)" stroke="var(--color-line)" stroke-width="2.5"/>
-  <path d="M92,68 L78,108 L94,100 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round"/>
-  <path d="M108,68 L122,108 L106,100 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M100,65 C92,42 62,30 36,40 C16,48 14,74 32,84 C54,96 88,84 100,65 Z" fill="url(#bow-sheen)"/>
+  <path d="M100,65 C108,42 138,30 164,40 C184,48 186,74 168,84 C146,96 112,84 100,65 Z" fill="url(#bow-sheen)"/>
+  <!-- knot -->
+  <path d="M84,52 C84,38 116,38 116,52 C122,60 122,72 116,80 C116,94 84,94 84,80 C78,72 78,60 84,52 Z"
+        fill="var(--presentation-fill-deep)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M90,44 L90,88" stroke="var(--color-line)" stroke-width="1.25" opacity="0.35"/>
+  <path d="M110,44 L110,88" stroke="var(--color-line)" stroke-width="1.25" opacity="0.35"/>
 </svg>

@@ -96,6 +96,7 @@ p {
   letter-spacing: 0.04em;
   font-weight: 700;
   text-transform: uppercase;
+  text-decoration: none;
   padding: 0.85rem 1.6rem;
   border-radius: 999px;
   border: 1.5px solid var(--color-ink-purple);
@@ -139,9 +140,11 @@ p {
 
 .btn-ghost {
   border-color: transparent;
-  text-decoration: underline;
-  text-underline-offset: 4px;
   padding-inline: var(--space-2);
+}
+
+.btn-ghost:hover {
+  color: var(--color-ink-purple-deep);
 }
 
 .visually-hidden {

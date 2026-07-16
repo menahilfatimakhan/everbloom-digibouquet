@@ -27,14 +27,11 @@ export function initArrange(store: BouquetStore, root: HTMLElement) {
     const layout = composeLayout(state, FLOWER_META);
     svg!.setAttribute('viewBox', layout.viewBox);
     const placements = flattenForRender(layout);
-    const stems = `<path d="${layout.stemsPath}" fill="none" stroke="#4f7a52" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>`;
-    svg!.innerHTML =
-      stems +
-      placementsToSvgBody(
-        placements,
-        (p) => (p.kind === 'bloom' ? FLOWER_SVGS[p.assetId] : GREENERY_SVGS[p.assetId]),
-        (p) => (p.kind === 'bloom' ? flowerCssVars(p.assetId) : greeneryCssVars(p.assetId))
-      );
+    svg!.innerHTML = placementsToSvgBody(
+      placements,
+      (p) => (p.kind === 'bloom' ? FLOWER_SVGS[p.assetId] : GREENERY_SVGS[p.assetId]),
+      (p) => (p.kind === 'bloom' ? flowerCssVars(p.assetId) : greeneryCssVars(p.assetId))
+    );
     staggerGrowIn(svg!.querySelectorAll('.placement'));
   }
 

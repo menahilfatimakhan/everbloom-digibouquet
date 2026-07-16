@@ -1,17 +1,11 @@
 ---
 import BaseLayout from '../components/layout/BaseLayout.astro';
 import PetalField from '../components/PetalField.astro';
-import { composeLayout, flattenForRender } from '../builder/composition/layoutEngine';
-import { placementsToSvgBody } from '../builder/composition/renderPlacements';
-import {
-  FLOWER_META,
-  FLOWER_SVGS,
-  GREENERY_SVGS,
-  flowerCssVars,
-  greeneryCssVars,
-} from '../builder/assetRegistry';
+import { composePresentedBouquet } from '../builder/composition/composePresentedBouquet';
+import { SCHEMA_VERSION, type BouquetState } from '../builder/state/schema';
 
-const showcaseState = {
+const showcaseState: BouquetState = {
+  v: SCHEMA_VERSION,
   blooms: [
     { species: 'peony', qty: 3 },
     { species: 'ranunculus', qty: 2 },
@@ -20,18 +14,13 @@ const showcaseState = {
   ],
   arrangementSeed: 8271,
   greenery: 'eucalyptus',
+  occasion: null,
+  presentation: { type: 'wrap', wrap: 'kraft-cone', vase: null, ribbon: 'satin-bow', theme: 'lavender-dream' },
+  card: { greeting: '', message: '', signature: '', font: 'monospace', doodle: null },
 };
 
-const showcaseLayout = composeLayout(showcaseState, FLOWER_META);
-const showcasePlacements = flattenForRender(showcaseLayout);
-const showcaseStems = `<path d="${showcaseLayout.stemsPath}" fill="none" stroke="#4f7a52" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>`;
-const showcaseSvgBody =
-  showcaseStems +
-  placementsToSvgBody(
-    showcasePlacements,
-    (p) => (p.kind === 'bloom' ? FLOWER_SVGS[p.assetId] : GREENERY_SVGS[p.assetId]),
-    (p) => (p.kind === 'bloom' ? flowerCssVars(p.assetId) : greeneryCssVars(p.assetId))
-  );
+const showcase = composePresentedBouquet(showcaseState);
+const showcaseSvgBody = `${showcase.materialSvg}${showcase.bloomsSvg}${showcase.ribbonSvg}`;
 
 const steps = [
   { n: 1, label: 'Pick Blooms', copy: 'Choose 6–10 flowers, one at a time. Watch your tally grow.' },
@@ -61,7 +50,7 @@ const steps = [
         </div>
       </div>
       <div class="hero__showcase" aria-hidden="true">
-        <svg viewBox={showcaseLayout.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
+        <svg viewBox={showcase.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
       </div>
     </div>
   </section>
@@ -147,7 +136,7 @@ const steps = [
 
   .steps-preview {
     padding-block: var(--space-16);
-    background: var(--color-paper-deep);
+    background: var(--color-lavender-pale);
   }
 
   .steps-preview__grid {

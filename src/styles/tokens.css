@@ -3,6 +3,9 @@
   --color-paper: #fbf3e7;
   --color-paper-deep: #f3e8d6;
   --color-paper-card: #fffdf8;
+  /* Sampled from the real Everbloom stamp badge — used to tie brand-lavender
+     sections back to the logo without going full-lavender everywhere. */
+  --color-lavender-pale: #ecdff5;
 
   /* Ink / brand purple, sampled from the Everbloom logo mark */
   --color-ink: #2f1f42;

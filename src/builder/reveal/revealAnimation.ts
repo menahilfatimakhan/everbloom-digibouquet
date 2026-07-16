@@ -40,7 +40,6 @@ export function mountReveal(container: HTMLElement, state: BouquetState): Reveal
     <div class="reveal-stage">
       <svg class="reveal-stage__svg" viewBox="${composed.viewBox}" data-reveal-svg>
         ${composed.materialSvg}
-        ${composed.stemsSvg}
         <g data-reveal-blooms>${composed.bloomsSvg}</g>
         ${composed.ribbonSvg}
       </svg>

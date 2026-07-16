@@ -21,5 +21,5 @@ Each entry needs a CSS `family` string and, if it's a Google Font not already lo
 
 ## Brand copy, colors, wordmark
 - Colors/fonts: `src/styles/tokens.css`
-- Header/footer/logo mark: `src/components/layout/SiteHeader.astro`, `SiteFooter.astro`, and `src/assets/svg/decorative/logo-mark.svg`
+- Header/footer/logo mark: `src/components/layout/SiteHeader.astro`, `SiteFooter.astro`, and `public/logo/everbloom-stamp.png` (the real Everbloom stamp badge, background removed — see `docs/architecture.md` for how it was processed)
 - Landing page copy: `src/pages/index.astro`

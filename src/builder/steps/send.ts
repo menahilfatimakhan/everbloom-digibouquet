@@ -1,5 +1,6 @@
 import type { BouquetStore } from '../state/bouquetState';
 import { composePresentedBouquet } from '../composition/composePresentedBouquet';
+import { PRESENTATION } from '../assetRegistry';
 import { attachHoverPop } from '../animation/microInteractions';
 import { exportSvgAsPng } from '../cardExport/exportImage';
 import { createShareLink } from '../../lib/http';
@@ -31,7 +32,16 @@ export function initSend(store: BouquetStore, root: HTMLElement) {
   typeToggle.querySelectorAll<HTMLButtonElement>('[data-presentation-type]').forEach((btn) => {
     btn.addEventListener('click', () => {
       const type = btn.dataset.presentationType as 'wrap' | 'vase';
-      store.setPresentation({ type });
+      const current = store.getState().presentation;
+      // Switching to a type that's never been picked before had no default
+      // selected, so nothing rendered — always ensure one is set.
+      if (type === 'vase' && !current.vase) {
+        store.setPresentation({ type, vase: PRESENTATION.vases[0].id });
+      } else if (type === 'wrap' && !current.wrap) {
+        store.setPresentation({ type, wrap: PRESENTATION.wraps[0].id });
+      } else {
+        store.setPresentation({ type });
+      }
     });
   });
 
@@ -105,7 +115,7 @@ export function initSend(store: BouquetStore, root: HTMLElement) {
     });
     const composed = composePresentedBouquet(state);
     svg!.setAttribute('viewBox', composed.viewBox);
-    svg!.innerHTML = `${composed.materialSvg}${composed.stemsSvg}${composed.bloomsSvg}${composed.ribbonSvg}`;
+    svg!.innerHTML = `${composed.materialSvg}${composed.bloomsSvg}${composed.ribbonSvg}`;
   }
 
   store.subscribe(render);

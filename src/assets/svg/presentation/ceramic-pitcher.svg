@@ -1,6 +1,21 @@
-<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
-  <path d="M126,14 L194,14 L200,50 C224,60 232,90 224,120 L212,190 C208,202 112,202 108,190 L96,120 C88,90 96,60 120,50 Z"
+<svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ceramic-shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.14"/>
+      <stop offset="0.5" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <path d="M118,128 L110,116 C122,108 198,108 210,116 L203,128
+           C224,140 236,168 232,198 C228,236 208,268 168,272
+           C122,276 92,246 90,204 C88,172 98,144 118,128 Z"
         fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round"/>
-  <path d="M214,70 C244,72 250,110 226,128" fill="none" stroke="var(--color-line)" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M110,190 L210,190" fill="none" stroke="var(--color-line)" stroke-width="1.5" opacity="0.4"/>
+  <path d="M118,128 L110,116 C122,108 198,108 210,116 L203,128
+           C224,140 236,168 232,198 C228,236 208,268 168,272
+           C122,276 92,246 90,204 C88,172 98,144 118,128 Z"
+        fill="url(#ceramic-shade)"/>
+  <path d="M225,148 C252,150 262,178 250,200 C242,214 226,220 213,216"
+        fill="none" stroke="var(--color-line)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M110,116 C118,104 202,104 210,116" fill="none" stroke="var(--color-line)" stroke-width="2.5" stroke-linecap="round"/>
+  <ellipse cx="160" cy="202" rx="6" ry="18" fill="#ffffff" opacity="0.25"/>
 </svg>

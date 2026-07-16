@@ -1,5 +1,17 @@
-<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
-  <path d="M140,10 L180,10 L184,60 C210,80 216,140 200,175 C190,198 130,198 120,175 C104,140 110,80 136,60 Z"
+<svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="glass-shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/>
+      <stop offset="0.35" stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <path d="M132,130 C126,150 100,168 92,202 C84,240 104,276 160,280 C216,276 236,240 228,202
+           C220,168 194,150 188,130 C196,124 196,110 188,106 L132,106 C124,110 124,124 132,130 Z"
         fill="var(--presentation-fill)" fill-opacity="0.55" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round"/>
-  <path d="M144,30 L176,30" fill="none" stroke="var(--color-line)" stroke-width="1.5" opacity="0.4"/>
+  <path d="M132,130 C126,150 100,168 92,202 C84,240 104,276 160,280 C216,276 236,240 228,202
+           C220,168 194,150 188,130 C196,124 196,110 188,106 L132,106 C124,110 124,124 132,130 Z"
+        fill="url(#glass-shade)"/>
+  <ellipse cx="160" cy="107" rx="28" ry="6" fill="var(--presentation-fill-deep)" fill-opacity="0.4" stroke="var(--color-line)" stroke-width="1.5"/>
+  <path d="M116,150 C110,180 106,210 116,240" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
 </svg>

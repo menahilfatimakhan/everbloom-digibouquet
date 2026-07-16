@@ -11,10 +11,23 @@ import {
   greeneryCssVars,
 } from '../assetRegistry';
 
+// Wrap/vase art is authored on a 320x320 viewBox. A wrap's "neck" (where
+// stems gather) sits at local (160,250); a vase's rim (where the flowers
+// should appear to emerge from) sits at local (160,130). These boxes place
+// each so that anchor point lands at the right spot relative to the bouquet
+// composition's own CENTER (see layoutEngine.ts). Sized generously (scale
+// ~0.95) so the wrap's flared opening actually spans wider than the
+// bloom fan's worst-case spread — a too-narrow wrap left blooms visually
+// floating outside it.
+const WRAP_BOX = { x: 68, y: 63, w: 304, h: 304 };
+const VASE_BOX = { x: 68, y: 135, w: 304, h: 304 };
+// Ribbon art is authored on a 200x130 viewBox with its knot at local (100,65).
+const RIBBON_BOX = { x: 155, y: 243, w: 130, h: 84.5 };
+
 function wrapVaseGroup(assetId: string, kind: 'wrap' | 'vase'): string {
   const raw = PRESENTATION_SVGS[assetId];
   if (!raw) return '';
-  const box = kind === 'vase' ? { x: 60, y: 130, w: 280, h: 200 } : { x: 40, y: 90, w: 320, h: 220 };
+  const box = kind === 'vase' ? VASE_BOX : WRAP_BOX;
   return raw.replace('<svg ', `<svg x="${box.x}" y="${box.y}" width="${box.w}" height="${box.h}" overflow="visible" `);
 }
 
@@ -24,7 +37,7 @@ function ribbonGroup(assetId: string, accent: string, accentDeep: string): strin
   if (!raw) return '';
   const nested = raw.replace(
     '<svg ',
-    `<svg x="140" y="185" width="120" height="72" viewBox="0 0 200 120" overflow="visible" `
+    `<svg x="${RIBBON_BOX.x}" y="${RIBBON_BOX.y}" width="${RIBBON_BOX.w}" height="${RIBBON_BOX.h}" overflow="visible" `
   );
   return `<g class="placement placement--ribbon" style="--presentation-fill:${accent};--presentation-fill-deep:${accentDeep}">${nested}</g>`;
 }
@@ -32,7 +45,6 @@ function ribbonGroup(assetId: string, accent: string, accentDeep: string): strin
 export interface PresentedBouquet {
   viewBox: string;
   materialSvg: string;
-  stemsSvg: string;
   bloomsSvg: string;
   ribbonSvg: string;
 }
@@ -64,7 +76,5 @@ export function composePresentedBouquet(state: BouquetState): PresentedBouquet {
 
   const ribbonSvg = presentation.ribbon ? ribbonGroup(presentation.ribbon, theme.accent, theme.accentDeep) : '';
 
-  const stemsSvg = `<path d="${layout.stemsPath}" fill="none" stroke="#4f7a52" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>`;
-
-  return { viewBox: layout.viewBox, materialSvg, stemsSvg, bloomsSvg, ribbonSvg };
+  return { viewBox: layout.viewBox, materialSvg, bloomsSvg, ribbonSvg };
 }

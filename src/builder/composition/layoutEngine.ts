@@ -16,6 +16,11 @@ export interface Placement {
   rotation: number;
   scale: number;
   layer: LayerName;
+  /** Half the intended visual footprint, in viewBox units — the renderer
+   * sizes the art from this directly, so it's also what collision spacing
+   * is measured against. Keeping these in lockstep is what keeps blooms
+   * from rendering far larger than the space they were spaced for. */
+  footprintRadius: number;
 }
 
 export interface ComposedLayout {
@@ -24,27 +29,11 @@ export interface ComposedLayout {
   silhouette: 'dome' | 'cascade' | 'wild';
   greenery: Placement[];
   blooms: Placement[];
-  /** Gathered-stem path, drawn beneath everything else so only the lower
-   * "tied" portion peeks out below the flower heads — grounds the
-   * composition instead of leaving the lower canvas empty. */
-  stemsPath: string;
 }
 
-const STEM_TIE_OFFSET_Y = 90;
-
-function buildStemsPath(blooms: Placement[], center: { x: number; y: number }): string {
-  const tie = { x: center.x, y: center.y + STEM_TIE_OFFSET_Y };
-  return blooms
-    .map((b) => {
-      const midX = (b.x + tie.x) / 2;
-      const midY = (b.y + tie.y) / 2;
-      return `M${b.x.toFixed(1)},${b.y.toFixed(1)} Q${midX.toFixed(1)},${midY.toFixed(1)} ${tie.x},${tie.y}`;
-    })
-    .join(' ');
-}
-
-const VIEWBOX_SIZE = 400;
-const CENTER = { x: 200, y: 246 };
+const VIEWBOX_SIZE = 440;
+const CENTER = { x: 220, y: 258 };
+const GREENERY_FOOTPRINT_RADIUS = 24;
 
 /** Derived independently of arrangementSeed's bloom PRNG stream, so swapping
  * which greenery species is drawn never reshuffles bloom placement — only an
@@ -76,22 +65,27 @@ function placeInLayer(
   footprintRadius: number,
   preset: ReturnType<typeof pickSilhouette>,
   random: () => number,
-  placedInLayer: { x: number; y: number; footprintRadius: number }[]
+  placedInLayer: { x: number; y: number; footprintRadius: number }[],
+  /** How much overlap to tolerate: 1 = centers must be a full combined-radius
+   * apart (no overlap at all), lower = petals allowed to touch/overlap a bit
+   * for a natural clustered look. Blooms want a fairly strict value so
+   * individual flowers stay legible; greenery can pack tighter. */
+  overlapTolerance: number
 ): { x: number; y: number; angleDeg: number } {
   const [minAngle, maxAngle] = preset.angleRange;
   let best = { x: CENTER.x, y: CENTER.y, angleDeg: minAngle };
 
-  for (let attempt = 0; attempt < 12; attempt++) {
+  for (let attempt = 0; attempt < 28; attempt++) {
     const angleDeg = randRange(random, minAngle, maxAngle);
     const angleRad = (angleDeg * Math.PI) / 180;
     const jitterFactor = randRange(random, preset.jitter[0], preset.jitter[1]);
     const radius =
-      preset.layerRadius[layer] * preset.angleFactor(angleDeg) * (0.55 + 0.45 * random()) * jitterFactor;
+      preset.layerRadius[layer] * preset.angleFactor(angleDeg) * (0.6 + 0.4 * random()) * jitterFactor;
     const x = CENTER.x + radius * Math.cos(angleRad);
     const y = CENTER.y + radius * Math.sin(angleRad);
 
     const collides = placedInLayer.some(
-      (p) => distance({ x, y }, p) < (p.footprintRadius + footprintRadius) * 0.5
+      (p) => distance({ x, y }, p) < (p.footprintRadius + footprintRadius) * overlapTolerance
     );
 
     best = { x, y, angleDeg };
@@ -128,7 +122,7 @@ export function composeLayout(
   const blooms: Placement[] = instances.map((species, index) => {
     const meta = flowerMeta[species] ?? { footprintRadius: 36, layerBias: 'mid' as LayerName };
     const layer = assignLayer(meta.layerBias, bloomRandom);
-    const { x, y } = placeInLayer(layer, meta.footprintRadius, preset, bloomRandom, placedByLayer[layer]);
+    const { x, y } = placeInLayer(layer, meta.footprintRadius, preset, bloomRandom, placedByLayer[layer], 0.82);
     placedByLayer[layer].push({ x, y, footprintRadius: meta.footprintRadius });
     return {
       id: `bloom-${species}-${index}`,
@@ -137,27 +131,37 @@ export function composeLayout(
       x,
       y,
       rotation: randRange(bloomRandom, -preset.rotationJitter, preset.rotationJitter),
-      scale: randRange(bloomRandom, 0.85, 1.15),
+      scale: randRange(bloomRandom, 0.92, 1.08),
       layer,
+      footprintRadius: meta.footprintRadius,
     };
   });
 
-  const greeneryCount = Math.min(16, 10 + Math.floor(totalQty / 3));
+  // Fewer, more deliberate sprigs read as "accent greenery"; a dense ring
+  // read as a bushy tangle that fought the blooms for attention.
+  const greeneryCount = Math.min(9, 5 + Math.floor(totalQty / 4));
   const greeneryPlaced: { x: number; y: number; footprintRadius: number }[] = [];
   const greeneryAssetId = state.greenery ?? 'eucalyptus';
   const greenery: Placement[] = Array.from({ length: greeneryCount }, (_, index) => {
-    const footprintRadius = 26;
-    const { x, y } = placeInLayer('back', footprintRadius, preset, greeneryRandom, greeneryPlaced);
-    greeneryPlaced.push({ x, y, footprintRadius });
+    const { x, y } = placeInLayer(
+      'back',
+      GREENERY_FOOTPRINT_RADIUS,
+      preset,
+      greeneryRandom,
+      greeneryPlaced,
+      0.6
+    );
+    greeneryPlaced.push({ x, y, footprintRadius: GREENERY_FOOTPRINT_RADIUS });
     return {
       id: `greenery-${index}`,
       assetId: greeneryAssetId,
       kind: 'greenery',
       x,
       y,
-      rotation: randRange(greeneryRandom, -20, 20),
-      scale: randRange(greeneryRandom, 0.8, 1.25),
+      rotation: randRange(greeneryRandom, -15, 15),
+      scale: randRange(greeneryRandom, 0.85, 1.1),
       layer: 'back',
+      footprintRadius: GREENERY_FOOTPRINT_RADIUS,
     };
   });
 
@@ -167,7 +171,6 @@ export function composeLayout(
     silhouette: preset.id,
     greenery,
     blooms,
-    stemsPath: buildStemsPath(blooms, CENTER),
   };
 }
 

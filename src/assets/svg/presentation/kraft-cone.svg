@@ -1,7 +1,21 @@
-<svg viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
-  <path d="M60,10 L260,10 L200,205 C185,215 135,215 120,205 Z"
+<svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="kraft-shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.16"/>
+      <stop offset="0.45" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.22"/>
+    </linearGradient>
+  </defs>
+  <!-- back paper layer, peeking out to one side for an asymmetric, hand-wrapped look -->
+  <path d="M96,44 C58,54 34,82 42,112 L96,236 C102,250 124,258 142,252 L112,110 C104,80 92,62 96,44 Z"
+        fill="var(--presentation-fill-deep)" opacity="0.85" stroke="var(--color-line)" stroke-width="2" stroke-linejoin="round"/>
+  <!-- main cone, wide flared opening -->
+  <path d="M58,40 C110,20 210,20 262,40 C276,46 280,58 272,70 L184,240 C178,262 142,262 136,240 L48,70 C40,58 44,46 58,40 Z"
         fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="2.5" stroke-linejoin="round"/>
-  <path d="M96,60 L224,60" fill="none" stroke="var(--color-line)" stroke-width="1.5" opacity="0.5"/>
-  <path d="M104,110 L216,110" fill="none" stroke="var(--color-line)" stroke-width="1.5" opacity="0.5"/>
-  <path d="M112,160 L208,160" fill="none" stroke="var(--color-line)" stroke-width="1.5" opacity="0.5"/>
+  <path d="M58,40 C110,20 210,20 262,40 C276,46 280,58 272,70 L184,240 C178,262 142,262 136,240 L48,70 C40,58 44,46 58,40 Z"
+        fill="url(#kraft-shade)"/>
+  <!-- soft fold creases -->
+  <path d="M84,84 C120,100 200,100 236,84" fill="none" stroke="var(--color-line)" stroke-width="1.25" opacity="0.4" stroke-linecap="round"/>
+  <path d="M108,140 C130,152 190,152 212,140" fill="none" stroke="var(--color-line)" stroke-width="1.25" opacity="0.4" stroke-linecap="round"/>
+  <path d="M126,192 C138,200 182,200 194,192" fill="none" stroke="var(--color-line)" stroke-width="1.25" opacity="0.4" stroke-linecap="round"/>
 </svg>
