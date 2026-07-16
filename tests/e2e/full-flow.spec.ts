@@ -4,8 +4,8 @@ test('walks the full builder flow and produces a share link', async ({ page }) =
   await page.goto('/build');
 
   // Step 1: Pick blooms
-  await page.locator('.flower-card[data-species="rose"]').click({ clickCount: 3, delay: 30 });
-  await page.locator('.flower-card[data-species="peony"]').click({ clickCount: 3, delay: 30 });
+  await page.locator('.flower-card[data-species="rose"] .flower-card__add').click({ clickCount: 3, delay: 30 });
+  await page.locator('.flower-card[data-species="peony"] .flower-card__add').click({ clickCount: 3, delay: 30 });
   await expect(page.locator('.builder-step[data-step="1"] [data-next]')).toBeEnabled();
   await page.locator('.builder-step[data-step="1"] [data-next]').click();
 
@@ -20,6 +20,10 @@ test('walks the full builder flow and produces a share link', async ({ page }) =
   await page.fill('[data-card-field="message"]', 'Full flow test message.');
   await page.fill('[data-card-field="signature"]', 'Tester');
   await expect(page.locator('[data-preview-greeting]')).toHaveText('Friend');
+
+  await page.click('.card-theme-chip[data-card-theme="torn-vintage"]');
+  await expect(page.locator('[data-card-preview]')).toHaveAttribute('data-card-theme', 'torn-vintage');
+
   await page.locator('.builder-step[data-step="3"] [data-next]').click();
 
   // Step 4: Send
@@ -28,4 +32,32 @@ test('walks the full builder flow and produces a share link', async ({ page }) =
   await expect(page.locator('[data-send-result]')).toBeVisible();
   const link = await page.locator('[data-send-link]').inputValue();
   expect(link).toMatch(/\/r\/[a-zA-Z0-9]+$/);
+});
+
+test('an occasion preset pre-fills the card message field, not just the preview', async ({ page }) => {
+  await page.goto('/build');
+
+  await page.click('.occasion-chip[data-occasion="anniversary"]');
+  await expect(page.locator('.builder-step[data-step="1"] [data-next]')).toBeEnabled();
+  await page.locator('.builder-step[data-step="1"] [data-next]').click();
+  await page.locator('.builder-step[data-step="2"] [data-next]').click();
+
+  const messageValue = await page.inputValue('[data-card-field="message"]');
+  expect(messageValue.length).toBeGreaterThan(0);
+  await expect(page.locator('[data-preview-message]')).toHaveText(messageValue);
+});
+
+test('the floriography info button shows a tooltip without adding the flower', async ({ page }) => {
+  await page.goto('/build');
+
+  const badge = page.locator('.flower-card[data-species="tulip"] [data-qty-badge]');
+  await expect(badge).toBeHidden();
+
+  await page.locator('.flower-card[data-species="tulip"] .flower-card__info').click();
+  await expect(page.locator('.floriography-tooltip')).toContainText('love');
+  await expect(badge).toBeHidden(); // info tap must never add the flower
+
+  await page.locator('.flower-card[data-species="tulip"] .flower-card__add').click();
+  await expect(badge).toBeVisible();
+  await expect(badge).toHaveText('1');
 });

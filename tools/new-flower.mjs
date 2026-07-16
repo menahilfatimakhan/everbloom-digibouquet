@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Scaffolds a new flower species: a starter SVG (edit the shape by hand
-// afterward) + a matching entry appended to src/content/flowers.json.
+// afterward) + a matching entry appended to src/content/flowers.json + its
+// meaning appended to src/content/floriography.json.
 // Usage: npm run new-flower -- <id> "<Display Name>" "<meaning>" <fillHex> <fillDeepHex> <centerHex>
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
@@ -50,7 +51,6 @@ if (flowers.some((f) => f.id === id)) {
 flowers.push({
   id,
   name,
-  meaning,
   footprintRadius: 38,
   layerBias: 'mid',
   fill,
@@ -59,5 +59,10 @@ flowers.push({
 });
 writeFileSync(flowersJsonPath, JSON.stringify(flowers, null, 2) + '\n');
 
-console.log(`Added "${id}" to flowers.json and created ${path.relative(root, svgPath)}`);
+const floriographyJsonPath = path.join(root, 'src', 'content', 'floriography.json');
+const floriography = JSON.parse(readFileSync(floriographyJsonPath, 'utf8'));
+floriography.push({ id, meaning });
+writeFileSync(floriographyJsonPath, JSON.stringify(floriography, null, 2) + '\n');
+
+console.log(`Added "${id}" to flowers.json + floriography.json and created ${path.relative(root, svgPath)}`);
 console.log('Next: open the SVG and replace the starter petal path with real artwork.');

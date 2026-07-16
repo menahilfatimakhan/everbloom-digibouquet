@@ -3,13 +3,14 @@ import greeneryData from '../content/greenery.json';
 import presentationData from '../content/presentation.json';
 import occasionsData from '../content/occasions.json';
 import cardFontsData from '../content/cardFonts.json';
+import cardThemesData from '../content/cardThemes.json';
+import floriographyData from '../content/floriography.json';
 import type { SpeciesMeta } from './composition/layoutEngine';
 import type { LayerName } from './composition/silhouettePresets';
 
 export interface FlowerContent {
   id: string;
   name: string;
-  meaning: string;
   footprintRadius: number;
   layerBias: LayerName;
   fill: string;
@@ -24,8 +25,24 @@ export interface GreeneryContent {
   fillDeep: string;
 }
 
+export interface FloriographyEntry {
+  id: string;
+  meaning: string;
+}
+
+export interface CardThemeContent {
+  id: string;
+  name: string;
+  paper: string;
+  paperDeep: string;
+  ink: string;
+  borderColor: string;
+  edge: 'clean' | 'torn';
+}
+
 export const FLOWERS = flowersData as FlowerContent[];
 export const GREENERY = greeneryData as GreeneryContent[];
+export const FLORIOGRAPHY = floriographyData as FloriographyEntry[];
 export const PRESENTATION = presentationData as {
   wraps: { id: string; name: string; fill: string; fillDeep: string }[];
   vases: { id: string; name: string; fill: string; fillDeep: string }[];
@@ -36,6 +53,7 @@ export const OCCASIONS = occasionsData as {
   id: string;
   label: string;
   suggestedTheme: string;
+  suggestedCardMessage: string;
   suggestedBlooms: { species: string; qty: number }[];
 }[];
 export const CARD_FONTS = cardFontsData as {
@@ -44,6 +62,7 @@ export const CARD_FONTS = cardFontsData as {
   family: string;
   googleFont: string | null;
 }[];
+export const CARD_THEMES = cardThemesData as CardThemeContent[];
 
 const flowerSvgModules = import.meta.glob('../assets/svg/flowers/*.svg', {
   query: '?raw',
@@ -82,9 +101,17 @@ export const FLOWER_BY_ID: Record<string, FlowerContent> = Object.fromEntries(
 export const GREENERY_BY_ID: Record<string, GreeneryContent> = Object.fromEntries(
   GREENERY.map((g) => [g.id, g])
 );
+export const CARD_THEME_BY_ID: Record<string, CardThemeContent> = Object.fromEntries(
+  CARD_THEMES.map((t) => [t.id, t])
+);
 
 export const FLOWER_META: Record<string, SpeciesMeta> = Object.fromEntries(
   FLOWERS.map((f) => [f.id, { footprintRadius: f.footprintRadius, layerBias: f.layerBias }])
+);
+
+/** id -> meaning, the lookup floriography tooltips actually use. */
+export const MEANING_BY_ID: Record<string, string> = Object.fromEntries(
+  FLORIOGRAPHY.map((f) => [f.id, f.meaning])
 );
 
 export function flowerCssVars(speciesId: string): Record<string, string> {
@@ -97,4 +124,17 @@ export function greeneryCssVars(greeneryId: string): Record<string, string> {
   const g = GREENERY_BY_ID[greeneryId];
   if (!g) return {};
   return { '--greenery-fill': g.fill, '--greenery-fill-deep': g.fillDeep };
+}
+
+export function cardThemeCssVars(themeId: string): Record<string, string> {
+  const t = CARD_THEME_BY_ID[themeId] ?? CARD_THEMES[0];
+  return {
+    '--card-paper': t.paper,
+    '--card-paper-deep': t.paperDeep,
+    '--card-ink': t.ink,
+    '--card-border-color': t.borderColor,
+    // Doodle stroke follows the theme's ink color so a Midnight signature
+    // stays legible instead of rendering brand-purple-on-near-black.
+    '--card-doodle-stroke': t.ink,
+  };
 }

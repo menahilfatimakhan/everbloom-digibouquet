@@ -2,7 +2,6 @@
   {
     "id": "rose",
     "name": "Rose",
-    "meaning": "Deep love and admiration.",
     "footprintRadius": 40,
     "layerBias": "front",
     "fill": "#E2496B",
@@ -12,7 +11,6 @@
   {
     "id": "peony",
     "name": "Peony",
-    "meaning": "Romance, honor, and a happy marriage.",
     "footprintRadius": 46,
     "layerBias": "front",
     "fill": "#F1A8C4",
@@ -22,7 +20,6 @@
   {
     "id": "ranunculus",
     "name": "Ranunculus",
-    "meaning": "I am dazzled by your charm.",
     "footprintRadius": 38,
     "layerBias": "mid",
     "fill": "#F0876B",
@@ -32,7 +29,6 @@
   {
     "id": "anemone",
     "name": "Anemone",
-    "meaning": "Anticipation and protection against ill will.",
     "footprintRadius": 36,
     "layerBias": "mid",
     "fill": "#F4EEE6",
@@ -42,7 +38,6 @@
   {
     "id": "carnation",
     "name": "Carnation",
-    "meaning": "Fascination and distinction.",
     "footprintRadius": 34,
     "layerBias": "mid",
     "fill": "#E8639A",
@@ -52,7 +47,6 @@
   {
     "id": "dahlia",
     "name": "Dahlia",
-    "meaning": "Inner strength and lasting commitment.",
     "footprintRadius": 42,
     "layerBias": "front",
     "fill": "#A6314F",
@@ -62,7 +56,6 @@
   {
     "id": "sunflower",
     "name": "Sunflower",
-    "meaning": "Warmth, loyalty, and adoration.",
     "footprintRadius": 48,
     "layerBias": "front",
     "fill": "#F4C430",
@@ -72,7 +65,6 @@
   {
     "id": "gerbera-daisy",
     "name": "Gerbera Daisy",
-    "meaning": "Cheerfulness and lifelong friendship.",
     "footprintRadius": 36,
     "layerBias": "mid",
     "fill": "#F2664F",
@@ -82,7 +74,6 @@
   {
     "id": "tulip",
     "name": "Tulip",
-    "meaning": "Perfect and undying love.",
     "footprintRadius": 30,
     "layerBias": "mid",
     "fill": "#C0398D",
@@ -92,7 +83,6 @@
   {
     "id": "lily",
     "name": "Lily",
-    "meaning": "Renewal, purity, and devotion.",
     "footprintRadius": 40,
     "layerBias": "front",
     "fill": "#F7DCE4",
@@ -102,7 +92,6 @@
   {
     "id": "orchid",
     "name": "Orchid",
-    "meaning": "Rare and delicate beauty.",
     "footprintRadius": 34,
     "layerBias": "mid",
     "fill": "#8E5DC2",
@@ -112,7 +101,6 @@
   {
     "id": "delphinium",
     "name": "Delphinium",
-    "meaning": "An open heart and lightness of being.",
     "footprintRadius": 26,
     "layerBias": "back",
     "fill": "#5B6FD6",

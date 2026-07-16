@@ -10,7 +10,7 @@ test('builder flow has no horizontal overflow and remains usable at 375px', asyn
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth + 1); // +1 for sub-pixel rounding
 
   for (let i = 0; i < 6; i++) {
-    await page.locator('.flower-card[data-species="tulip"]').click();
+    await page.locator('.flower-card[data-species="tulip"] .flower-card__add').click();
   }
   await expect(page.locator('.builder-step[data-step="1"] [data-next]')).toBeEnabled();
   await page.locator('.builder-step[data-step="1"] [data-next]').click();

@@ -82,13 +82,19 @@ export function createBouquetStore(initial?: BouquetState) {
     notify();
   }
 
-  function applyOccasion(occasionId: string, blooms: { species: string; qty: number }[], theme: string) {
+  function applyOccasion(
+    occasionId: string,
+    blooms: { species: string; qty: number }[],
+    theme: string,
+    cardMessage?: string
+  ) {
     state = {
       ...state,
       occasion: occasionId,
       blooms,
       presentation: { ...state.presentation, theme },
       arrangementSeed: Math.floor(Math.random() * 2 ** 31),
+      card: cardMessage !== undefined ? { ...state.card, message: cardMessage } : state.card,
     };
     notify();
   }

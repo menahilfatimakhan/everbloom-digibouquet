@@ -3,33 +3,42 @@ import BaseLayout from '../../components/layout/BaseLayout.astro';
 import PetalField from '../../components/PetalField.astro';
 import '../../styles/components/reveal.css';
 import { getKv } from '../../lib/kv';
-import { isValidBouquetState } from '../../builder/state/schema';
+import { hydrateBouquetState, isValidBouquetState, type BouquetState } from '../../builder/state/schema';
+import { PRESENTATION } from '../../builder/assetRegistry';
 
 export const prerender = false;
 
 const { id } = Astro.params;
 const raw = id ? await getKv().get(id) : null;
 
-let state: unknown = null;
+let state: BouquetState | null = null;
 if (raw) {
   try {
     const record = JSON.parse(raw);
-    if (isValidBouquetState(record.state)) state = record.state;
+    if (isValidBouquetState(record.state)) state = hydrateBouquetState(record.state);
   } catch {
     state = null;
   }
 }
+
+// "Mood": the sender's own Color Theme choice also sets a subtle background
+// tint on the reveal page specifically — nowhere else in the app. Reuses the
+// `paper` field every theme already declares (previously unused).
+const moodTheme = state
+  ? PRESENTATION.themes.find((t) => t.id === state.presentation.theme) ?? PRESENTATION.themes[0]
+  : null;
 ---
 
 <BaseLayout title={state ? 'A Bouquet For You' : 'Bouquet Not Found'}>
-  <section class="reveal-page">
+  <section class="reveal-page" style={moodTheme ? `--reveal-mood-paper:${moodTheme.paper}` : undefined}>
     <PetalField count={10} />
     <div class="container reveal-page__inner">
       {
         state ? (
           <>
-            <p class="eyebrow" style="text-align:center">Someone sent you a bouquet</p>
-            <h1 style="text-align:center">An Everbloom bouquet, just for you.</h1>
+            {/* No static heading here on purpose — the typed intro inside
+               mountReveal() is meant to be the first thing the recipient
+               reads, not spoiled by a server-rendered heading above it. */}
             <div data-reveal-mount></div>
             <script is:inline type="application/json" id="bouquet-state" set:html={JSON.stringify(state)} />
             <script>
@@ -65,6 +74,8 @@ if (raw) {
     position: relative;
     padding-block: var(--space-12) var(--space-16);
     min-height: 70vh;
+    background: radial-gradient(ellipse 70% 55% at 50% 18%, var(--reveal-mood-paper, transparent) 0%, transparent 72%);
+    transition: background-color 0.6s ease;
   }
 
   .reveal-page__inner {

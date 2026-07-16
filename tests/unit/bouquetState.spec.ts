@@ -36,6 +36,28 @@ describe('bouquetState mutators', () => {
     expect(store.speciesQty('rose')).toBe(0);
   });
 
+  it('applyOccasion sets card.message when a suggestion is provided', () => {
+    const store = createBouquetStore(createInitialState());
+    store.applyOccasion('birthday', [{ species: 'sunflower', qty: 6 }], 'sunset-blush', 'Happy birthday!');
+    expect(store.getState().card.message).toBe('Happy birthday!');
+    expect(store.getState().occasion).toBe('birthday');
+    expect(store.getState().presentation.theme).toBe('sunset-blush');
+  });
+
+  it('applyOccasion leaves card.message untouched when no suggestion is provided', () => {
+    const store = createBouquetStore(createInitialState());
+    store.setCard({ message: 'My own words' });
+    store.applyOccasion('congrats', [{ species: 'tulip', qty: 6 }], 'lavender-dream');
+    expect(store.getState().card.message).toBe('My own words');
+  });
+
+  it('applyOccasion overwrites a previous suggestion on a second call', () => {
+    const store = createBouquetStore(createInitialState());
+    store.applyOccasion('birthday', [{ species: 'sunflower', qty: 6 }], 'sunset-blush', 'First message');
+    store.applyOccasion('sympathy', [{ species: 'lily', qty: 6 }], 'ivory-sage', 'Second message');
+    expect(store.getState().card.message).toBe('Second message');
+  });
+
   it('reshuffleArrangement changes the seed', () => {
     const store = createBouquetStore(createInitialState());
     const before = store.getState().arrangementSeed;

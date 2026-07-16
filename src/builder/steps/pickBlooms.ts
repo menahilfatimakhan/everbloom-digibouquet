@@ -1,7 +1,8 @@
 import type { BouquetStore } from '../state/bouquetState';
 import { MAX_BLOOMS, MIN_BLOOMS, isBloomCountValid, totalBloomCount } from '../state/schema';
-import { FLOWER_BY_ID, OCCASIONS } from '../assetRegistry';
+import { FLOWER_BY_ID, MEANING_BY_ID, OCCASIONS } from '../assetRegistry';
 import { attachHoverPop, popIn, shake, tweenNumber } from '../animation/microInteractions';
+import { attachFloriographyTooltip } from '../floriography/tooltip';
 
 export function initPickBlooms(store: BouquetStore, root: HTMLElement) {
   const gridQuery = root.querySelector<HTMLElement>('[data-flower-grid]');
@@ -23,16 +24,26 @@ export function initPickBlooms(store: BouquetStore, root: HTMLElement) {
   const countNumberEl = countEl.querySelector<HTMLElement>('[data-count-number]')!;
 
   grid.querySelectorAll<HTMLElement>('.flower-card').forEach((card) => {
-    attachHoverPop(card, 1.05);
-    card.addEventListener('click', () => {
-      const species = card.dataset.species;
-      if (!species) return;
+    const species = card.dataset.species;
+    const addBtn = card.querySelector<HTMLElement>('.flower-card__add');
+    const infoBtn = card.querySelector<HTMLElement>('.flower-card__info');
+    if (!species || !addBtn) return;
+
+    attachHoverPop(addBtn, 1.05);
+    addBtn.addEventListener('click', () => {
       if (totalBloomCount({ blooms: store.getState().blooms }) >= MAX_BLOOMS) {
         shake(card);
         return;
       }
       store.addBloom(species);
     });
+
+    // Two independent sibling controls on purpose: "add this flower" and
+    // "show its meaning" must never be able to trigger each other.
+    if (infoBtn) {
+      const meaning = MEANING_BY_ID[species];
+      if (meaning) attachFloriographyTooltip(infoBtn, meaning);
+    }
   });
 
   root.querySelectorAll<HTMLElement>('.occasion-chip').forEach((chip) => {
@@ -41,7 +52,12 @@ export function initPickBlooms(store: BouquetStore, root: HTMLElement) {
       const occasionId = chip.dataset.occasion;
       const occasion = OCCASIONS.find((o) => o.id === occasionId);
       if (!occasion) return;
-      store.applyOccasion(occasion.id, occasion.suggestedBlooms, occasion.suggestedTheme);
+      store.applyOccasion(
+        occasion.id,
+        occasion.suggestedBlooms,
+        occasion.suggestedTheme,
+        occasion.suggestedCardMessage
+      );
       root.querySelectorAll('.occasion-chip').forEach((c) => c.removeAttribute('data-active'));
       chip.setAttribute('data-active', 'true');
     });

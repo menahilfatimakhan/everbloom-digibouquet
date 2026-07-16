@@ -1,13 +1,19 @@
 <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-  <g fill="none" stroke="var(--presentation-fill)" stroke-width="5" stroke-linecap="round">
-    <path d="M62,42 C90,54 110,54 138,42"/>
-    <path d="M58,58 C90,70 110,70 142,58"/>
-    <path d="M60,74 C90,84 110,84 140,74"/>
+  <g data-bow-part="wrap" style="transform-origin: 100px 58px">
+    <g fill="none" stroke="var(--presentation-fill)" stroke-width="5" stroke-linecap="round">
+      <path d="M62,42 C90,54 110,54 138,42"/>
+      <path d="M58,58 C90,70 110,70 142,58"/>
+      <path d="M60,74 C90,84 110,84 140,74"/>
+    </g>
+    <g fill="none" stroke="var(--color-line)" stroke-width="1" opacity="0.3">
+      <path d="M62,42 C90,54 110,54 138,42"/>
+      <path d="M58,58 C90,70 110,70 142,58"/>
+    </g>
   </g>
-  <g fill="none" stroke="var(--color-line)" stroke-width="1" opacity="0.3">
-    <path d="M62,42 C90,54 110,54 138,42"/>
-    <path d="M58,58 C90,70 110,70 142,58"/>
+  <g data-bow-part="tail-left" style="transform-origin: 88px 90px">
+    <path d="M88,90 L70,124 L86,116 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round"/>
   </g>
-  <path d="M88,90 L70,124 L86,116 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round"/>
-  <path d="M112,90 L130,124 L114,116 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round"/>
+  <g data-bow-part="tail-right" style="transform-origin: 112px 90px">
+    <path d="M112,90 L130,124 L114,116 Z" fill="var(--presentation-fill)" stroke="var(--color-line)" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
 </svg>

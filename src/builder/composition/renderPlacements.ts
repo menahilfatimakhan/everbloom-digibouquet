@@ -32,7 +32,7 @@ export function placementToGroup(placement: Placement, rawSvg: string, vars: Ren
     .join(';');
   const size = placement.footprintRadius * FOOTPRINT_TO_RENDER_SIZE;
   const nested = positionSvgRoot(rawSvg, size);
-  return `<g class="placement placement--${placement.kind}" data-id="${placement.id}" data-layer="${placement.layer}" style="${styleAttr}" transform="translate(${placement.x.toFixed(2)},${placement.y.toFixed(2)}) rotate(${placement.rotation.toFixed(2)}) scale(${placement.scale.toFixed(3)})">${nested}</g>`;
+  return `<g class="placement placement--${placement.kind}" data-id="${placement.id}" data-asset-id="${placement.assetId}" data-layer="${placement.layer}" style="${styleAttr}" transform="translate(${placement.x.toFixed(2)},${placement.y.toFixed(2)}) rotate(${placement.rotation.toFixed(2)}) scale(${placement.scale.toFixed(3)})">${nested}</g>`;
 }
 
 export function placementsToSvgBody(

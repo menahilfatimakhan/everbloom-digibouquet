@@ -1,0 +1,34 @@
+/* Global (unscoped) on purpose — the tooltip element is created at runtime
+   by src/builder/floriography/tooltip.ts and appended to document.body,
+   which Astro's per-component style scoping cannot reach. */
+
+.flower-card__info {
+  position: relative;
+}
+
+.floriography-tooltip {
+  position: absolute;
+  z-index: 50;
+  transform: translateX(-50%);
+  max-width: 14rem;
+  background: var(--color-ink-purple);
+  color: var(--color-paper-card);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-style: italic;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-soft);
+  pointer-events: none;
+}
+
+.floriography-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-ink-purple);
+}

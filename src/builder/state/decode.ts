@@ -1,5 +1,5 @@
 import { decompressFromEncodedURIComponent } from 'lz-string';
-import { isValidBouquetState, SCHEMA_VERSION, type BouquetState } from './schema';
+import { hydrateBouquetState, isValidBouquetState, SCHEMA_VERSION, type BouquetState } from './schema';
 
 /**
  * Reverses encodeState. Returns null on any failure (corrupt token, JSON
@@ -13,7 +13,7 @@ export function decodeState(token: string): BouquetState | null {
     const parsed = JSON.parse(json);
     if (!isValidBouquetState(parsed)) return null;
     if (parsed.v > SCHEMA_VERSION) return null;
-    return parsed;
+    return hydrateBouquetState(parsed);
   } catch {
     return null;
   }

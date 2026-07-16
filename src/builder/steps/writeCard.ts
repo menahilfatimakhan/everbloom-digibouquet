@@ -1,5 +1,5 @@
 import type { BouquetStore } from '../state/bouquetState';
-import { CARD_FONTS } from '../assetRegistry';
+import { CARD_FONTS, CARD_THEMES, cardThemeCssVars } from '../assetRegistry';
 import { attachHoverPop } from '../animation/microInteractions';
 
 function pointFromEvent(svg: SVGSVGElement, evt: PointerEvent): { x: number; y: number } {
@@ -15,6 +15,7 @@ export function initWriteCard(store: BouquetStore, root: HTMLElement) {
   const messageInput = root.querySelector<HTMLTextAreaElement>('[data-card-field="message"]');
   const signatureInput = root.querySelector<HTMLInputElement>('[data-card-field="signature"]');
   const fontPicker = root.querySelector<HTMLElement>('[data-font-picker]');
+  const themePicker = root.querySelector<HTMLElement>('[data-card-theme-picker]');
   const doodlePad = root.querySelector<SVGSVGElement>('[data-doodle-pad]');
   const doodleClearBtn = root.querySelector<HTMLButtonElement>('[data-doodle-clear]');
   const previewGreeting = root.querySelector<HTMLElement>('[data-preview-greeting]');
@@ -22,10 +23,24 @@ export function initWriteCard(store: BouquetStore, root: HTMLElement) {
   const previewSignature = root.querySelector<HTMLElement>('[data-preview-signature]');
   const previewDoodle = root.querySelector<SVGSVGElement>('[data-preview-doodle]');
   const previewPanel = root.querySelector<HTMLElement>('[data-card-preview]');
-  if (!greetingInput || !messageInput || !signatureInput || !fontPicker || !doodlePad || !previewPanel) return;
+  if (
+    !greetingInput ||
+    !messageInput ||
+    !signatureInput ||
+    !fontPicker ||
+    !themePicker ||
+    !doodlePad ||
+    !previewPanel
+  ) {
+    return;
+  }
   // Re-bound as fresh, non-nullable consts: TS narrowing from the guard
   // above doesn't cross into the render() closure defined below.
+  const greetingInputEl = greetingInput;
+  const messageInputEl = messageInput;
+  const signatureInputEl = signatureInput;
   const fontPickerEl = fontPicker;
+  const themePickerEl = themePicker;
   const previewPanelEl = previewPanel;
 
   greetingInput.addEventListener('input', () => store.setCard({ greeting: greetingInput.value }));
@@ -40,13 +55,21 @@ export function initWriteCard(store: BouquetStore, root: HTMLElement) {
     });
   });
 
+  themePicker.querySelectorAll<HTMLButtonElement>('.card-theme-chip').forEach((chip) => {
+    attachHoverPop(chip, 1.04);
+    chip.addEventListener('click', () => {
+      const themeId = chip.dataset.cardTheme;
+      if (themeId) store.setCard({ theme: themeId });
+    });
+  });
+
   // --- signature doodle pad (freehand, pointer-driven SVG path) ---
   let drawing = false;
   let committedPath = '';
   let strokePath = '';
   const livePath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   livePath.setAttribute('fill', 'none');
-  livePath.setAttribute('stroke', 'var(--color-ink-purple)');
+  livePath.setAttribute('stroke', 'var(--card-doodle-stroke, var(--color-ink-purple))');
   livePath.setAttribute('stroke-width', '2.5');
   livePath.setAttribute('stroke-linecap', 'round');
   livePath.setAttribute('stroke-linejoin', 'round');
@@ -88,6 +111,16 @@ export function initWriteCard(store: BouquetStore, root: HTMLElement) {
 
   function render() {
     const { card } = store.getState();
+
+    // Keep the actual field values in sync with the store, not just the
+    // preview — needed now that something other than the user's own typing
+    // (an occasion preset) can set card.message. Reassigning to a value that
+    // already matches is a safe no-op, so this can't fight the user's typing
+    // or jump their cursor.
+    if (greetingInputEl.value !== card.greeting) greetingInputEl.value = card.greeting;
+    if (messageInputEl.value !== card.message) messageInputEl.value = card.message;
+    if (signatureInputEl.value !== card.signature) signatureInputEl.value = card.signature;
+
     if (previewGreeting) previewGreeting.textContent = card.greeting || 'Beloved';
     if (previewMessage) {
       previewMessage.textContent =
@@ -98,13 +131,21 @@ export function initWriteCard(store: BouquetStore, root: HTMLElement) {
     const font = CARD_FONTS.find((f) => f.id === card.font) ?? CARD_FONTS[0];
     previewPanelEl.style.fontFamily = font.family;
 
+    const theme = CARD_THEMES.find((t) => t.id === card.theme) ?? CARD_THEMES[0];
+    previewPanelEl.dataset.cardTheme = theme.id;
+    const vars = cardThemeCssVars(theme.id);
+    for (const [key, value] of Object.entries(vars)) previewPanelEl.style.setProperty(key, value);
+
     fontPickerEl.querySelectorAll<HTMLElement>('.font-chip').forEach((chip) => {
       chip.dataset.active = String(chip.dataset.font === card.font);
+    });
+    themePickerEl.querySelectorAll<HTMLElement>('.card-theme-chip').forEach((chip) => {
+      chip.dataset.active = String(chip.dataset.cardTheme === theme.id);
     });
 
     if (previewDoodle) {
       previewDoodle.innerHTML = card.doodle
-        ? `<path d="${card.doodle}" fill="none" stroke="var(--color-ink-purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`
+        ? `<path d="${card.doodle}" fill="none" stroke="var(--card-doodle-stroke, var(--color-ink-purple))" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`
         : '';
     }
   }

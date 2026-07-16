@@ -17,6 +17,7 @@ describe('state URL encode/decode round-trip', () => {
         message: 'A message with — em dashes, emoji 🌸, and "quotes".',
         signature: 'Everbloom',
         font: 'caveat',
+        theme: 'torn-vintage',
         doodle: 'M10,10 L20,20 L30,10',
       },
     };
@@ -25,6 +26,18 @@ describe('state URL encode/decode round-trip', () => {
     const decoded = decodeState(token);
 
     expect(decoded).toEqual(state);
+  });
+
+  it('decodes an old record missing card.theme with a default filled in', () => {
+    // Simulates a v1 token created before card.theme existed.
+    const legacyState = createInitialState();
+    // @ts-expect-error — intentionally building a payload from before `theme` existed
+    delete legacyState.card.theme;
+
+    const token = encodeState(legacyState);
+    const decoded = decodeState(token);
+
+    expect(decoded?.card.theme).toBe('classic-cream');
   });
 
   it('returns null for a garbage token instead of throwing', () => {

@@ -3,6 +3,7 @@
     "id": "birthday",
     "label": "Birthday",
     "suggestedTheme": "sunset-blush",
+    "suggestedCardMessage": "Happy birthday! Hope your day is as lovely as these blooms.",
     "suggestedBlooms": [
       { "species": "gerbera-daisy", "qty": 3 },
       { "species": "ranunculus", "qty": 3 },
@@ -13,6 +14,7 @@
     "id": "anniversary",
     "label": "Anniversary",
     "suggestedTheme": "classic-red",
+    "suggestedCardMessage": "Here's to us, and to many more years like this one.",
     "suggestedBlooms": [
       { "species": "rose", "qty": 5 },
       { "species": "peony", "qty": 3 }
@@ -22,6 +24,7 @@
     "id": "sympathy",
     "label": "Sympathy",
     "suggestedTheme": "ivory-sage",
+    "suggestedCardMessage": "Thinking of you and holding you close right now.",
     "suggestedBlooms": [
       { "species": "lily", "qty": 3 },
       { "species": "anemone", "qty": 3 },
@@ -32,6 +35,7 @@
     "id": "congrats",
     "label": "Congrats",
     "suggestedTheme": "lavender-dream",
+    "suggestedCardMessage": "Congratulations — you did it, and these are for you!",
     "suggestedBlooms": [
       { "species": "orchid", "qty": 3 },
       { "species": "tulip", "qty": 3 },
@@ -42,6 +46,7 @@
     "id": "just-because",
     "label": "Just Because",
     "suggestedTheme": "lavender-dream",
+    "suggestedCardMessage": "No reason needed — just wanted you to know I'm thinking of you.",
     "suggestedBlooms": [
       { "species": "anemone", "qty": 3 },
       { "species": "carnation", "qty": 3 },

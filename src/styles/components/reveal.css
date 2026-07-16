@@ -16,6 +16,18 @@
   filter: drop-shadow(0 24px 40px rgba(75, 31, 115, 0.22));
 }
 
+.reveal-stage__intro {
+  position: absolute;
+  top: -2.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  text-align: center;
+  font-family: var(--font-script);
+  font-size: clamp(1.1rem, 4.5vw, 1.35rem);
+  color: var(--color-ink-purple);
+}
+
 .reveal-stage__cta {
   position: absolute;
   bottom: 1rem;
@@ -27,17 +39,12 @@
   margin-top: var(--space-8);
 }
 
+/* Paper look (background/padding/border-radius/shadow) is owned entirely by
+   .card-surface (cardThemes.css) — this rule is layout-only so the two never
+   fight over which one wins. */
 .reveal-card {
   max-width: 26rem;
   width: 100%;
-  background: var(--color-paper-card);
-  border-radius: var(--radius-md);
-  padding: var(--space-8);
-  box-shadow: var(--shadow-card);
-}
-
-.reveal-card p {
-  margin: 0 0 var(--space-4);
 }
 
 .reveal-card__greeting em,

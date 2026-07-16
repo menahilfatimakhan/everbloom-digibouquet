@@ -27,6 +27,11 @@ export interface CardState {
   message: string;
   signature: string;
   font: string;
+  /** id into content/cardThemes.json — the card panel's own paper/border look.
+   * Added after v1 shipped; intentionally does NOT bump SCHEMA_VERSION (see
+   * decode.ts) since isValidBouquetState() never validated card.font either —
+   * old tokens missing this field decode fine and get a default at read time. */
+  theme: string;
   /** SVG path `d` data drawn on a 300x100 signature pad, or null if skipped. */
   doodle: string | null;
 }
@@ -60,6 +65,7 @@ export function createInitialState(): BouquetState {
       message: '',
       signature: '',
       font: 'monospace',
+      theme: 'classic-cream',
       doodle: null,
     },
   };
@@ -96,4 +102,18 @@ export function isValidBouquetState(value: unknown): value is BouquetState {
   if (!s.card || typeof s.card !== 'object') return false;
   if (typeof s.card.greeting !== 'string' || typeof s.card.message !== 'string') return false;
   return true;
+}
+
+/**
+ * Fills in defaults for fields added after a record/token was created, so
+ * older data (missing e.g. `card.theme`) still renders correctly instead of
+ * needing a SCHEMA_VERSION bump + migration. Call after isValidBouquetState
+ * has already confirmed the base shape. Safe to call on already-complete
+ * state — every fill is a no-op if the field is already present.
+ */
+export function hydrateBouquetState(state: BouquetState): BouquetState {
+  if (!state.card.theme) {
+    state = { ...state, card: { ...state.card, theme: 'classic-cream' } };
+  }
+  return state;
 }
