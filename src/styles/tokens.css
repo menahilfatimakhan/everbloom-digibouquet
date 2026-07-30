@@ -1,53 +1,229 @@
-:root {
-  /* Paper / background */
-  --color-paper: #fbf3e7;
-  --color-paper-deep: #f3e8d6;
-  --color-paper-card: #fffdf8;
-  /* Sampled from the real Everbloom stamp badge — used to tie brand-lavender
-     sections back to the logo without going full-lavender everywhere. */
-  --color-lavender-pale: #ecdff5;
+/*
+  ============================================================================
+  EVERBLOOM DESIGN TOKENS
+  ============================================================================
+  Every visual decision in the redesign lives in this file. Components should
+  reference these variables and never hard-code a colour, radius, or step of
+  the spacing scale — tuning or reverting the redesign means editing here.
 
-  /* Ink / brand purple, sampled from the Everbloom logo mark */
-  --color-ink: #2f1f42;
+  GROUND SYSTEM
+  The app runs on two grounds, never more:
+
+    "deep"  — a rich plum, used only for the landing hero. The watercolour
+              florals glow against it. Light text.
+    "light" — lavender-pearl, the workspace for everything else (builder,
+              reveal, all card themes). Cool, never cream, so the watercolour
+              art and the sender's chosen card stock both read correctly.
+
+  Ground is selected by `data-ground` on <body> (see BaseLayout.astro), which
+  swaps the --ground-* aliases below. Components style against the aliases,
+  so they work on either ground without knowing which one they are on.
+  ============================================================================
+*/
+
+:root {
+  /* --------------------------------------------------------------------
+     1. PALETTE — raw values. Only the alias layer below should be used
+        directly by components.
+     -------------------------------------------------------------------- */
+
+  /* Light ground: lavender-pearl. Cool-cast, replaces the old cream. */
+  --color-pearl: #f4f1fa;
+  --color-pearl-deep: #e8e2f3;
+  --color-pearl-card: #fdfcff;
+
+  /* Deep ground: plum. The hero, and nothing else. */
+  --color-plum: #1e0f2e;
+  --color-plum-lift: #34164c;
+  --color-plum-glow: #5b2a85;
+
+  /* Brand purple ramp — sampled from the Everbloom stamp. Unchanged: this
+     is the brand, and the redesign is a refinement, not a rebrand. */
+  --color-ink: #241733;
   --color-ink-purple: #6b2fa0;
   --color-ink-purple-deep: #4b1f73;
-  --color-ink-purple-soft: #9c6fc9;
   --color-ink-purple-pale: #e9defa;
+
+  /* Muted purple for secondary text. Replaces #9C6FC9, which measured
+     3.40:1 on the page ground and failed WCAG AA for body text. This
+     value measures 5.96:1 on --color-pearl. Do not lighten it. */
+  --color-ink-purple-soft: #6a5285;
+
+  /* Tie-back to the stamp badge lavender, used for quiet section bands. */
+  --color-lavender-pale: #ebe3f6;
+
+  /* Light text ramp, for use on the deep ground. */
+  --color-on-deep: #fdfcff;
+  --color-on-deep-muted: #d9c7ec;
+  --color-on-deep-faint: #c9b2e2;
+
+  /* --------------------------------------------------------------------
+     2. GROUND ALIASES — the layer components actually consume.
+        Defaults are the light ground; body[data-ground='deep'] overrides.
+     -------------------------------------------------------------------- */
+  --ground: var(--color-pearl);
+  --ground-deep: var(--color-pearl-deep);
+  --ground-card: var(--color-pearl-card);
+  --ground-text: var(--color-ink);
+  --ground-text-muted: var(--color-ink-purple-soft);
+  --ground-accent: var(--color-ink-purple);
+  --ground-border: var(--color-ink-purple-pale);
+
+  /* Petal tint — PetalField reads this so drifting petals stay visible on
+     whichever ground they are falling over. */
+  --petal-fill: var(--color-ink-purple-pale);
+  --petal-stroke: var(--color-ink-purple);
+  --petal-opacity: 0.7;
+
+  /* Primary button, ground-aware: brand-filled on the light ground, and
+     inverted to pearl-on-plum where a purple fill would sink into the
+     deep ground instead of reading as the primary action. */
+  --btn-primary-bg: var(--color-ink-purple);
+  --btn-primary-bg-hover: var(--color-ink-purple-deep);
+  --btn-primary-fg: var(--color-pearl-card);
+
+  /* Legacy aliases. Older components reference these names throughout; they
+     are kept pointing at the new palette so the redesign needed no rename
+     sweep and stays easy to revert. Prefer the --ground-* names in new work. */
+  --color-paper: var(--ground);
+  --color-paper-deep: var(--ground-deep);
+  --color-paper-card: var(--ground-card);
 
   --color-line: var(--color-ink-purple);
   --color-focus: var(--color-ink-purple);
 
-  /* Theme accent defaults (overridden per chosen presentation theme) */
+  /* Theme accent defaults (overridden per chosen presentation theme). */
   --color-accent: var(--color-ink-purple);
   --color-accent-deep: var(--color-ink-purple-deep);
 
-  /* Type */
-  --font-script: 'Playfair Display', 'Iowan Old Style', serif;
-  --font-wordmark: 'Pinyon Script', var(--font-script);
+  /* --------------------------------------------------------------------
+     3. TYPE — three roles, and only three.
+          script   the wordmark, and nothing else
+          display  serif, for headings at 1.5rem and up
+          mono     labels, UI, and body copy
+        Cormorant Garamond replaces Playfair as the display face: higher
+        stroke contrast and a finer italic, which reads more upscale at
+        large sizes. It is deliberately never used below --text-lg, where
+        its light strokes would weaken.
+     -------------------------------------------------------------------- */
+  --font-display: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --font-wordmark: 'Pinyon Script', var(--font-display);
   --font-mono: 'Space Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-  --step-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* --font-script was the old (misleading) name for the display serif —
+     it was never the script face. Aliased so existing components keep
+     working; new code should use --font-display. */
+  --font-script: var(--font-display);
 
-  /* Spacing scale */
+  /* Fluid display sizes. */
+  --display-xl: clamp(3rem, 7.5vw + 0.75rem, 5.25rem);
+  --display-lg: clamp(2.25rem, 4.5vw + 0.9rem, 3.75rem);
+  --display-md: clamp(1.85rem, 2.8vw + 0.95rem, 2.75rem);
+  --display-sm: clamp(1.5rem, 1.6vw + 1rem, 1.95rem);
+
+  /* Fixed UI sizes. Body stays at 1rem for readability; refinement comes
+     from tracking and leading, not from shrinking body copy. */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+
+  --tracking-label: 0.18em;
+  --tracking-wide: 0.08em;
+  --tracking-display: -0.015em;
+
+  --leading-display: 1.08;
+  --leading-snug: 1.35;
+  --leading-body: 1.65;
+
+  /* --------------------------------------------------------------------
+     4. SPACING — a single 4px-based scale. The gaps in the old scale
+        (5, 7, 10 …) are filled in so layouts never need a one-off value.
+        Existing steps keep their original values, so nothing shifts.
+     -------------------------------------------------------------------- */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
+  --space-5: 1.25rem;
   --space-6: 1.5rem;
+  --space-7: 1.75rem;
   --space-8: 2rem;
+  --space-10: 2.5rem;
   --space-12: 3rem;
+  --space-14: 3.5rem;
   --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
 
-  --radius-sm: 0.5rem;
+  /* Section rhythm — the vertical beat between major page sections.
+     Generous by design; this is most of where the "calm" comes from. */
+  --section-y: clamp(var(--space-16), 9vw, var(--space-32));
+  --section-y-tight: clamp(var(--space-12), 6vw, var(--space-20));
+
+  /* --------------------------------------------------------------------
+     5. RADII — one scale, soft and consistent.
+     -------------------------------------------------------------------- */
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.625rem;
   --radius-md: 1rem;
-  --radius-lg: 1.75rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-pill: 999px;
 
-  --shadow-soft: 0 12px 32px -16px rgba(75, 31, 115, 0.35);
-  --shadow-card: 0 18px 48px -20px rgba(47, 31, 66, 0.4);
+  /* --------------------------------------------------------------------
+     6. ELEVATION — soft, wide, low-opacity. Shadows are always tinted
+        with the brand purple rather than neutral black.
+     -------------------------------------------------------------------- */
+  --shadow-soft: 0 12px 32px -16px rgba(75, 31, 115, 0.28);
+  --shadow-card: 0 18px 48px -20px rgba(36, 23, 51, 0.22);
+  --shadow-lift: 0 24px 56px -24px rgba(75, 31, 115, 0.34);
+  --shadow-glow: 0 0 80px -12px rgba(91, 42, 133, 0.55);
+
+  /* --------------------------------------------------------------------
+     7. MOTION — durations and easings. Every animated property in the app
+        should pull its timing from here so motion feels like one system.
+     -------------------------------------------------------------------- */
+  --step-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-fast: 0.18s;
+  --dur-base: 0.28s;
+  --dur-slow: 0.5s;
 }
 
 /*
-  Everbloom's cream-paper-and-purple-ink look is the brand identity, not a
-  "light theme" — it stays constant regardless of OS color-scheme preference,
-  the way a printed stationery brand would.
+  DEEP GROUND
+  Set `data-ground="deep"` on any element — a <section>, the site header — to
+  re-point the ground aliases for that element and its subtree. Components
+  styled against the aliases invert automatically, which is why the landing
+  can run a plum hero directly above a lavender-pearl section without either
+  one needing to know about the other.
+*/
+[data-ground='deep'] {
+  --ground: var(--color-plum);
+  --ground-deep: var(--color-plum-lift);
+  --ground-card: rgba(253, 252, 255, 0.06);
+  --ground-text: var(--color-on-deep);
+  --ground-text-muted: var(--color-on-deep-muted);
+  --ground-accent: var(--color-on-deep);
+  --ground-border: rgba(217, 199, 236, 0.28);
+
+  --petal-fill: var(--color-on-deep-faint);
+  --petal-stroke: rgba(217, 199, 236, 0.45);
+  --petal-opacity: 0.4;
+
+  --btn-primary-bg: var(--color-pearl-card);
+  --btn-primary-bg-hover: var(--color-on-deep-muted);
+  --btn-primary-fg: var(--color-plum);
+}
+
+/*
+  Everbloom's purple-ink identity stays constant regardless of OS
+  colour-scheme preference, the way a printed stationery brand would.
+  The two grounds above are art direction, not a light/dark theme.
 */

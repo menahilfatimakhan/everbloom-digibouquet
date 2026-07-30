@@ -31,27 +31,35 @@ const steps = [
 ];
 ---
 
-<BaseLayout title="Everbloom Digibouquet">
-  <section class="hero">
+<BaseLayout title="Everbloom Digibouquet" headerGround="deep">
+  <section class="hero" data-ground="deep">
+    <div class="hero__glow" aria-hidden="true"></div>
     <PetalField count={14} />
     <div class="container hero__inner">
       <div class="hero__copy">
-        <p class="eyebrow">Digital bouquets, built bloom by bloom</p>
-        <h1 class="hero__headline">
+        <p class="eyebrow" data-hero-reveal>Digital bouquets, built bloom by bloom</p>
+        <h1 class="hero__headline" data-hero-reveal>
           <span class="wordmark">Everbloom</span> never wilts.
         </h1>
-        <p class="hero__sub">
+        <p class="hero__sub" data-hero-reveal>
           Pick your blooms, watch them arrange themselves into a bouquet, write the card,
           and send it as a link. Whoever opens it watches it bloom — today, and every time
           they open it again.
         </p>
-        <div class="hero__actions">
+        <div class="hero__actions" data-hero-reveal>
           <a class="btn btn-primary" href="/build">Build a Bouquet</a>
           <a class="btn btn-ghost" href="#how-it-works">See how it works</a>
         </div>
       </div>
       <div class="hero__showcase" aria-hidden="true">
-        <svg viewBox={showcase.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
+        <!-- The signature moment: the bouquet sits in a lit, perforated
+             stamp window and breaks its top edge — the "send it like a
+             letter" idea already in the logo, stated once and then left
+             alone. Everything else on the page stays quiet. -->
+        <div class="hero__stage" data-hero-stage>
+          <div class="hero__stamp"></div>
+          <svg viewBox={showcase.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
+        </div>
       </div>
     </div>
   </section>
@@ -79,10 +87,31 @@ const steps = [
 </BaseLayout>
 
 <style>
+  /* ---------------------------------------------------------------
+     HERO — the one deep-ground section in the app.
+     --------------------------------------------------------------- */
+
   .hero {
     position: relative;
-    padding-block: var(--space-12) var(--space-16);
+    isolation: isolate;
     overflow: hidden;
+    background: linear-gradient(168deg, var(--color-plum) 0%, #2a1440 52%, var(--color-plum) 100%);
+    /* Top padding clears the header, which is overlaid rather than stacked. */
+    padding-block: clamp(7rem, 14vh, 9.5rem) var(--section-y);
+    min-height: min(100svh, 46rem);
+    display: flex;
+    align-items: center;
+  }
+
+  /* Ambient light behind the bouquet — the "lit window" the florals glow in.
+     Purely decorative, sits under everything. */
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse 55% 50% at 74% 40%, rgba(91, 42, 133, 0.6), transparent 70%),
+      radial-gradient(ellipse 70% 55% at 12% 88%, rgba(107, 47, 160, 0.24), transparent 72%);
   }
 
   .hero__inner {
@@ -90,39 +119,55 @@ const steps = [
     z-index: 1;
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--space-12);
+    gap: var(--space-10);
     align-items: center;
+    width: 100%;
   }
 
   @media (min-width: 60rem) {
     .hero__inner {
-      grid-template-columns: 1.1fr 0.9fr;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: var(--space-16);
     }
   }
 
   .hero__headline {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    line-height: 1.05;
-    margin-bottom: var(--space-4);
+    font-size: var(--display-lg);
+    margin-bottom: var(--space-5);
+    color: var(--color-on-deep);
   }
 
   .hero__headline .wordmark {
     display: block;
-    font-size: clamp(3.5rem, 9vw, 6rem);
-    color: var(--color-ink-purple);
+    font-size: var(--display-xl);
+    line-height: 0.95;
+    margin-bottom: 0.08em;
+    color: var(--color-on-deep);
   }
 
   .hero__sub {
-    max-width: 34rem;
-    font-size: 1rem;
-    color: var(--color-ink);
+    max-width: 32rem;
+    font-size: var(--text-md);
+    line-height: var(--leading-body);
+    color: var(--color-on-deep-muted);
+    margin-bottom: 0;
   }
 
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-4);
-    margin-top: var(--space-6);
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+  }
+
+  /* The ghost button carries inline padding so it sits correctly beside the
+     primary one. Once it wraps onto its own line that padding reads as a
+     stray indent, so pull it back into alignment. */
+  @media (max-width: 26rem) {
+    .hero__actions .btn-ghost {
+      margin-inline-start: calc(var(--space-3) * -1);
+    }
   }
 
   .hero__showcase {
@@ -130,9 +175,65 @@ const steps = [
     justify-content: center;
   }
 
+  .hero__stage {
+    position: relative;
+    width: min(100%, 27rem);
+    display: flex;
+    justify-content: center;
+
+    /*
+      THE ONE ART-DEPENDENT NUMBER IN THE REDESIGN.
+
+      Where the stamp's top edge sits, as a percentage of the bouquet
+      artwork's height. The composed bouquet SVG carries its own headroom
+      above the tallest stem, and this inset absorbs it so the stems cross
+      the perforated edge instead of floating inside the frame.
+
+      That headroom is a property of the ARTWORK, not of the layout — so
+      when the new flower art lands, this is the single value to retune.
+      Lower it if the stems no longer reach the edge; raise it if they
+      overshoot too far. Nothing else here depends on the art.
+    */
+    --stamp-top: 26%;
+
+    /* Continuously floated by GSAP — give it a compositor layer up front. */
+    will-change: transform;
+  }
+
+  /* Postage-stamp window: a lit panel with punched perforations on all four
+     edges. The mask is the only thing creating the notches — if a browser
+     drops it, this degrades to a plain rounded panel rather than breaking. */
+  .hero__stamp {
+    position: absolute;
+    /* Percentage-based so the frame lands at the same point on the artwork
+       at every viewport. See --stamp-top on .hero__stage. */
+    inset: var(--stamp-top) 0 0;
+    background: linear-gradient(180deg, rgba(253, 252, 255, 0.16), rgba(253, 252, 255, 0.05));
+    backdrop-filter: blur(2px);
+    --perf: 7px;
+    --perf-gap: 26px;
+    -webkit-mask:
+      radial-gradient(circle var(--perf) at 50% 0, #0000 97%, #000) 50% 0 / var(--perf-gap) 100% repeat-x,
+      radial-gradient(circle var(--perf) at 50% 100%, #0000 97%, #000) 50% 100% / var(--perf-gap) 100% repeat-x,
+      radial-gradient(circle var(--perf) at 0 50%, #0000 97%, #000) 0 50% / 100% var(--perf-gap) repeat-y,
+      radial-gradient(circle var(--perf) at 100% 50%, #0000 97%, #000) 100% 50% / 100% var(--perf-gap) repeat-y;
+    -webkit-mask-composite: source-in;
+    mask:
+      radial-gradient(circle var(--perf) at 50% 0, #0000 97%, #000) 50% 0 / var(--perf-gap) 100% repeat-x,
+      radial-gradient(circle var(--perf) at 50% 100%, #0000 97%, #000) 50% 100% / var(--perf-gap) 100% repeat-x,
+      radial-gradient(circle var(--perf) at 0 50%, #0000 97%, #000) 0 50% / 100% var(--perf-gap) repeat-y,
+      radial-gradient(circle var(--perf) at 100% 50%, #0000 97%, #000) 100% 50% / 100% var(--perf-gap) repeat-y;
+    mask-composite: intersect;
+  }
+
   .hero__bouquet {
-    width: min(100%, 26rem);
-    filter: drop-shadow(0 24px 40px rgba(75, 31, 115, 0.18));
+    position: relative;
+    width: 100%;
+    /* The composed bouquet is a large multi-path SVG, and the new artwork is
+       heavier still. Promoting the animated wrapper to its own layer (below)
+       keeps the drop-shadow rasterised once instead of on every frame of the
+       float, which is what would otherwise cost us on mobile. */
+    filter: drop-shadow(0 28px 48px rgba(12, 5, 20, 0.55));
   }
 
   .steps-preview {
@@ -193,3 +294,46 @@ const steps = [
     margin-top: var(--space-12);
   }
 </style>
+
+<script>
+  // Reuses the shared GSAP + reduced-motion helpers rather than reaching for
+  // gsap directly, so hero motion obeys the same switch as the builder.
+  import { gsap, prefersReducedMotion } from '../builder/animation/gsapSetup';
+
+  function initHero() {
+    if (prefersReducedMotion()) return;
+
+    const reveals = document.querySelectorAll<HTMLElement>('[data-hero-reveal]');
+    const stage = document.querySelector<HTMLElement>('[data-hero-stage]');
+
+    // gsap.from() applies the start state on the same frame it runs, so the
+    // markup stays visible for anyone without JS instead of being stranded
+    // at opacity 0.
+    if (reveals.length) {
+      gsap.from(reveals, {
+        y: 18,
+        opacity: 0,
+        duration: 0.7,
+        ease: 'power2.out',
+        stagger: 0.09,
+      });
+    }
+
+    if (stage) {
+      gsap
+        .timeline()
+        .from(stage, { opacity: 0, scale: 0.965, duration: 0.9, ease: 'power2.out' }, 0.15)
+        // Settles into a slow drift once it has arrived — the bouquet is
+        // meant to feel held, not animated at.
+        .to(stage, {
+          y: -10,
+          duration: 6,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+    }
+  }
+
+  initHero();
+</script>

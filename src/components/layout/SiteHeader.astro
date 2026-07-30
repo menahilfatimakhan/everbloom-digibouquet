@@ -1,7 +1,19 @@
 ---
+interface Props {
+  /**
+   * 'deep' overlays the header on top of the plum hero and inverts its
+   * colours via the --ground-* aliases. 'light' is the normal in-flow header.
+   */
+  ground?: 'light' | 'deep';
+}
+
+const { ground = 'light' } = Astro.props;
 ---
 
-<header class="site-header">
+<header
+  class:list={['site-header', ground === 'deep' && 'site-header--overlay']}
+  data-ground={ground === 'deep' ? 'deep' : undefined}
+>
   <div class="container site-header__inner">
     <a href="/" class="site-header__brand">
       <img class="site-header__mark" src="/logo/everbloom-stamp.png" alt="Everbloom" width="120" height="158" />
@@ -16,7 +28,19 @@
 
 <style>
   .site-header {
-    padding-block: var(--space-4);
+    position: relative;
+    z-index: 10;
+    padding-block: var(--space-5);
+  }
+
+  /* On the landing page the hero owns the full viewport top, so the header
+     floats over it rather than pushing it down. The hero compensates with
+     its own top padding (see index.astro). */
+  .site-header--overlay {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    background: transparent;
   }
 
   .site-header__inner {
@@ -31,43 +55,71 @@
     align-items: center;
     gap: var(--space-3);
     text-decoration: none;
-    color: var(--color-ink);
+    color: var(--ground-text);
+    border-radius: var(--radius-sm);
+    transition: opacity var(--dur-base) var(--step-ease);
+  }
+
+  .site-header__brand:hover {
+    opacity: 0.82;
   }
 
   .site-header__mark {
     width: 2.4rem;
     height: auto;
     flex-shrink: 0;
-    border-radius: 0.3rem;
+    border-radius: var(--radius-xs);
   }
 
   .site-header__wordmark {
     display: flex;
     flex-direction: column;
     line-height: 1;
+    gap: 0.28rem;
   }
 
   .site-header__wordmark .wordmark {
     font-size: 1.75rem;
-    color: var(--color-ink-purple);
+    color: var(--ground-accent);
   }
 
   .site-header__by {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.14em;
+    font-size: var(--text-2xs);
+    letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-    color: var(--color-ink-purple-soft);
+    color: var(--ground-text-muted);
   }
 
   .site-header__cta {
-    font-size: 0.75rem;
-    padding: 0.65rem 1.2rem;
+    font-size: var(--text-2xs);
+    padding: 0.7rem 1.35rem;
   }
 
+  /* At phone widths the wordmark and the CTA were colliding, so both step
+     down. (The rule this replaces targeted a `span` inside the CTA that
+     does not exist, so it had never taken effect.) */
   @media (max-width: 30rem) {
-    .site-header__cta span {
-      display: none;
+    .site-header {
+      padding-block: var(--space-4);
+    }
+
+    .site-header__mark {
+      width: 1.9rem;
+    }
+
+    .site-header__wordmark .wordmark {
+      font-size: 1.35rem;
+    }
+
+    .site-header__by {
+      font-size: 0.5625rem;
+      letter-spacing: 0.12em;
+    }
+
+    .site-header__cta {
+      padding: 0.6rem 0.9rem;
+      letter-spacing: 0.04em;
     }
   }
 </style>

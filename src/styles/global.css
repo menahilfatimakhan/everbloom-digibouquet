@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Space+Mono:wght@400;700&family=Caveat:wght@500;700&family=Homemade+Apple&display=swap');
+/* Cormorant Garamond is the display serif. Playfair Display is retained
+   ITALIC-ONLY because it is a card-lettering option the sender can pick
+   ("Formal Script" in cardFonts.json) — it is no longer a UI face. */
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital@1&family=Space+Mono:wght@400;700&family=Caveat:wght@500;700&family=Homemade+Apple&display=swap');
 
 @import './tokens.css';
 
@@ -14,14 +17,12 @@ html {
 
 body {
   margin: 0;
-  background: var(--color-paper);
-  color: var(--color-ink);
+  background: var(--ground);
+  color: var(--ground-text);
   font-family: var(--font-mono);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
   -webkit-font-smoothing: antialiased;
-  background-image: radial-gradient(circle at 20% 20%, rgba(107, 47, 160, 0.05), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(107, 47, 160, 0.04), transparent 40%);
 }
 
 img,
@@ -46,13 +47,35 @@ button {
   font-family: inherit;
 }
 
+/* ---------------------------------------------------------------------
+   TYPE
+   Display serif for headings; mono for everything else. Cormorant is
+   never used below --text-lg, where its light strokes would weaken.
+   --------------------------------------------------------------------- */
+
 h1,
 h2,
 h3 {
-  font-family: var(--font-script);
-  font-weight: 600;
-  margin: 0 0 var(--space-3);
-  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+  margin: 0 0 var(--space-4);
+  color: var(--ground-text);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--display-lg);
+}
+
+h2 {
+  font-size: var(--display-md);
+}
+
+h3 {
+  font-size: var(--display-sm);
+  line-height: var(--leading-snug);
 }
 
 p {
@@ -62,22 +85,35 @@ p {
 .wordmark {
   font-family: var(--font-wordmark);
   font-weight: 400;
+  letter-spacing: 0;
 }
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.18em;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: var(--color-ink-purple);
+  color: var(--ground-text-muted);
   font-weight: 700;
+  margin: 0 0 var(--space-4);
 }
+
+/* Quiet lead-in paragraph under a heading. */
+.lede {
+  font-size: var(--text-lg);
+  line-height: var(--leading-body);
+  color: var(--ground-text-muted);
+}
+
+/* ---------------------------------------------------------------------
+   LAYOUT
+   --------------------------------------------------------------------- */
 
 .container {
   width: 100%;
   max-width: 72rem;
   margin: 0 auto;
-  padding-inline: var(--space-4);
+  padding-inline: var(--space-5);
 }
 
 @media (min-width: 48rem) {
@@ -86,34 +122,53 @@ p {
   }
 }
 
+/* Standard vertical rhythm for a major page section. */
+.section {
+  padding-block: var(--section-y);
+}
+
+.section--tight {
+  padding-block: var(--section-y-tight);
+}
+
+/* ---------------------------------------------------------------------
+   BUTTONS
+   Styled against the ground aliases, so the same markup works on the
+   plum hero and the lavender-pearl workspace with no variant class.
+   --------------------------------------------------------------------- */
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
   font-weight: 700;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 0.85rem 1.6rem;
-  border-radius: 999px;
-  border: 1.5px solid var(--color-ink-purple);
+  padding: 0.9rem 1.75rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid color-mix(in srgb, var(--ground-accent) 45%, transparent);
   cursor: pointer;
-  transition: transform 0.2s var(--step-ease), box-shadow 0.2s var(--step-ease),
-    background 0.2s var(--step-ease), color 0.2s var(--step-ease);
+  transition: transform var(--dur-base) var(--step-ease),
+    box-shadow var(--dur-base) var(--step-ease), background var(--dur-base) var(--step-ease),
+    border-color var(--dur-base) var(--step-ease), color var(--dur-base) var(--step-ease);
   background: transparent;
-  color: var(--color-ink-purple);
+  color: var(--ground-accent);
   touch-action: manipulation;
 }
 
 .btn:hover {
   transform: translateY(-2px);
+  border-color: var(--ground-accent);
+  box-shadow: var(--shadow-soft);
 }
 
 .btn:active {
   transform: translateY(0);
+  box-shadow: none;
 }
 
 .btn:focus-visible {
@@ -122,30 +177,47 @@ p {
 }
 
 .btn-primary {
-  background: var(--color-ink-purple);
-  color: var(--color-paper-card);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-fg);
+  border-color: var(--btn-primary-bg);
   box-shadow: var(--shadow-soft);
 }
 
 .btn-primary:hover {
-  background: var(--color-ink-purple-deep);
-  border-color: var(--color-ink-purple-deep);
+  background: var(--btn-primary-bg-hover);
+  border-color: var(--btn-primary-bg-hover);
+  box-shadow: var(--shadow-lift);
 }
 
+/* Disabled is drawn as a real state rather than a blanket opacity fade.
+   Fading the primary button to 40% put white-on-lilac at 2.22:1 and made
+   the label — which is the thing telling you what you still have to do —
+   the least readable text on the page. This reads as clearly inactive and
+   measures 5.16:1. */
 .btn[disabled] {
-  opacity: 0.4;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
+  background: var(--color-ink-purple-pale);
+  border-color: transparent;
+  color: var(--color-ink-purple-soft);
 }
 
 .btn-ghost {
   border-color: transparent;
-  padding-inline: var(--space-2);
+  padding-inline: var(--space-3);
+  color: var(--ground-text-muted);
 }
 
 .btn-ghost:hover {
-  color: var(--color-ink-purple-deep);
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--ground-text);
 }
+
+/* ---------------------------------------------------------------------
+   ACCESSIBILITY
+   --------------------------------------------------------------------- */
 
 .visually-hidden {
   position: absolute;
@@ -157,6 +229,17 @@ p {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Baseline visible focus for every interactive element that does not
+   define its own. Keyboard users should never lose their place. */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+[data-ground='deep'] :focus-visible {
+  outline-color: var(--color-on-deep);
 }
 
 @media (prefers-reduced-motion: reduce) {

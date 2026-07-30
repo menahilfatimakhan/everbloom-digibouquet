@@ -23,7 +23,9 @@ const { count = 10 } = Astro.props;
     position: absolute;
     width: 1.4rem;
     height: 1.4rem;
-    opacity: 0.75;
+    /* Tint and weight come from the ground the petals are falling over —
+       see --petal-* in tokens.css. */
+    opacity: var(--petal-opacity, 0.75);
     will-change: transform;
   }
 </style>
