@@ -12,21 +12,15 @@
     "fillDeep": "#365A39"
   },
   {
-    "id": "ruscus",
-    "name": "Ruscus",
-    "fill": "#3E6B4A",
-    "fillDeep": "#294A32"
+    "id": "willow",
+    "name": "Willow",
+    "fill": "#9BAE93",
+    "fillDeep": "#788F72"
   },
   {
-    "id": "seeded-grass",
-    "name": "Seeded Grass",
-    "fill": "#A9A66B",
-    "fillDeep": "#88854F"
-  },
-  {
-    "id": "babys-breath",
-    "name": "Baby's Breath",
-    "fill": "#F5F1E8",
-    "fillDeep": "#E3DCC8"
+    "id": "leafy",
+    "name": "Mixed Greens",
+    "fill": "#6F9455",
+    "fillDeep": "#4E7038"
   }
 ]

@@ -1,6 +1,7 @@
 import type { BouquetState } from '../state/schema';
 import { mulberry32, pickWeighted, randRange } from './seededRandom';
 import { pickSilhouette, type LayerName } from './silhouettePresets';
+import { FOOTPRINT_TO_RENDER_SIZE } from './renderPlacements';
 
 export interface SpeciesMeta {
   footprintRadius: number;
@@ -15,6 +16,12 @@ export interface Placement {
   y: number;
   rotation: number;
   scale: number;
+  /** Horizontal-only multiplier for art whose square canvas needs fanning out
+   * to fill a wider-than-tall space. Applied inside the placement rather than
+   * as part of its transform — GSAP animates `.placement` and rewrites that
+   * transform as a matrix, which silently discards a non-uniform scale. Omitted
+   * for everything but the greenery backdrop; it must never distort a bloom. */
+  widthScale?: number;
   layer: LayerName;
   /** Half the intended visual footprint, in viewBox units — the renderer
    * sizes the art from this directly, so it's also what collision spacing
@@ -33,7 +40,38 @@ export interface ComposedLayout {
 
 const VIEWBOX_SIZE = 440;
 const CENTER = { x: 220, y: 258 };
-const GREENERY_FOOTPRINT_RADIUS = 24;
+
+/** Greenery is drawn as a single backdrop, not a scattering of sprigs.
+ *
+ * Each greenery asset is already a whole gathered spray — stems tied at the
+ * bottom, foliage fanning up and out. Repeating one across the arrangement
+ * therefore reads as several tiny bunches rather than one bouquet's worth of
+ * foliage, which is what the sprig-ring approach produced once the art changed.
+ * Placing it once, large, behind the blooms lets the art's own composition do
+ * the work.
+ *
+ * Height of the spray's *drawn* area in viewBox units. Blooms top out around
+ * y=30 and the gather sits at y=258, so filling roughly that span covers the
+ * bouquet without the fronds being clipped by the 440-unit frame. */
+const GREENERY_BACKDROP_HEIGHT = 236;
+
+/** The traced art is padded so the drawing occupies this fraction of its
+ * square box (tools/vectorize-art.mjs FILL_RATIO). Anchoring has to be done in
+ * terms of the drawing, not the box — otherwise the transparent margin throws
+ * the base off by ~8% of the height, which is enough to lift the whole spray
+ * clear of the blooms it is meant to sit behind. */
+const ART_FILL_RATIO = 0.85;
+
+/** How far below the vase rim the cut stem ends sit, so they finish behind the
+ * rim rather than stopping short in mid-air. */
+const GREENERY_BASE_OFFSET = 16;
+
+/** Horizontal stretch. The sprays are drawn on a square canvas, but a bouquet
+ * is wider than it is tall — at a height that clears the frame, an unstretched
+ * spray ends up narrower than the blooms and reads as a stripe behind them
+ * instead of foliage they are nestled into. Fanning the bunch wider is what a
+ * florist does by hand anyway. */
+const GREENERY_WIDTH_STRETCH = 1.5;
 
 /** Derived independently of arrangementSeed's bloom PRNG stream, so swapping
  * which greenery species is drawn never reshuffles bloom placement — only an
@@ -187,35 +225,28 @@ export function composeLayout(
     };
   });
 
-  // Fewer, more deliberate sprigs read as "accent greenery"; a dense ring
-  // read as a bushy tangle that fought the blooms for attention.
-  const greeneryCount = Math.min(9, 5 + Math.floor(totalQty / 4));
-  const greeneryAngles = stratifiedAngles(greeneryCount, preset.angleRange, greeneryRandom);
-  const greeneryPlaced: { x: number; y: number; footprintRadius: number }[] = [];
+  // One spray, placed deliberately behind the blooms — see
+  // GREENERY_BACKDROP_SIZE. It sits on the back layer so every bloom paints
+  // over it, and carries only a whisper of rotation: the art is already
+  // symmetric about its own stem, and tilting a full bouquet's worth of
+  // foliage reads as a mistake rather than as looseness.
   const greeneryAssetId = state.greenery ?? 'eucalyptus';
-  const greenery: Placement[] = greeneryAngles.map((angle, index) => {
-    const { x, y } = placeAtAngle(
-      angle,
-      'back',
-      GREENERY_FOOTPRINT_RADIUS,
-      preset,
-      greeneryRandom,
-      greeneryPlaced,
-      0.6
-    );
-    greeneryPlaced.push({ x, y, footprintRadius: GREENERY_FOOTPRINT_RADIUS });
-    return {
-      id: `greenery-${index}`,
+  const greeneryBox = GREENERY_BACKDROP_HEIGHT / ART_FILL_RATIO;
+  const greenery: Placement[] = [
+    {
+      id: 'greenery-backdrop',
       assetId: greeneryAssetId,
       kind: 'greenery',
-      x,
-      y,
-      rotation: randRange(greeneryRandom, -15, 15),
-      scale: randRange(greeneryRandom, 0.85, 1.1),
+      x: CENTER.x,
+      // Anchor the drawing's bottom edge, not the padded box's.
+      y: CENTER.y + GREENERY_BASE_OFFSET - GREENERY_BACKDROP_HEIGHT / 2,
+      rotation: randRange(greeneryRandom, -2.5, 2.5),
+      scale: 1,
+      widthScale: GREENERY_WIDTH_STRETCH,
       layer: 'back',
-      footprintRadius: GREENERY_FOOTPRINT_RADIUS,
-    };
-  });
+      footprintRadius: greeneryBox / FOOTPRINT_TO_RENDER_SIZE,
+    },
+  ];
 
   return {
     viewBox: `0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`,
@@ -226,15 +257,21 @@ export function composeLayout(
   };
 }
 
-/** Merges greenery + blooms into a single paint-order list: back layer
- * first (greenery interleaved with any back-biased blooms), then mid, then
- * front, sorted by y within each layer so lower elements sit in front of
- * higher ones within that layer — natural depth without cross-layer
- * z-fighting between a low greenery sprig and a high focal bloom. */
+/** Merges greenery + blooms into a single paint-order list.
+ *
+ * Greenery paints first unconditionally — it is one full-width backdrop, so
+ * ordering it against the blooms by y (as when it was a ring of small sprigs)
+ * would let the spray paint over any back-layer bloom that happened to sit
+ * higher than the spray's own centre, burying a flower behind the foliage.
+ *
+ * Blooms then run back layer to front, sorted by y within each layer so lower
+ * ones sit in front of higher ones — natural depth without cross-layer
+ * z-fighting between a low back bloom and a high focal one. */
 export function flattenForRender(layout: ComposedLayout): Placement[] {
-  return [...layout.greenery, ...layout.blooms].sort((a, b) => {
+  const blooms = [...layout.blooms].sort((a, b) => {
     const rankDiff = LAYER_RANK[a.layer] - LAYER_RANK[b.layer];
     if (rankDiff !== 0) return rankDiff;
     return a.y - b.y;
   });
+  return [...layout.greenery, ...blooms];
 }

@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "new-flower": "node tools/new-flower.mjs",
-    "process-logo": "node tools/process-logo.mjs"
+    "process-logo": "node tools/process-logo.mjs",
+    "vectorize-art": "node tools/vectorize-art.mjs"
   },
   "dependencies": {
     "@astrojs/vercel": "^8.0.0",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@neplex/vectorizer": "^0.1.0",
     "@playwright/test": "^1.48.0",
     "@types/node": "^22.0.0",
     "sharp": "^0.33.5",

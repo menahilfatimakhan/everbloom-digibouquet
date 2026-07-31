@@ -79,5 +79,32 @@
     "fill": "#5B6FD6",
     "fillDeep": "#3E4FB0",
     "center": "#28337D"
+  },
+  {
+    "id": "anemone",
+    "name": "Anemone",
+    "footprintRadius": 42,
+    "layerBias": "front",
+    "fill": "#C9B6E4",
+    "fillDeep": "#9E86C8",
+    "center": "#3B2352"
+  },
+  {
+    "id": "lotus",
+    "name": "Lotus",
+    "footprintRadius": 44,
+    "layerBias": "front",
+    "fill": "#F2C4CE",
+    "fillDeep": "#DA98A8",
+    "center": "#E8C86A"
+  },
+  {
+    "id": "zinnia",
+    "name": "Zinnia",
+    "footprintRadius": 36,
+    "layerBias": "mid",
+    "fill": "#F0764A",
+    "fillDeep": "#D2542B",
+    "center": "#E8C04A"
   }
 ]
