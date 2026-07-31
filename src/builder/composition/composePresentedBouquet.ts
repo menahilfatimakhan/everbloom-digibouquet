@@ -1,6 +1,7 @@
 import type { BouquetState } from '../state/schema';
 import { composeLayout, flattenForRender } from './layoutEngine';
 import { placementsToSvgBody } from './renderPlacements';
+import type { PresentationPiece } from '../assetRegistry';
 import {
   FLOWER_META,
   FLOWER_SVGS,
@@ -11,54 +12,53 @@ import {
   greeneryCssVars,
 } from '../assetRegistry';
 
-// Vase art is authored on a 320x320 viewBox; its rim — where the flowers
-// should appear to emerge from — sits at local (160,130). Everything below is
-// derived so that anchor lands exactly on the bouquet composition's own CENTER
-// (220, 258.5; see layoutEngine.ts), whatever size the vessel is drawn at.
-const VASE_RIM = { x: 160 / 320, y: 130 / 320 };
+/** Where the bouquet gathers — the point every vessel's rim and every bow's
+ * knot has to line up with. Matches the layout's own CENTER (see
+ * layoutEngine.ts), which is what the blooms fan out from. */
 const RIM_AT = { x: 220, y: 258.5 };
 
-/** Vessel size in composed units. Pulled back from the original 304 — at that
- * size the vase filled ~69% of the frame and read as the subject, with the
- * blooms as a garnish on top of it. The flowers are the point. */
-const VASE_SIZE = 252;
+/** A bow is tied around the stems just above the rim, not level with it. */
+const RIBBON_KNOT_RISE = 6;
 
-const VASE_BOX = {
-  x: RIM_AT.x - VASE_SIZE * VASE_RIM.x,
-  y: RIM_AT.y - VASE_SIZE * VASE_RIM.y,
-  w: VASE_SIZE,
-  h: VASE_SIZE,
-};
+/** A vessel or ribbon, as described in content/presentation.json. Each piece is
+ * traced tight to its own drawing (tools/vectorize-art.mjs), so it carries no
+ * consistent margin to position against; instead it declares
+ *
+ *   aspect  width / height of the drawn art
+ *   anchor  where its rim (vessel) or knot (bow) sits, as a fraction of height
+ *   height  how tall it should render, in composed units
+ *
+ * which is enough to place any of them without the compositor knowing anything
+ * about the individual piece. The previous constants were fitted by hand to one
+ * specific vase drawn on one specific canvas, and every new vessel — a wide
+ * bowl, a tall cone — would have needed its own set. */
+/** Positions a piece so its anchor point lands on `at`. */
+function pieceBox(piece: PresentationPiece, at: { x: number; y: number }) {
+  const h = piece.height;
+  const w = h * piece.aspect;
+  return { x: at.x - w / 2, y: at.y - h * piece.anchor, w, h };
+}
 
-// Ribbon art is authored on a 200x130 viewBox with its knot at local (100,65),
-// tied around the stems as they gather just above the rim. Scaled with the
-// vessel so the bow stays in proportion to the neck it is tied around.
-const RIBBON_SIZE = { w: 112 * (VASE_SIZE / 304), h: 72.8 * (VASE_SIZE / 304) };
-const RIBBON_BOX = {
-  x: RIM_AT.x - RIBBON_SIZE.w / 2,
-  y: RIM_AT.y + 5.7 - RIBBON_SIZE.h / 2,
-  w: RIBBON_SIZE.w,
-  h: RIBBON_SIZE.h,
-};
-
-function vaseGroup(assetId: string): string {
-  const raw = PRESENTATION_SVGS[assetId];
-  if (!raw) return '';
+function nest(raw: string, box: { x: number; y: number; w: number; h: number }): string {
   return raw.replace(
     '<svg ',
-    `<svg x="${VASE_BOX.x}" y="${VASE_BOX.y}" width="${VASE_BOX.w}" height="${VASE_BOX.h}" overflow="visible" `
+    `<svg x="${box.x.toFixed(2)}" y="${box.y.toFixed(2)}" width="${box.w.toFixed(2)}" height="${box.h.toFixed(2)}" preserveAspectRatio="none" overflow="visible" `
   );
 }
 
-function ribbonGroup(assetId: string, accent: string, accentDeep: string): string {
-  if (assetId === 'none') return '';
-  const raw = PRESENTATION_SVGS[assetId];
+function vaseGroup(piece: PresentationPiece): string {
+  const raw = PRESENTATION_SVGS[piece.id];
   if (!raw) return '';
-  const nested = raw.replace(
-    '<svg ',
-    `<svg x="${RIBBON_BOX.x}" y="${RIBBON_BOX.y}" width="${RIBBON_BOX.w}" height="${RIBBON_BOX.h}" overflow="visible" `
-  );
-  return `<g class="placement placement--ribbon" style="--presentation-fill:${accent};--presentation-fill-deep:${accentDeep}">${nested}</g>`;
+  return nest(raw, pieceBox(piece, RIM_AT));
+}
+
+function ribbonGroup(piece: PresentationPiece): string {
+  if (piece.id === 'none') return '';
+  const raw = PRESENTATION_SVGS[piece.id];
+  if (!raw) return '';
+  const nested = nest(raw, pieceBox(piece, { x: RIM_AT.x, y: RIM_AT.y - RIBBON_KNOT_RISE }));
+  // Class retained for the reveal's untie step, which looks the group up by it.
+  return `<g class="placement placement--ribbon">${nested}</g>`;
 }
 
 export interface PresentedBouquet {
@@ -73,7 +73,6 @@ export interface PresentedBouquet {
  * recipient reveal page, so they can never visually drift from each other. */
 export function composePresentedBouquet(state: BouquetState): PresentedBouquet {
   const { presentation } = state;
-  const theme = PRESENTATION.themes.find((t) => t.id === presentation.theme) ?? PRESENTATION.themes[0];
   const layout = composeLayout(state, FLOWER_META);
   const placements = flattenForRender(layout);
 
@@ -84,12 +83,15 @@ export function composePresentedBouquet(state: BouquetState): PresentedBouquet {
   );
 
   const vaseId = presentation.vase ?? PRESENTATION.vases[0].id;
-  const vaseContent = PRESENTATION.vases.find((v) => v.id === vaseId);
-  const materialSvg = vaseContent
-    ? `<g class="placement placement--material" style="--presentation-fill:${vaseContent.fill};--presentation-fill-deep:${vaseContent.fillDeep}">${vaseGroup(vaseId)}</g>`
+  const vasePiece = PRESENTATION.vases.find((v) => v.id === vaseId);
+  const materialSvg = vasePiece
+    ? `<g class="placement placement--material">${vaseGroup(vasePiece)}</g>`
     : '';
 
-  const ribbonSvg = presentation.ribbon ? ribbonGroup(presentation.ribbon, theme.accent, theme.accentDeep) : '';
+  const ribbonPiece = presentation.ribbon
+    ? PRESENTATION.ribbons.find((r) => r.id === presentation.ribbon)
+    : undefined;
+  const ribbonSvg = ribbonPiece ? ribbonGroup(ribbonPiece) : '';
 
   return { viewBox: layout.viewBox, materialSvg, bloomsSvg, ribbonSvg };
 }

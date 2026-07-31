@@ -43,9 +43,19 @@ export interface CardThemeContent {
 export const FLOWERS = flowersData as FlowerContent[];
 export const GREENERY = greeneryData as GreeneryContent[];
 export const FLORIOGRAPHY = floriographyData as FloriographyEntry[];
+/** Vessels and ribbons carry the geometry the compositor needs to place them:
+ * see PresentationPiece in composition/composePresentedBouquet.ts. */
+export interface PresentationPiece {
+  id: string;
+  name: string;
+  aspect: number;
+  anchor: number;
+  height: number;
+}
+
 export const PRESENTATION = presentationData as {
-  vases: { id: string; name: string; fill: string; fillDeep: string }[];
-  ribbons: { id: string; name: string; fill: string }[];
+  vases: PresentationPiece[];
+  ribbons: PresentationPiece[];
   themes: { id: string; name: string; accent: string; accentDeep: string; paper: string }[];
 };
 export const OCCASIONS = occasionsData as {

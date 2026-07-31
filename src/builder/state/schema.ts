@@ -63,8 +63,8 @@ export function createInitialState(): BouquetState {
     presentation: {
       type: 'vase',
       wrap: null,
-      vase: 'glass-bud',
-      ribbon: 'satin-bow',
+      vase: 'vase-glass',
+      ribbon: 'bow-pink',
       theme: 'lavender-dream',
     },
     card: {
@@ -132,7 +132,7 @@ export function hydrateBouquetState(state: BouquetState): BouquetState {
   if (state.presentation.type !== 'vase' || !state.presentation.vase) {
     state = {
       ...state,
-      presentation: { ...state.presentation, type: 'vase', vase: state.presentation.vase ?? 'glass-bud' },
+      presentation: { ...state.presentation, type: 'vase', vase: state.presentation.vase ?? 'vase-glass' },
     };
   }
   return state;

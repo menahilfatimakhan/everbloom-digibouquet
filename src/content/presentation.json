@@ -1,12 +1,21 @@
 {
   "vases": [
-    { "id": "glass-bud", "name": "Glass Bud Vase", "fill": "#DCE7E2", "fillDeep": "#B9CFC7" },
-    { "id": "ceramic-pitcher", "name": "Ceramic Pitcher", "fill": "#E8DCC8", "fillDeep": "#CBB894" }
+    { "id": "vase-glass", "name": "Glass Vase", "aspect": 0.774, "anchor": 0.05, "height": 172 },
+    { "id": "vase-ceramic", "name": "Ceramic Bowl", "aspect": 1.075, "anchor": 0.08, "height": 150 },
+    { "id": "vase-terracotta", "name": "Terracotta Pot", "aspect": 0.981, "anchor": 0.06, "height": 150 },
+    { "id": "wrap-kraft", "name": "Kraft Wrap", "aspect": 0.603, "anchor": 0.1, "height": 190 }
   ],
   "ribbons": [
-    { "id": "satin-bow", "name": "Satin Bow", "fill": "#6B2FA0" },
-    { "id": "twine", "name": "Twine & Raffia", "fill": "#8A7455" },
-    { "id": "none", "name": "No Ribbon", "fill": "transparent" }
+    { "id": "bow-pink", "name": "Blush", "aspect": 0.78, "anchor": 0.3, "height": 112 },
+    { "id": "bow-peach", "name": "Peach", "aspect": 0.807, "anchor": 0.3, "height": 112 },
+    { "id": "bow-gold", "name": "Gold", "aspect": 0.923, "anchor": 0.3, "height": 112 },
+    { "id": "bow-cream", "name": "Ivory", "aspect": 0.862, "anchor": 0.3, "height": 112 },
+    { "id": "bow-blue", "name": "Powder Blue", "aspect": 0.92, "anchor": 0.3, "height": 112 },
+    { "id": "bow-lavender", "name": "Lavender", "aspect": 0.889, "anchor": 0.3, "height": 112 },
+    { "id": "bow-violet", "name": "Violet", "aspect": 0.856, "anchor": 0.3, "height": 112 },
+    { "id": "bow-mauve", "name": "Mauve", "aspect": 1.071, "anchor": 0.3, "height": 112 },
+    { "id": "twine", "name": "Twine", "aspect": 0.991, "anchor": 0.55, "height": 62 },
+    { "id": "none", "name": "No Ribbon", "aspect": 1, "anchor": 0.5, "height": 0 }
   ],
   "themes": [
     { "id": "lavender-dream", "name": "Lavender Dream", "accent": "#8E5DC2", "accentDeep": "#6B3FA0", "paper": "#F7F2FA" },

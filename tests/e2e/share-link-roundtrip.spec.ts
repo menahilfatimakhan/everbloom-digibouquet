@@ -9,7 +9,7 @@ const TEST_STATE = {
   greenery: 'fern',
   arrangementSeed: 777,
   occasion: null,
-  presentation: { type: 'wrap', wrap: 'tissue-bundle', vase: null, ribbon: 'twine', theme: 'ivory-sage' },
+  presentation: { type: 'vase', wrap: null, vase: 'vase-terracotta', ribbon: 'twine', theme: 'ivory-sage' },
   card: {
     greeting: 'Roundtrip',
     message: 'This came from an automated share-link roundtrip test.',

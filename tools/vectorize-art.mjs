@@ -58,6 +58,25 @@ const TARGETS = {
   Fern: { id: 'fern', kind: 'greenery' },
   Willow: { id: 'willow', kind: 'greenery' },
   Leafy: { id: 'leafy', kind: 'greenery' },
+
+  // Vessels, wraps and ribbons. Unlike blooms these are not padded to a square:
+  // the compositor positions them by an anchor point (a vessel's rim, a bow's
+  // knot) expressed as a fraction of the drawn art, and squaring the canvas
+  // would bury that fraction under a variable transparent margin. They keep
+  // their natural aspect and are traced tight to the drawing.
+  'vase-glass': { id: 'vase-glass', kind: 'presentation', fit: 'content', anchor: 'rim' },
+  'vase-ceramic': { id: 'vase-ceramic', kind: 'presentation', fit: 'content', anchor: 'rim' },
+  'vase-terracotta': { id: 'vase-terracotta', kind: 'presentation', fit: 'content', anchor: 'rim' },
+  'wrap-kraft': { id: 'wrap-kraft', kind: 'presentation', fit: 'content', anchor: 'rim' },
+  Gemini_Generated_Image_2a81g12a81g12a81: { id: 'bow-peach', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  Gemini_Generated_Image_6p3nd16p3nd16p3n: { id: 'bow-blue', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  Gemini_Generated_Image_776ebd776ebd776e: { id: 'bow-gold', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  Gemini_Generated_Image_9ix46t9ix46t9ix4: { id: 'bow-pink', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  Gemini_Generated_Image_egm6clegm6clegm6: { id: 'bow-lavender', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  Gemini_Generated_Image_idcdb2idcdb2idcd: { id: 'bow-mauve', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  Gemini_Generated_Image_mheietmheietmhei: { id: 'bow-violet', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  Gemini_Generated_Image_um6nh7um6nh7um6n: { id: 'bow-cream', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  Gemini_Generated_Image_yiigmkyiigmkyiig: { id: 'twine', kind: 'presentation', fit: 'content', anchor: 'knot' },
 };
 
 const args = Object.fromEntries(
@@ -118,7 +137,49 @@ const TRACE_OPTS = {
  * sharp applies resize *before* composite regardless of chain order, so doing
  * both in one pipeline shrinks the canvas first and then fails to composite
  * the full-size art onto it. */
-async function prepare(srcPath) {
+/**
+ * Where the compositor should pin this piece, as a fraction of the drawn art.
+ *
+ * A bow hangs from its knot and a vessel is filled at its rim, so those are the
+ * points that must land on the bouquet's gather — not the art's centre, which
+ * would leave a bow floating above the stems and a vase swallowing them.
+ *
+ *  - `knot`: the narrowest row across the top half. A bow's loops flare out
+ *    above and its tails below, so the cinch is the local minimum between.
+ *  - `rim`: where the silhouette first reaches most of its full width coming
+ *    down from the top, i.e. the lip of the opening.
+ */
+function measureAnchor(mask, width, height, bounds, kind) {
+  const widths = [];
+  for (let y = bounds.top; y < bounds.top + bounds.height; y++) {
+    let first = -1;
+    let last = -1;
+    for (let x = bounds.left; x < bounds.left + bounds.width; x++) {
+      if (mask[y * width + x]) continue;
+      if (first < 0) first = x;
+      last = x;
+    }
+    widths.push(first < 0 ? 0 : last - first + 1);
+  }
+  if (!widths.length) return { x: 0.5, y: 0.15 };
+
+  if (kind === 'knot') {
+    // Ignore the very top few rows, where a stray loop tip can be narrower
+    // than the knot itself.
+    const from = Math.round(widths.length * 0.08);
+    const to = Math.round(widths.length * 0.55);
+    let bestY = from;
+    for (let i = from; i < to; i++) if (widths[i] < widths[bestY]) bestY = i;
+    return { x: 0.5, y: bestY / widths.length };
+  }
+
+  const maxWidth = Math.max(...widths);
+  let rimY = 0;
+  while (rimY < widths.length && widths[rimY] < maxWidth * 0.88) rimY++;
+  return { x: 0.5, y: rimY / widths.length };
+}
+
+async function prepare(srcPath, target) {
   const { data, info } = await sharp(srcPath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   const { width, height } = info;
 
@@ -133,29 +194,43 @@ async function prepare(srcPath) {
   }
 
   const bounds = contentBounds(mask, width, height);
-  const side = Math.max(bounds.width, bounds.height);
-  const box = Math.round(side / FILL_RATIO);
 
   const cropped = await sharp(rgba, { raw: { width, height, channels: 4 } })
     .extract(bounds)
     .png()
     .toBuffer();
 
-  const padded = await sharp({
-    create: { width: box, height: box, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
-  })
-    .composite([
-      {
-        input: cropped,
-        left: Math.round((box - bounds.width) / 2),
-        top: Math.round((box - bounds.height) / 2),
-      },
-    ])
-    .png()
-    .toBuffer();
+  let staged;
+  let traceW;
+  let traceH;
+  if (target.fit === 'content') {
+    // Tight to the drawing, natural aspect kept, longest side at trace
+    // resolution — so the anchor fractions measured below stay meaningful.
+    staged = cropped;
+    const scale = TRACE_PX / Math.max(bounds.width, bounds.height);
+    traceW = Math.max(1, Math.round(bounds.width * scale));
+    traceH = Math.max(1, Math.round(bounds.height * scale));
+  } else {
+    const side = Math.max(bounds.width, bounds.height);
+    const box = Math.round(side / FILL_RATIO);
+    staged = await sharp({
+      create: { width: box, height: box, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+    })
+      .composite([
+        {
+          input: cropped,
+          left: Math.round((box - bounds.width) / 2),
+          top: Math.round((box - bounds.height) / 2),
+        },
+      ])
+      .png()
+      .toBuffer();
+    traceW = TRACE_PX;
+    traceH = TRACE_PX;
+  }
 
-  const small = await sharp(padded)
-    .resize(TRACE_PX, TRACE_PX, { fit: 'fill', kernel: 'lanczos3' })
+  const small = await sharp(staged)
+    .resize(traceW, traceH, { fit: 'fill', kernel: 'lanczos3' })
     .raw()
     .toBuffer({ resolveWithObject: true });
 
@@ -174,9 +249,17 @@ async function prepare(srcPath) {
     px[p + 3] = 255;
   }
 
-  return sharp(px, { raw: { width: small.info.width, height: small.info.height, channels: 4 } })
+  const png = await sharp(px, {
+    raw: { width: small.info.width, height: small.info.height, channels: 4 },
+  })
     .png()
     .toBuffer();
+
+  return {
+    png,
+    anchor: target.anchor ? measureAnchor(mask, width, height, bounds, target.anchor) : null,
+    aspect: bounds.width / bounds.height,
+  };
 }
 
 function rgb(hex) {
@@ -314,7 +397,10 @@ function normalize(svg, id) {
 const entries = Object.entries(TARGETS).filter(([name]) => !only || only.has(name.toLowerCase()));
 let totalBytes = 0;
 
-for (const [name, { id, kind }] of entries) {
+const measured = [];
+
+for (const [name, target] of entries) {
+  const { id, kind } = target;
   const srcPath = path.join(srcDir, `${name}.png`);
   try {
     statSync(srcPath);
@@ -323,8 +409,8 @@ for (const [name, { id, kind }] of entries) {
     continue;
   }
 
-  const prepared = await prepare(srcPath);
-  const traced = await vectorize(prepared, TRACE_OPTS);
+  const prepared = await prepare(srcPath, target);
+  const traced = await vectorize(prepared.png, TRACE_OPTS);
   const svg = normalize(traced, id);
 
   const outDir = path.join(root, 'src', 'assets', 'svg', kind);
@@ -335,7 +421,22 @@ for (const [name, { id, kind }] of entries) {
   const kb = Buffer.byteLength(svg) / 1024;
   totalBytes += Buffer.byteLength(svg);
   const paths = (svg.match(/<path/g) || []).length;
-  console.log(`✓ ${name.padEnd(12)} -> ${kind}/${id}.svg  ${kb.toFixed(1)} KB  ${paths} paths`);
+  console.log(`✓ ${id.padEnd(16)} ${kind.padEnd(12)} ${kb.toFixed(1).padStart(6)} KB  ${String(paths).padStart(3)} paths`);
+  if (prepared.anchor) {
+    measured.push({ id, aspect: prepared.aspect, anchor: prepared.anchor });
+  }
+}
+
+if (measured.length) {
+  // Printed rather than written: presentation.json carries these by hand, so
+  // they can be nudged after looking at a render without the tool overwriting
+  // the correction on its next run.
+  console.log('\nMeasured anchors (aspect = w/h, anchor as a fraction of the drawn art):');
+  for (const m of measured) {
+    console.log(
+      `  ${m.id.padEnd(16)} aspect ${m.aspect.toFixed(3)}  anchor y ${m.anchor.y.toFixed(3)}`
+    );
+  }
 }
 
 console.log(`\nTotal: ${(totalBytes / 1024).toFixed(1)} KB across ${entries.length} files`);

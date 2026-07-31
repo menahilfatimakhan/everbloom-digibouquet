@@ -173,7 +173,10 @@ import '../styles/components/cardThemes.css';
       <div class="send-layout">
         <div class="send-options">
           <div class="field" data-vase-options>
-            <span>Vase</span>
+            <!-- "Vessel", not "Vase": the list now holds a kraft wrap alongside
+                 the vases and pots, and they all play the same role — the thing
+                 the bouquet is presented in. -->
+            <span>Vessel</span>
             <div class="chip-row">
               {PRESENTATION.vases.map((v) => <button type="button" class="chip" data-vase={v.id}>{v.name}</button>)}
             </div>

@@ -9,7 +9,7 @@ const TEST_STATE = {
   greenery: 'eucalyptus',
   arrangementSeed: 42,
   occasion: null,
-  presentation: { type: 'wrap', wrap: 'kraft-cone', vase: null, ribbon: 'satin-bow', theme: 'classic-red' },
+  presentation: { type: 'vase', wrap: null, vase: 'vase-ceramic', ribbon: 'bow-gold', theme: 'classic-red' },
   card: {
     greeting: 'Friend',
     message: 'Testing the reveal sequence.',

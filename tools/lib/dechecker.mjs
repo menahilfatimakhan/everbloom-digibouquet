@@ -22,11 +22,66 @@
 // worked for both — the eucalyptus centre needs a permissive one, the daisy's
 // petals a strict one.
 
-/** The two checker levels, and how far a pixel may sit from one to still count
- * as background. */
-const LIGHT = 254;
-const DARK = 205;
+/** How far a pixel may sit from a checker level to still count as background. */
 const LEVEL_TOL = 16;
+
+/** Fallback levels, used only if the pair can't be read off an image. */
+const DEFAULT_LEVELS = { light: 254, dark: 205 };
+
+/**
+ * Reads the two greys this particular export used for its checkerboard.
+ *
+ * Most of the set uses 254/205, but not all of them — one bow ships with a
+ * much lighter 253/232 pair, and against hardcoded levels its dark squares
+ * fell outside tolerance, so the mask kept the entire background and the trace
+ * came out as a bow on a grey slab.
+ *
+ * Sampled from a frame around the border rather than the whole image: the
+ * artwork is always inset from the edges, so the border is background by
+ * construction, whereas a whole-image histogram can be swayed by art that is
+ * itself largely neutral (the cream bow, the twine, the glass vase).
+ */
+function detectLevels(data, width, height) {
+  const band = Math.max(2, Math.round(Math.min(width, height) * 0.06));
+  const histogram = new Float64Array(256);
+  const consider = (x, y) => {
+    const p = (y * width + x) * 4;
+    const r = data[p];
+    const g = data[p + 1];
+    const b = data[p + 2];
+    if (Math.max(r, g, b) - Math.min(r, g, b) > NEUTRAL_TOL) return;
+    histogram[Math.round((r + g + b) / 3)]++;
+  };
+  for (let y = 0; y < height; y++) {
+    const edgeRow = y < band || y >= height - band;
+    for (let x = 0; x < width; x++) {
+      if (edgeRow || x < band || x >= width - band) consider(x, y);
+    }
+  }
+
+  const peak = (exclude) => {
+    let best = -1;
+    let bestCount = 0;
+    for (let v = 0; v < 256; v++) {
+      if (exclude >= 0 && Math.abs(v - exclude) <= 20) continue;
+      if (histogram[v] > bestCount) {
+        bestCount = histogram[v];
+        best = v;
+      }
+    }
+    return { value: best, count: bestCount };
+  };
+
+  const first = peak(-1);
+  const second = peak(first.value);
+  if (first.value < 0 || second.value < 0 || second.count < first.count * 0.15) {
+    return DEFAULT_LEVELS;
+  }
+  return {
+    light: Math.max(first.value, second.value),
+    dark: Math.min(first.value, second.value),
+  };
+}
 
 /** Max channel spread before a pixel reads as colored artwork rather than
  * neutral checker. Pale petal tints keep a visible red-over-green bias, so
@@ -48,6 +103,7 @@ const ALTERNATION_MIN = 0.15;
  */
 export function checkerMask(data, width, height, dilate = 2) {
   const n = width * height;
+  const { light: LIGHT, dark: DARK } = detectLevels(data, width, height);
 
   // --- 1. classify by color alone ----------------------------------------
   // Deliberately no attempt to predict which grey belongs at a given (x,y).
