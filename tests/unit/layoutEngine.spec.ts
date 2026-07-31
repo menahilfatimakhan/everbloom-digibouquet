@@ -62,6 +62,32 @@ describe('composeLayout', () => {
     expect(flattenForRender(layout)[0].id).toBe(spray.id);
   });
 
+  it('eases blooms down as the selection grows, so the foliage keeps reading', () => {
+    // The greenery backdrop is already sized to the frame and can't grow with
+    // the bouquet, so a fuller selection has to give ground instead — at full
+    // size ten blooms close ranks and bury it.
+    const at = (qty: number) =>
+      composeLayout({ ...baseState, blooms: [{ species: 'rose', qty }] }, FLOWER_META);
+
+    const six = at(6);
+    const ten = at(10);
+    const maxScale = (l: ReturnType<typeof at>) => Math.max(...l.blooms.map((b) => b.scale));
+
+    expect(maxScale(ten)).toBeLessThan(maxScale(six));
+    // But not so far that a full bouquet reads as a posy of buds.
+    expect(maxScale(ten)).toBeGreaterThan(maxScale(six) * 0.75);
+
+    // Only the art shrinks — the spacing the layout reserved is untouched, so
+    // blooms hold their positions and simply stop touching.
+    expect(ten.blooms.every((b) => b.footprintRadius === six.blooms[0].footprintRadius)).toBe(true);
+
+    // A fuller bouquet also has to fill its own middle: holding every bloom out
+    // at the rim leaves a hole where the heart should be.
+    const nearest = (l: ReturnType<typeof at>) =>
+      Math.min(...l.blooms.map((b) => Math.hypot(b.x - l.center.x, b.y - l.center.y)));
+    expect(nearest(ten)).toBeLessThan(nearest(six));
+  });
+
   it('changing the greenery species does not move bloom placements (independent sub-seed)', () => {
     const a = composeLayout(baseState, FLOWER_META);
     const b = composeLayout({ ...baseState, greenery: 'fern' }, FLOWER_META);

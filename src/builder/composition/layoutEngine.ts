@@ -90,6 +90,44 @@ const LAYER_NEIGHBORS: Record<LayerName, LayerName[]> = {
   front: ['mid'],
 };
 
+/** Bloom count the arrangement is tuned around — the low end of the allowed
+ * range, where blooms sit at full size with foliage clearly visible between
+ * them. */
+const REFERENCE_BLOOM_COUNT = 6;
+
+/**
+ * How much to shrink each bloom as the selection grows.
+ *
+ * The greenery backdrop is already sized to the frame — it spans essentially
+ * the full 440 units — so it cannot be scaled up to keep pace with a fuller
+ * bouquet. What changes with the count is how much of it the blooms *cover*:
+ * at six they sit apart with foliage reading between them, at ten they close
+ * ranks and bury it. Easing each bloom down keeps that ratio roughly constant,
+ * which is also just what a bouquet does — more stems, each reading smaller.
+ *
+ * The exponent is well below the 0.5 that would hold total petal area exactly
+ * constant. Blooms overlap, so covered area grows more slowly than the count,
+ * and compensating fully makes a ten-stem bouquet look like a posy of buds.
+ */
+function bloomScaleForCount(total: number): number {
+  if (total <= REFERENCE_BLOOM_COUNT) return 1;
+  return (REFERENCE_BLOOM_COUNT / total) ** 0.32;
+}
+
+/**
+ * How close to the gather a bloom may sit, as a fraction of its layer radius.
+ *
+ * A small selection wants its blooms held out near the rim — drawn inward they
+ * pile on the gather and leave the envelope's edge bare. A large one needs the
+ * opposite: once the blooms are also scaled down, holding them all out at the
+ * rim arranges them into a ring with a hole punched through the middle, with
+ * bare foliage showing where the heart of the bouquet should be.
+ */
+function depthFloorForCount(total: number): number {
+  const t = Math.min(Math.max((total - REFERENCE_BLOOM_COUNT) / 4, 0), 1);
+  return 0.74 - 0.28 * t;
+}
+
 function assignLayer(bias: LayerName, random: () => number): LayerName {
   const neighbors = LAYER_NEIGHBORS[bias];
   const weights: [LayerName, number][] = [[bias, 0.65]];
@@ -134,7 +172,10 @@ function placeAtAngle(
    * apart (no overlap at all), lower = petals allowed to touch/overlap a bit
    * for a natural clustered look. Blooms want a fairly strict value so
    * individual flowers stay legible; greenery can pack tighter. */
-  overlapTolerance: number
+  overlapTolerance: number,
+  /** Closest a bloom may sit to the gather, as a fraction of its layer's
+   * radius. See depthFloorForCount. */
+  depthFloor: number
 ): { x: number; y: number } {
   let best = { x: CENTER.x, y: CENTER.y };
 
@@ -145,12 +186,11 @@ function placeAtAngle(
     const nudgedAngle = angleDeg + randRange(random, -4, 4);
     const angleRad = (nudgedAngle * Math.PI) / 180;
     const jitterFactor = randRange(random, preset.jitter[0], preset.jitter[1]);
-    // The depth term keeps a layer from reading as a hard ring, but its floor
-    // used to be 0.6 — deep enough that a bloom could land barely half way out
-    // and pile onto the gather while the dome's outer edge sat empty. A higher
-    // floor spreads the same blooms across more of the envelope, which is what
-    // stops a full bouquet from looking cramped in its middle.
-    const depth = 0.74 + 0.26 * random();
+    // Square-rooted rather than taken flat, so blooms spread evenly over the
+    // dome's *area*. A flat draw puts as many stems in the small disc near the
+    // gather as in the much larger band at the rim, which is what made full
+    // bouquets look congested in the middle and thin at the edge.
+    const depth = Math.sqrt(depthFloor * depthFloor + (1 - depthFloor * depthFloor) * random());
     const radius = preset.layerRadius[layer] * preset.angleFactor(nudgedAngle) * depth * jitterFactor;
     const x = CENTER.x + radius * Math.cos(angleRad);
     const y = CENTER.y + radius * Math.sin(angleRad);
@@ -210,12 +250,23 @@ export function composeLayout(
   };
 
   const overrides = state.arrangementOverrides ?? {};
+  const bloomScale = bloomScaleForCount(totalQty);
+  const depthFloor = depthFloorForCount(totalQty);
   const blooms: Placement[] = instances.map((species, index) => {
     const meta = flowerMeta[species] ?? { footprintRadius: 36, layerBias: 'mid' as LayerName };
     const layer = layerOf[index];
     const angle = anglesByIndex.get(index)!;
     const id = `bloom-${species}-${index}`;
-    const placed = placeAtAngle(angle, layer, meta.footprintRadius, preset, bloomRandom, placedByLayer[layer], 0.82);
+    const placed = placeAtAngle(
+      angle,
+      layer,
+      meta.footprintRadius,
+      preset,
+      bloomRandom,
+      placedByLayer[layer],
+      0.82,
+      depthFloor
+    );
     // A manual drag override replaces the algorithmic position outright, but
     // still feeds into collision spacing for blooms placed after it so later
     // instances don't land on top of a spot the sender deliberately chose.
@@ -228,7 +279,11 @@ export function composeLayout(
       x,
       y,
       rotation: randRange(bloomRandom, -preset.rotationJitter, preset.rotationJitter),
-      scale: randRange(bloomRandom, 0.92, 1.08),
+      // Only the art shrinks — footprintRadius, and so the spacing the layout
+      // reserved, stays put. That is deliberate: the blooms keep their
+      // positions and simply stop touching, opening the gaps the foliage
+      // shows through.
+      scale: randRange(bloomRandom, 0.92, 1.08) * bloomScale,
       layer,
       footprintRadius: meta.footprintRadius,
     };
