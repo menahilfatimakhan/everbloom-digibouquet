@@ -15,7 +15,7 @@ const showcaseState: BouquetState = {
   // Chosen by eye from a sweep against the current art and envelope: a full,
   // rounded mass with the daisies reading at both edges and the fern fanning
   // evenly. Retune if the silhouette presets or the flower art change again.
-  arrangementSeed: 88,
+  arrangementSeed: 33,
   greenery: 'fern',
   occasion: null,
   // No ribbon here. On the builder it's a choice the sender makes; on the hero
@@ -213,12 +213,20 @@ const steps = [
      banding against the hero's own gradient. */
   .hero__halo {
     position: absolute;
-    inset: -14% -12% -10%;
+    /* Generous overflow so the fade has room to finish *inside* the element.
+       A radial-gradient is still clipped to its own box, so an ending shape
+       wider than the box gets sliced off flat at the edges — which is what
+       drew a hard-edged rectangle around the bouquet at the previous 78%. */
+    inset: -70% -40%;
     z-index: -1;
     pointer-events: none;
+    /* Every radius stays well under 50%, so both washes reach zero with room
+       to spare on all four sides. Fading to an explicit alpha-0 of the *same*
+       hue, not `transparent`: the keyword resolves to rgba(0,0,0,0), and
+       interpolating toward it drags a grey cast through the midtones. */
     background:
-      radial-gradient(ellipse 52% 44% at 50% 42%, rgba(255, 241, 250, 0.22), transparent 72%),
-      radial-gradient(ellipse 78% 70% at 50% 48%, rgba(158, 106, 205, 0.28), transparent 76%);
+      radial-gradient(ellipse 24% 26% at 50% 46%, rgba(255, 241, 250, 0.2), rgba(255, 241, 250, 0)),
+      radial-gradient(ellipse 34% 36% at 50% 47%, rgba(158, 106, 205, 0.28), rgba(158, 106, 205, 0));
   }
 
   .hero__bouquet {

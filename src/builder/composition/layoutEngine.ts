@@ -111,7 +111,7 @@ const REFERENCE_BLOOM_COUNT = 6;
  */
 function bloomScaleForCount(total: number): number {
   if (total <= REFERENCE_BLOOM_COUNT) return 1;
-  return (REFERENCE_BLOOM_COUNT / total) ** 0.32;
+  return (REFERENCE_BLOOM_COUNT / total) ** 0.16;
 }
 
 /**
@@ -125,7 +125,7 @@ function bloomScaleForCount(total: number): number {
  */
 function depthFloorForCount(total: number): number {
   const t = Math.min(Math.max((total - REFERENCE_BLOOM_COUNT) / 4, 0), 1);
-  return 0.74 - 0.28 * t;
+  return 0.74 - 0.12 * t;
 }
 
 function assignLayer(bias: LayerName, random: () => number): LayerName {
@@ -167,12 +167,18 @@ function placeAtAngle(
   footprintRadius: number,
   preset: ReturnType<typeof pickSilhouette>,
   random: () => number,
-  placedInLayer: { x: number; y: number; footprintRadius: number }[],
+  /** Every bloom placed so far, across all layers — not just this one's.
+   * Spacing used to be checked within a layer only, which let a front bloom
+   * land squarely on a mid one: with ten blooms split three ways there were
+   * barely three per layer, so almost nothing pushed them apart and they
+   * collected into a knot instead of spreading over the dome. */
+  placedSoFar: { x: number; y: number; footprintRadius: number; layer: LayerName }[],
   /** How much overlap to tolerate: 1 = centers must be a full combined-radius
    * apart (no overlap at all), lower = petals allowed to touch/overlap a bit
-   * for a natural clustered look. Blooms want a fairly strict value so
-   * individual flowers stay legible; greenery can pack tighter. */
-  overlapTolerance: number,
+   * for a natural clustered look. Two values, because overlap across depth is
+   * how a bouquet reads as layered rather than flat — blooms on different
+   * layers may sit much closer than two on the same one. */
+  overlapTolerance: { sameLayer: number; crossLayer: number },
   /** Closest a bloom may sit to the gather, as a fraction of its layer's
    * radius. See depthFloorForCount. */
   depthFloor: number
@@ -195,9 +201,10 @@ function placeAtAngle(
     const x = CENTER.x + radius * Math.cos(angleRad);
     const y = CENTER.y + radius * Math.sin(angleRad);
 
-    const collides = placedInLayer.some(
-      (p) => distance({ x, y }, p) < (p.footprintRadius + footprintRadius) * overlapTolerance
-    );
+    const collides = placedSoFar.some((p) => {
+      const tolerance = p.layer === layer ? overlapTolerance.sameLayer : overlapTolerance.crossLayer;
+      return distance({ x, y }, p) < (p.footprintRadius + footprintRadius) * tolerance;
+    });
 
     best = { x, y };
     if (!collides) return best;
@@ -243,11 +250,11 @@ export function composeLayout(
     indices.forEach((i, slot) => anglesByIndex.set(i, angles[slot]));
   });
 
-  const placedByLayer: Record<LayerName, { x: number; y: number; footprintRadius: number }[]> = {
-    back: [],
-    mid: [],
-    front: [],
-  };
+  const placedBlooms: { x: number; y: number; footprintRadius: number; layer: LayerName }[] = [];
+
+  /** Same-layer blooms must stand clearly apart; blooms on different layers may
+   * tuck in behind one another, which is what gives the arrangement depth. */
+  const BLOOM_SPACING = { sameLayer: 0.88, crossLayer: 0.6 };
 
   const overrides = state.arrangementOverrides ?? {};
   const bloomScale = bloomScaleForCount(totalQty);
@@ -263,15 +270,15 @@ export function composeLayout(
       meta.footprintRadius,
       preset,
       bloomRandom,
-      placedByLayer[layer],
-      0.82,
+      placedBlooms,
+      BLOOM_SPACING,
       depthFloor
     );
     // A manual drag override replaces the algorithmic position outright, but
     // still feeds into collision spacing for blooms placed after it so later
     // instances don't land on top of a spot the sender deliberately chose.
     const { x, y } = overrides[id] ?? placed;
-    placedByLayer[layer].push({ x, y, footprintRadius: meta.footprintRadius });
+    placedBlooms.push({ x, y, footprintRadius: meta.footprintRadius, layer });
     return {
       id,
       assetId: species,
