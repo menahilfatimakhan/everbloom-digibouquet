@@ -7,16 +7,16 @@ import { SCHEMA_VERSION, type BouquetState } from '../builder/state/schema';
 const showcaseState: BouquetState = {
   v: SCHEMA_VERSION,
   blooms: [
-    { species: 'peony', qty: 3 },
-    { species: 'tulip', qty: 2 },
-    { species: 'rose', qty: 2 },
-    { species: 'delphinium', qty: 2 },
+    { species: 'rose', qty: 3 },
+    { species: 'gerbera-daisy', qty: 3 },
+    { species: 'peony', qty: 2 },
+    { species: 'lily', qty: 2 },
   ],
-  // Chosen by eye against the current art and envelope: a balanced dome with
-  // both tulips reading at the shoulders and the delphinium not buried. Retune
-  // if the silhouette presets or the flower art change again.
-  arrangementSeed: 909,
-  greenery: 'eucalyptus',
+  // Chosen by eye from a sweep against the current art and envelope: a full,
+  // rounded mass with the daisies reading at both edges and the fern fanning
+  // evenly. Retune if the silhouette presets or the flower art change again.
+  arrangementSeed: 88,
+  greenery: 'fern',
   occasion: null,
   // No ribbon here. On the builder it's a choice the sender makes; on the hero
   // it only added a second focal point competing with the blooms.
@@ -26,7 +26,17 @@ const showcaseState: BouquetState = {
 };
 
 const showcase = composePresentedBouquet(showcaseState);
-const showcaseSvgBody = `${showcase.materialSvg}${showcase.bloomsSvg}${showcase.ribbonSvg}`;
+
+// Hand-tied, not arranged in a vessel: the hero shows the bouquet as it is
+// gathered, so it drops materialSvg (the vase) and ribbonSvg. Only the blooms
+// and their foliage are painted.
+const showcaseSvgBody = showcase.bloomsSvg;
+
+// The composed viewBox is square because it reserves room for a vessel below
+// the gather. With no vase to draw, that lower third is empty, and letting it
+// stand would float the bouquet in the top of its own frame. Cropped to the
+// arrangement itself — the gathered stem ends sit at ~280.
+const showcaseViewBox = '0 0 440 300';
 
 const steps = [
   { n: 1, label: 'Pick Blooms', copy: 'Choose 6–10 flowers, one at a time. Watch your tally grow.' },
@@ -64,7 +74,7 @@ const steps = [
              no edge to outgrow. -->
         <div class="hero__stage" data-hero-stage>
           <div class="hero__halo"></div>
-          <svg viewBox={showcase.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
+          <svg viewBox={showcaseViewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
         </div>
       </div>
     </div>
@@ -183,7 +193,10 @@ const steps = [
 
   .hero__stage {
     position: relative;
-    width: min(100%, 29rem);
+    /* Wider than it would be for a square frame: the hand-tied bouquet is
+       cropped to a 440x300 box, so a width tuned for a square composition
+       leaves it reading small against the headline beside it. */
+    width: min(100%, 36rem);
     display: flex;
     justify-content: center;
 
