@@ -14,38 +14,55 @@ export interface SilhouettePreset {
   rotationJitter: number;
 }
 
-// Presentation is vase-only now (no wrap opening to stay narrow enough to
-// fit inside), so the fan can use a fuller arc than before — blooms just
-// need to emerge plausibly above the vase rim, not be contained by it.
-// Actual even coverage of this arc comes from layoutEngine.ts's stratified
-// angle assignment, not from these ranges alone.
+/** Shapes the envelope by how *vertical* a bloom's angle is: full reach
+ * straight up, pulled in to `sides` out at the horizontal extremes.
+ *
+ * The envelope used to be shaped from cos(angle), which is asymmetric — it
+ * reached ~10% further to the left than the right and gave every arrangement
+ * a lopsided list. Worse, it reached *furthest* at the horizontal extremes,
+ * which is where a bouquet should be tightest: blooms at the far edges ended
+ * up level with the vase rim and a long way from it, reading as though they
+ * were floating beside the bouquet rather than growing out of it.
+ */
+function domeFactor(sides: number) {
+  return (angleDeg: number) => sides + (1 - sides) * Math.abs(Math.sin((angleDeg * Math.PI) / 180));
+}
+
+// Presentation is vase-only (no wrap opening to stay narrow enough to fit
+// inside), so the fan can use a generous arc — but it stops well short of
+// horizontal at both ends. A bloom placed near horizontal has its *centre*
+// just above the rim, and the art then hangs a half-height below it, leaving
+// flowers dangling past the vase neck with nothing holding them up.
+// Even coverage of the arc comes from layoutEngine.ts's stratified angle
+// assignment, not from these ranges alone.
 export const SILHOUETTE_PRESETS: SilhouettePreset[] = [
   {
     id: 'dome',
-    layerRadius: { back: 168, mid: 136, front: 104 },
-    angleRange: [-172, -8],
-    angleFactor: (angleDeg) => 1 - 0.1 * Math.cos((angleDeg * Math.PI) / 180),
-    jitter: [0.92, 1.06],
+    layerRadius: { back: 162, mid: 131, front: 100 },
+    angleRange: [-158, -22],
+    angleFactor: domeFactor(0.78),
+    jitter: [0.94, 1.05],
     rotationJitter: 9,
   },
   {
     id: 'cascade',
-    layerRadius: { back: 172, mid: 140, front: 106 },
-    angleRange: [-172, 6],
+    layerRadius: { back: 166, mid: 134, front: 102 },
+    angleRange: [-161, -19],
+    // Same dome, with one shoulder allowed to reach a little further for a
+    // soft asymmetric drape — deliberate, unlike the old accidental lean.
     angleFactor: (angleDeg) => {
-      // A gentle extra reach on one side for a soft drape.
-      const drape = angleDeg > -55 ? 1 + ((angleDeg + 55) / 61) * 0.2 : 1;
-      return drape;
+      const drape = angleDeg > -60 ? 1 + ((angleDeg + 60) / 48) * 0.12 : 1;
+      return domeFactor(0.8)(angleDeg) * drape;
     },
-    jitter: [0.9, 1.08],
+    jitter: [0.92, 1.07],
     rotationJitter: 10,
   },
   {
     id: 'wild',
-    layerRadius: { back: 176, mid: 142, front: 108 },
-    angleRange: [-176, -4],
-    angleFactor: () => 1,
-    jitter: [0.85, 1.12],
+    layerRadius: { back: 168, mid: 136, front: 104 },
+    angleRange: [-163, -17],
+    angleFactor: domeFactor(0.86),
+    jitter: [0.88, 1.1],
     rotationJitter: 13,
   },
 ];

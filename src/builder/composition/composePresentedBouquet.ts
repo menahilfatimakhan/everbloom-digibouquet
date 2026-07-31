@@ -11,17 +11,35 @@ import {
   greeneryCssVars,
 } from '../assetRegistry';
 
-// Vase art is authored on a 320x320 viewBox; its rim (where the flowers
-// should appear to emerge from) sits at local (160,130). This box places
-// that anchor point at the right spot relative to the bouquet composition's
-// own CENTER (see layoutEngine.ts).
-const VASE_BOX = { x: 68, y: 135, w: 304, h: 304 };
-// Ribbon art is authored on a 200x130 viewBox with its knot at local (100,65).
-// Sized+positioned so that knot anchor lands just above the vase rim (which
-// itself sits at composed y≈258.5, see VASE_BOX above) — tied around the
-// stems as they gather, rather than the old wrap-neck placement lower down.
-// Deliberately smaller than a statement bow for a cuter accent look.
-const RIBBON_BOX = { x: 164, y: 227.8, w: 112, h: 72.8 };
+// Vase art is authored on a 320x320 viewBox; its rim — where the flowers
+// should appear to emerge from — sits at local (160,130). Everything below is
+// derived so that anchor lands exactly on the bouquet composition's own CENTER
+// (220, 258.5; see layoutEngine.ts), whatever size the vessel is drawn at.
+const VASE_RIM = { x: 160 / 320, y: 130 / 320 };
+const RIM_AT = { x: 220, y: 258.5 };
+
+/** Vessel size in composed units. Pulled back from the original 304 — at that
+ * size the vase filled ~69% of the frame and read as the subject, with the
+ * blooms as a garnish on top of it. The flowers are the point. */
+const VASE_SIZE = 252;
+
+const VASE_BOX = {
+  x: RIM_AT.x - VASE_SIZE * VASE_RIM.x,
+  y: RIM_AT.y - VASE_SIZE * VASE_RIM.y,
+  w: VASE_SIZE,
+  h: VASE_SIZE,
+};
+
+// Ribbon art is authored on a 200x130 viewBox with its knot at local (100,65),
+// tied around the stems as they gather just above the rim. Scaled with the
+// vessel so the bow stays in proportion to the neck it is tied around.
+const RIBBON_SIZE = { w: 112 * (VASE_SIZE / 304), h: 72.8 * (VASE_SIZE / 304) };
+const RIBBON_BOX = {
+  x: RIM_AT.x - RIBBON_SIZE.w / 2,
+  y: RIM_AT.y + 5.7 - RIBBON_SIZE.h / 2,
+  w: RIBBON_SIZE.w,
+  h: RIBBON_SIZE.h,
+};
 
 function vaseGroup(assetId: string): string {
   const raw = PRESENTATION_SVGS[assetId];

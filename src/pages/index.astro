@@ -12,10 +12,15 @@ const showcaseState: BouquetState = {
     { species: 'rose', qty: 2 },
     { species: 'delphinium', qty: 2 },
   ],
-  arrangementSeed: 8271,
+  // Chosen by eye against the current art and envelope: a balanced dome with
+  // both tulips reading at the shoulders and the delphinium not buried. Retune
+  // if the silhouette presets or the flower art change again.
+  arrangementSeed: 909,
   greenery: 'eucalyptus',
   occasion: null,
-  presentation: { type: 'vase', wrap: null, vase: 'glass-bud', ribbon: 'satin-bow', theme: 'lavender-dream' },
+  // No ribbon here. On the builder it's a choice the sender makes; on the hero
+  // it only added a second focal point competing with the blooms.
+  presentation: { type: 'vase', wrap: null, vase: 'glass-bud', ribbon: null, theme: 'lavender-dream' },
   card: { greeting: '', message: '', signature: '', font: 'monospace', theme: 'classic-cream', doodle: null },
   arrangementOverrides: {},
 };
@@ -52,12 +57,13 @@ const steps = [
         </div>
       </div>
       <div class="hero__showcase" aria-hidden="true">
-        <!-- The signature moment: the bouquet sits in a lit, perforated
-             stamp window and breaks its top edge — the "send it like a
-             letter" idea already in the logo, stated once and then left
-             alone. Everything else on the page stays quiet. -->
+        <!-- The signature moment: the bouquet sits in its own pool of light.
+             A soft radial wash rather than a framed panel — a hard-edged frame
+             has to be sized to the artwork, and any bloom reaching past it
+             read as spilling out of a box that was too small. A gradient has
+             no edge to outgrow. -->
         <div class="hero__stage" data-hero-stage>
-          <div class="hero__stamp"></div>
+          <div class="hero__halo"></div>
           <svg viewBox={showcase.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
         </div>
       </div>
@@ -177,53 +183,29 @@ const steps = [
 
   .hero__stage {
     position: relative;
-    width: min(100%, 27rem);
+    width: min(100%, 29rem);
     display: flex;
     justify-content: center;
-
-    /*
-      THE ONE ART-DEPENDENT NUMBER IN THE REDESIGN.
-
-      Where the stamp's top edge sits, as a percentage of the bouquet
-      artwork's height. The composed bouquet SVG carries its own headroom
-      above the tallest stem, and this inset absorbs it so the stems cross
-      the perforated edge instead of floating inside the frame.
-
-      That headroom is a property of the ARTWORK, not of the layout — so
-      when the new flower art lands, this is the single value to retune.
-      Lower it if the stems no longer reach the edge; raise it if they
-      overshoot too far. Nothing else here depends on the art.
-    */
-    --stamp-top: 26%;
 
     /* Continuously floated by GSAP — give it a compositor layer up front. */
     will-change: transform;
   }
 
-  /* Postage-stamp window: a lit panel with punched perforations on all four
-     edges. The mask is the only thing creating the notches — if a browser
-     drops it, this degrades to a plain rounded panel rather than breaking. */
-  .hero__stamp {
+  /* The pool of light the bouquet stands in. Overflows the stage on every side
+     so it can never be "too small" for the artwork the way a framed panel was;
+     it simply falls off to nothing before it reaches the section edges.
+
+     Two stops rather than one: a tight warm core that lifts the blooms off the
+     plum ground, and a wide cool falloff that keeps the transition from
+     banding against the hero's own gradient. */
+  .hero__halo {
     position: absolute;
-    /* Percentage-based so the frame lands at the same point on the artwork
-       at every viewport. See --stamp-top on .hero__stage. */
-    inset: var(--stamp-top) 0 0;
-    background: linear-gradient(180deg, rgba(253, 252, 255, 0.16), rgba(253, 252, 255, 0.05));
-    backdrop-filter: blur(2px);
-    --perf: 7px;
-    --perf-gap: 26px;
-    -webkit-mask:
-      radial-gradient(circle var(--perf) at 50% 0, #0000 97%, #000) 50% 0 / var(--perf-gap) 100% repeat-x,
-      radial-gradient(circle var(--perf) at 50% 100%, #0000 97%, #000) 50% 100% / var(--perf-gap) 100% repeat-x,
-      radial-gradient(circle var(--perf) at 0 50%, #0000 97%, #000) 0 50% / 100% var(--perf-gap) repeat-y,
-      radial-gradient(circle var(--perf) at 100% 50%, #0000 97%, #000) 100% 50% / 100% var(--perf-gap) repeat-y;
-    -webkit-mask-composite: source-in;
-    mask:
-      radial-gradient(circle var(--perf) at 50% 0, #0000 97%, #000) 50% 0 / var(--perf-gap) 100% repeat-x,
-      radial-gradient(circle var(--perf) at 50% 100%, #0000 97%, #000) 50% 100% / var(--perf-gap) 100% repeat-x,
-      radial-gradient(circle var(--perf) at 0 50%, #0000 97%, #000) 0 50% / 100% var(--perf-gap) repeat-y,
-      radial-gradient(circle var(--perf) at 100% 50%, #0000 97%, #000) 100% 50% / 100% var(--perf-gap) repeat-y;
-    mask-composite: intersect;
+    inset: -14% -12% -10%;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 52% 44% at 50% 42%, rgba(255, 241, 250, 0.22), transparent 72%),
+      radial-gradient(ellipse 78% 70% at 50% 48%, rgba(158, 106, 205, 0.28), transparent 76%);
   }
 
   .hero__bouquet {

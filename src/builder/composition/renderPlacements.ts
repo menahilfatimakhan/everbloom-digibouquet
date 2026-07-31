@@ -5,8 +5,14 @@ import type { Placement } from './layoutEngine';
  * placement's `footprintRadius` (the spacing the layout engine actually
  * reserved for it) into the art's render size, so a bloom never renders larger
  * than the room it was spaced for — the earlier fixed render size regardless
- * of footprint was what made arrangements look like an overlapping tangle. */
-export const FOOTPRINT_TO_RENDER_SIZE = 2.35;
+ * of footprint was what made arrangements look like an overlapping tangle.
+ *
+ * Held slightly below the spacing the layout reserves, so blooms sit *in* the
+ * space allotted to them rather than filling it edge to edge. At 2.35 a full
+ * selection of the larger species (peony, lotus) packed shoulder to shoulder
+ * and buried the foliage behind them; the gap this leaves is what lets the
+ * greenery read between the blooms. */
+export const FOOTPRINT_TO_RENDER_SIZE = 2.12;
 
 export interface RenderableCssVars {
   [customProperty: string]: string;

@@ -50,10 +50,14 @@ const CENTER = { x: 220, y: 258 };
  * Placing it once, large, behind the blooms lets the art's own composition do
  * the work.
  *
- * Height of the spray's *drawn* area in viewBox units. Blooms top out around
- * y=30 and the gather sits at y=258, so filling roughly that span covers the
- * bouquet without the fronds being clipped by the 440-unit frame. */
-const GREENERY_BACKDROP_HEIGHT = 236;
+ * Height of the spray's *drawn* area in viewBox units. Sized to reach from
+ * just under the gather to near the top of the frame, so the foliage reads as
+ * a bed the blooms are set into rather than a sprig behind them — at the
+ * previous 236 the blooms covered nearly all of it and the arrangement looked
+ * cramped. Capped by the frame: the drawn area starts at
+ * CENTER.y + GREENERY_BASE_OFFSET and runs upward, so anything past ~270 gets
+ * its fronds sheared off by the viewBox edge. */
+const GREENERY_BACKDROP_HEIGHT = 264;
 
 /** The traced art is padded so the drawing occupies this fraction of its
  * square box (tools/vectorize-art.mjs FILL_RATIO). Anchoring has to be done in
@@ -71,7 +75,7 @@ const GREENERY_BASE_OFFSET = 16;
  * spray ends up narrower than the blooms and reads as a stripe behind them
  * instead of foliage they are nestled into. Fanning the bunch wider is what a
  * florist does by hand anyway. */
-const GREENERY_WIDTH_STRETCH = 1.5;
+const GREENERY_WIDTH_STRETCH = 1.62;
 
 /** Derived independently of arrangementSeed's bloom PRNG stream, so swapping
  * which greenery species is drawn never reshuffles bloom placement — only an
@@ -141,8 +145,13 @@ function placeAtAngle(
     const nudgedAngle = angleDeg + randRange(random, -4, 4);
     const angleRad = (nudgedAngle * Math.PI) / 180;
     const jitterFactor = randRange(random, preset.jitter[0], preset.jitter[1]);
-    const radius =
-      preset.layerRadius[layer] * preset.angleFactor(nudgedAngle) * (0.6 + 0.4 * random()) * jitterFactor;
+    // The depth term keeps a layer from reading as a hard ring, but its floor
+    // used to be 0.6 — deep enough that a bloom could land barely half way out
+    // and pile onto the gather while the dome's outer edge sat empty. A higher
+    // floor spreads the same blooms across more of the envelope, which is what
+    // stops a full bouquet from looking cramped in its middle.
+    const depth = 0.74 + 0.26 * random();
+    const radius = preset.layerRadius[layer] * preset.angleFactor(nudgedAngle) * depth * jitterFactor;
     const x = CENTER.x + radius * Math.cos(angleRad);
     const y = CENTER.y + radius * Math.sin(angleRad);
 
