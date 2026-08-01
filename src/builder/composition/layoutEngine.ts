@@ -36,6 +36,9 @@ export interface Placement {
 
 export interface ComposedLayout {
   viewBox: string;
+  /** Frame width in composed units, so callers can build a cropped viewBox
+   * without parsing the string above. */
+  frameWidth: number;
   center: { x: number; y: number };
   silhouette: 'dome' | 'cascade' | 'wild';
   greenery: Placement[];
@@ -343,6 +346,7 @@ export function composeLayout(
 
   return {
     viewBox: `0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`,
+    frameWidth: VIEWBOX_SIZE,
     center: CENTER,
     silhouette: preset.id,
     greenery,

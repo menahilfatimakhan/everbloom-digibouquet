@@ -68,11 +68,12 @@ const TARGETS = {
   'vase-ceramic': { id: 'vase-ceramic', kind: 'presentation', fit: 'content', anchor: 'rim' },
   'vase-terracotta': { id: 'vase-terracotta', kind: 'presentation', fit: 'content', anchor: 'rim' },
   'wrap-kraft': { id: 'wrap-kraft', kind: 'presentation', fit: 'content', anchor: 'rim' },
+  // The lavender bow (Gemini_Generated_Image_egm6cl...) is deliberately absent:
+  // it read as a near-duplicate of the violet one in the colour row.
   Gemini_Generated_Image_2a81g12a81g12a81: { id: 'bow-peach', kind: 'presentation', fit: 'content', anchor: 'knot' },
   Gemini_Generated_Image_6p3nd16p3nd16p3n: { id: 'bow-blue', kind: 'presentation', fit: 'content', anchor: 'knot' },
   Gemini_Generated_Image_776ebd776ebd776e: { id: 'bow-gold', kind: 'presentation', fit: 'content', anchor: 'knot' },
   Gemini_Generated_Image_9ix46t9ix46t9ix4: { id: 'bow-pink', kind: 'presentation', fit: 'content', anchor: 'knot' },
-  Gemini_Generated_Image_egm6clegm6clegm6: { id: 'bow-lavender', kind: 'presentation', fit: 'content', anchor: 'knot' },
   Gemini_Generated_Image_idcdb2idcdb2idcd: { id: 'bow-mauve', kind: 'presentation', fit: 'content', anchor: 'knot' },
   Gemini_Generated_Image_mheietmheietmhei: { id: 'bow-violet', kind: 'presentation', fit: 'content', anchor: 'knot' },
   Gemini_Generated_Image_um6nh7um6nh7um6n: { id: 'bow-cream', kind: 'presentation', fit: 'content', anchor: 'knot' },

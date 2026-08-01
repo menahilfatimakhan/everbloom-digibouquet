@@ -1,14 +1,57 @@
 {
   "vases": [
-    { "id": "vase-glass", "name": "Glass Vase", "aspect": 0.774, "anchor": 0.05, "height": 172 },
-    { "id": "vase-ceramic", "name": "Ceramic Bowl", "aspect": 1.075, "anchor": 0.08, "height": 150 },
-    { "id": "vase-terracotta", "name": "Terracotta Pot", "aspect": 0.981, "anchor": 0.06, "height": 150 },
-    { "id": "wrap-kraft", "name": "Kraft Wrap", "aspect": 0.603, "anchor": 0.27, "height": 210 }
+    {
+      "id": "vase-glass",
+      "name": "Glass Vase",
+      "aspect": 0.774,
+      "anchor": 0.05,
+      "height": 172
+    },
+    {
+      "id": "vase-ceramic",
+      "name": "Ceramic Bowl",
+      "aspect": 1.075,
+      "anchor": 0.08,
+      "height": 150
+    },
+    {
+      "id": "vase-terracotta",
+      "name": "Terracotta Pot",
+      "aspect": 0.981,
+      "anchor": 0.06,
+      "height": 150
+    },
+    {
+      "id": "wrap-kraft",
+      "name": "Kraft Wrap",
+      "aspect": 0.603,
+      "anchor": 0.27,
+      "height": 210
+    },
+    {
+      "id": "none",
+      "name": "No Vessel"
+    }
   ],
   "ribbons": [
-    { "id": "ribbon", "name": "Ribbon" },
-    { "id": "twine", "name": "Twine", "piece": { "id": "twine", "aspect": 1.73, "anchor": 0.28, "height": 74 } },
-    { "id": "none", "name": "No Ribbon" }
+    {
+      "id": "ribbon",
+      "name": "Ribbon"
+    },
+    {
+      "id": "twine",
+      "name": "Twine",
+      "piece": {
+        "id": "twine",
+        "aspect": 1.73,
+        "anchor": 0.28,
+        "height": 74
+      }
+    },
+    {
+      "id": "none",
+      "name": "No Ribbon"
+    }
   ],
   "themes": [
     {
@@ -16,56 +59,84 @@
       "name": "Blush",
       "accent": "#E3A9A2",
       "paper": "#FBF6F5",
-      "bow": { "id": "bow-pink", "aspect": 0.78, "anchor": 0.3, "height": 112 }
+      "bow": {
+        "id": "bow-pink",
+        "aspect": 0.78,
+        "anchor": 0.3,
+        "height": 112
+      }
     },
     {
       "id": "peach",
       "name": "Peach",
       "accent": "#E5A87E",
       "paper": "#FBF4F0",
-      "bow": { "id": "bow-peach", "aspect": 0.807, "anchor": 0.3, "height": 112 }
+      "bow": {
+        "id": "bow-peach",
+        "aspect": 0.807,
+        "anchor": 0.3,
+        "height": 112
+      }
     },
     {
       "id": "gold",
       "name": "Gold",
       "accent": "#DCB463",
       "paper": "#FCF8F2",
-      "bow": { "id": "bow-gold", "aspect": 0.923, "anchor": 0.3, "height": 112 }
+      "bow": {
+        "id": "bow-gold",
+        "aspect": 0.923,
+        "anchor": 0.3,
+        "height": 112
+      }
     },
     {
       "id": "ivory",
       "name": "Ivory",
       "accent": "#D8CDBC",
       "paper": "#FCFAF9",
-      "bow": { "id": "bow-cream", "aspect": 0.862, "anchor": 0.3, "height": 112 }
+      "bow": {
+        "id": "bow-cream",
+        "aspect": 0.862,
+        "anchor": 0.3,
+        "height": 112
+      }
     },
     {
       "id": "powder-blue",
       "name": "Powder Blue",
       "accent": "#9FB8D2",
       "paper": "#F7F9FB",
-      "bow": { "id": "bow-blue", "aspect": 0.92, "anchor": 0.3, "height": 112 }
-    },
-    {
-      "id": "lavender",
-      "name": "Lavender",
-      "accent": "#B695CE",
-      "paper": "#F7F3F9",
-      "bow": { "id": "bow-lavender", "aspect": 0.889, "anchor": 0.3, "height": 112 }
+      "bow": {
+        "id": "bow-blue",
+        "aspect": 0.92,
+        "anchor": 0.3,
+        "height": 112
+      }
     },
     {
       "id": "violet",
       "name": "Violet",
       "accent": "#A98BC0",
       "paper": "#F8F4F7",
-      "bow": { "id": "bow-violet", "aspect": 0.856, "anchor": 0.3, "height": 112 }
+      "bow": {
+        "id": "bow-violet",
+        "aspect": 0.856,
+        "anchor": 0.3,
+        "height": 112
+      }
     },
     {
       "id": "mauve",
       "name": "Mauve",
       "accent": "#BE90A8",
       "paper": "#F7F2F4",
-      "bow": { "id": "bow-mauve", "aspect": 1.071, "anchor": 0.3, "height": 112 }
+      "bow": {
+        "id": "bow-mauve",
+        "aspect": 1.071,
+        "anchor": 0.3,
+        "height": 112
+      }
     }
   ]
 }

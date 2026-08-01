@@ -58,7 +58,7 @@
   {
     "id": "congrats",
     "label": "Congrats",
-    "suggestedTheme": "lavender",
+    "suggestedTheme": "violet",
     "suggestedCardMessage": "Congratulations — you did it, and these are for you!",
     "suggestedBlooms": [
       {
@@ -78,7 +78,7 @@
   {
     "id": "just-because",
     "label": "Just Because",
-    "suggestedTheme": "lavender",
+    "suggestedTheme": "violet",
     "suggestedCardMessage": "No reason needed — just wanted you to know I'm thinking of you.",
     "suggestedBlooms": [
       {

@@ -20,23 +20,17 @@ const showcaseState: BouquetState = {
   occasion: null,
   // No ribbon here. On the builder it's a choice the sender makes; on the hero
   // it only added a second focal point competing with the blooms.
-  presentation: { type: 'vase', wrap: null, vase: 'vase-glass', ribbon: null, theme: 'blush' },
+  presentation: { type: 'vase', wrap: null, vase: 'none', ribbon: null, theme: 'blush' },
   card: { greeting: '', message: '', signature: '', font: 'monospace', theme: 'classic-cream', doodle: null },
   arrangementOverrides: {},
 };
 
 const showcase = composePresentedBouquet(showcaseState);
 
-// Hand-tied, not arranged in a vessel: the hero shows the bouquet as it is
-// gathered, so it drops materialSvg (the vase) and ribbonSvg. Only the blooms
-// and their foliage are painted.
-const showcaseSvgBody = showcase.bloomsSvg;
-
-// The composed viewBox is square because it reserves room for a vessel below
-// the gather. With no vase to draw, that lower third is empty, and letting it
-// stand would float the bouquet in the top of its own frame. Cropped to the
-// arrangement itself — the gathered stem ends sit at ~280.
-const showcaseViewBox = '0 0 440 300';
+// Hand-tied: the hero picks the "No Vessel" presentation, so the compositor
+// draws blooms and foliage only and hands back a frame already cropped to the
+// arrangement rather than one reserving empty room for a vase.
+const showcaseSvgBody = `${showcase.materialSvg}${showcase.bloomsSvg}${showcase.ribbonSvg}`;
 
 const steps = [
   { n: 1, label: 'Pick Blooms', copy: 'Choose 6–10 flowers, one at a time. Watch your tally grow.' },
@@ -74,7 +68,7 @@ const steps = [
              no edge to outgrow. -->
         <div class="hero__stage" data-hero-stage>
           <div class="hero__halo"></div>
-          <svg viewBox={showcaseViewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
+          <svg viewBox={showcase.viewBox} class="hero__bouquet" set:html={showcaseSvgBody} />
         </div>
       </div>
     </div>

@@ -69,8 +69,19 @@ export interface ThemeOption {
   bow: PresentationPiece;
 }
 
+/** A vessel choice. "No Vessel" carries no geometry — there is nothing to
+ * place — so the drawing fields are optional and callers must narrow before
+ * positioning one. */
+export interface VesselOption {
+  id: string;
+  name: string;
+  aspect?: number;
+  anchor?: number;
+  height?: number;
+}
+
 export const PRESENTATION = presentationData as {
-  vases: (PresentationPiece & { name: string })[];
+  vases: VesselOption[];
   ribbons: RibbonOption[];
   themes: ThemeOption[];
 };

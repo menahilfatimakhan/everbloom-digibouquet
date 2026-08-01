@@ -1,7 +1,7 @@
 import type { BouquetState } from '../state/schema';
 import { composeLayout, flattenForRender } from './layoutEngine';
 import { placementsToSvgBody } from './renderPlacements';
-import type { PresentationPiece } from '../assetRegistry';
+import type { PresentationPiece, VesselOption } from '../assetRegistry';
 import {
   FLOWER_META,
   FLOWER_SVGS,
@@ -20,19 +20,32 @@ const RIM_AT = { x: 220, y: 258.5 };
 /** A bow is tied around the stems just above the rim, not level with it. */
 const RIBBON_KNOT_RISE = 6;
 
-/** A vessel or ribbon, as described in content/presentation.json. Each piece is
- * traced tight to its own drawing (tools/vectorize-art.mjs), so it carries no
- * consistent margin to position against; instead it declares
+/** The vessel option that means "don't draw one" — see presentation.json. */
+const NO_VESSEL_ID = 'none';
+
+/** How far down the frame a hand-tied bouquet reaches: the gather plus the cut
+ * stem ends below it. Used to crop the frame when no vessel is drawn. */
+const HAND_TIED_DEPTH = 300;
+
+/** Narrows a vessel choice to one that can actually be drawn. Returns
+ * undefined for "No Vessel", and for any entry missing its geometry. */
+function drawableVessel(v: VesselOption | undefined): PresentationPiece | undefined {
+  if (!v || v.id === NO_VESSEL_ID) return undefined;
+  if (v.aspect === undefined || v.anchor === undefined || v.height === undefined) return undefined;
+  return { id: v.id, aspect: v.aspect, anchor: v.anchor, height: v.height };
+}
+
+/**
+ * Positions a piece so its anchor point lands on `at`.
  *
- *   aspect  width / height of the drawn art
- *   anchor  where its rim (vessel) or knot (bow) sits, as a fraction of height
- *   height  how tall it should render, in composed units
- *
- * which is enough to place any of them without the compositor knowing anything
- * about the individual piece. The previous constants were fitted by hand to one
- * specific vase drawn on one specific canvas, and every new vessel — a wide
- * bowl, a tall cone — would have needed its own set. */
-/** Positions a piece so its anchor point lands on `at`. */
+ * Every piece is traced tight to its own drawing (tools/vectorize-art.mjs), so
+ * it carries no consistent margin to position against; instead it declares its
+ * aspect, where its rim or knot sits as a fraction of its height, and how tall
+ * to render. That is enough to place any of them without this file knowing
+ * anything about the individual piece — the constants it replaced were fitted
+ * by hand to one vase on one canvas, and a wide bowl and a tall cone would each
+ * have needed their own.
+ */
 function pieceBox(piece: PresentationPiece, at: { x: number; y: number }) {
   const h = piece.height;
   const w = h * piece.aspect;
@@ -81,8 +94,11 @@ export function composePresentedBouquet(state: BouquetState): PresentedBouquet {
     (p) => (p.kind === 'bloom' ? flowerCssVars(p.assetId) : greeneryCssVars(p.assetId))
   );
 
+  // A vessel is optional: "No Vessel" sends the bouquet hand-tied, exactly as
+  // it is gathered. The fallback covers a *missing* value only — an explicit
+  // "none" must not be quietly replaced with the first vase.
   const vaseId = presentation.vase ?? PRESENTATION.vases[0].id;
-  const vasePiece = PRESENTATION.vases.find((v) => v.id === vaseId);
+  const vasePiece = drawableVessel(PRESENTATION.vases.find((v) => v.id === vaseId));
   const materialSvg = vasePiece
     ? `<g class="placement placement--material">${vaseGroup(vasePiece)}</g>`
     : '';
@@ -97,5 +113,11 @@ export function composePresentedBouquet(state: BouquetState): PresentedBouquet {
     ribbonChoice?.id === 'ribbon' ? themeChoice.bow : ribbonChoice?.piece;
   const ribbonSvg = ribbonPiece ? ribbonGroup(ribbonPiece) : '';
 
-  return { viewBox: layout.viewBox, materialSvg, bloomsSvg, ribbonSvg };
+  // The layout's own frame is square because it reserves room below the gather
+  // for a vessel. With none drawn, that lower third is empty and the bouquet
+  // floats in the top of its own box, so the frame is cropped to the
+  // arrangement — the gathered stem ends sit at roughly HAND_TIED_DEPTH.
+  const viewBox = vasePiece ? layout.viewBox : `0 0 ${layout.frameWidth} ${HAND_TIED_DEPTH}`;
+
+  return { viewBox, materialSvg, bloomsSvg, ribbonSvg };
 }
