@@ -43,20 +43,36 @@ export interface CardThemeContent {
 export const FLOWERS = flowersData as FlowerContent[];
 export const GREENERY = greeneryData as GreeneryContent[];
 export const FLORIOGRAPHY = floriographyData as FloriographyEntry[];
-/** Vessels and ribbons carry the geometry the compositor needs to place them:
- * see PresentationPiece in composition/composePresentedBouquet.ts. */
+/** A drawn piece plus the geometry the compositor needs to place it: see
+ * pieceBox in composition/composePresentedBouquet.ts. */
 export interface PresentationPiece {
   id: string;
-  name: string;
   aspect: number;
   anchor: number;
   height: number;
 }
 
+/** The Ribbon control offers only a *kind* of tie. Which coloured bow "ribbon"
+ * actually draws comes from the chosen theme — the eight bow colours are the
+ * colour palette, rather than eight more entries in this list. */
+export interface RibbonOption {
+  id: 'ribbon' | 'twine' | 'none';
+  name: string;
+  piece?: PresentationPiece;
+}
+
+export interface ThemeOption {
+  id: string;
+  name: string;
+  accent: string;
+  paper: string;
+  bow: PresentationPiece;
+}
+
 export const PRESENTATION = presentationData as {
-  vases: PresentationPiece[];
-  ribbons: PresentationPiece[];
-  themes: { id: string; name: string; accent: string; accentDeep: string; paper: string }[];
+  vases: (PresentationPiece & { name: string })[];
+  ribbons: RibbonOption[];
+  themes: ThemeOption[];
 };
 export const OCCASIONS = occasionsData as {
   id: string;

@@ -35,10 +35,15 @@ function domeFactor(sides: number) {
 // flowers dangling past the vase neck with nothing holding them up.
 // Even coverage of the arc comes from layoutEngine.ts's stratified angle
 // assignment, not from these ranges alone.
+// Radii sit ~12% wider than the arrangement strictly needs at six blooms. Ten
+// blooms will not fit the tighter envelope without burying each other — at the
+// previous size a ten-stem bouquet had 17 of its 45 pairs overlapping — and the
+// extra room costs little at low counts, where the depth floor holds blooms out
+// near the rim anyway.
 export const SILHOUETTE_PRESETS: SilhouettePreset[] = [
   {
     id: 'dome',
-    layerRadius: { back: 162, mid: 131, front: 100 },
+    layerRadius: { back: 181, mid: 147, front: 112 },
     angleRange: [-158, -22],
     angleFactor: domeFactor(0.78),
     jitter: [0.94, 1.05],
@@ -46,7 +51,7 @@ export const SILHOUETTE_PRESETS: SilhouettePreset[] = [
   },
   {
     id: 'cascade',
-    layerRadius: { back: 166, mid: 134, front: 102 },
+    layerRadius: { back: 186, mid: 150, front: 114 },
     angleRange: [-161, -19],
     // Same dome, with one shoulder allowed to reach a little further for a
     // soft asymmetric drape — deliberate, unlike the old accidental lean.
@@ -59,7 +64,7 @@ export const SILHOUETTE_PRESETS: SilhouettePreset[] = [
   },
   {
     id: 'wild',
-    layerRadius: { back: 168, mid: 136, front: 104 },
+    layerRadius: { back: 188, mid: 152, front: 116 },
     angleRange: [-163, -17],
     angleFactor: domeFactor(0.86),
     jitter: [0.88, 1.1],

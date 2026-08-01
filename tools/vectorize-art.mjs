@@ -76,7 +76,7 @@ const TARGETS = {
   Gemini_Generated_Image_idcdb2idcdb2idcd: { id: 'bow-mauve', kind: 'presentation', fit: 'content', anchor: 'knot' },
   Gemini_Generated_Image_mheietmheietmhei: { id: 'bow-violet', kind: 'presentation', fit: 'content', anchor: 'knot' },
   Gemini_Generated_Image_um6nh7um6nh7um6n: { id: 'bow-cream', kind: 'presentation', fit: 'content', anchor: 'knot' },
-  Gemini_Generated_Image_yiigmkyiigmkyiig: { id: 'twine', kind: 'presentation', fit: 'content', anchor: 'knot' },
+  twine: { id: 'twine', kind: 'presentation', fit: 'content', anchor: 'knot' },
 };
 
 const args = Object.fromEntries(

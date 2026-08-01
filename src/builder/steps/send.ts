@@ -31,7 +31,7 @@ export function initSend(store: BouquetStore, root: HTMLElement) {
     btn.addEventListener('click', () => store.setPresentation({ ribbon: btn.dataset.ribbon ?? null }));
   });
   themeRow.querySelectorAll<HTMLButtonElement>('[data-theme]').forEach((btn) => {
-    btn.addEventListener('click', () => store.setPresentation({ theme: btn.dataset.theme ?? 'lavender-dream' }));
+    btn.addEventListener('click', () => store.setPresentation({ theme: btn.dataset.theme ?? 'blush' }));
   });
 
   previewRevealBtn?.addEventListener('click', () => playRevealPreview(store.getState()));

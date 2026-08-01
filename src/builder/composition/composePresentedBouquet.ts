@@ -53,7 +53,6 @@ function vaseGroup(piece: PresentationPiece): string {
 }
 
 function ribbonGroup(piece: PresentationPiece): string {
-  if (piece.id === 'none') return '';
   const raw = PRESENTATION_SVGS[piece.id];
   if (!raw) return '';
   const nested = nest(raw, pieceBox(piece, { x: RIM_AT.x, y: RIM_AT.y - RIBBON_KNOT_RISE }));
@@ -88,9 +87,14 @@ export function composePresentedBouquet(state: BouquetState): PresentedBouquet {
     ? `<g class="placement placement--material">${vaseGroup(vasePiece)}</g>`
     : '';
 
-  const ribbonPiece = presentation.ribbon
-    ? PRESENTATION.ribbons.find((r) => r.id === presentation.ribbon)
-    : undefined;
+  // "ribbon" means a bow, and the theme decides which one — so the colour
+  // control drives the tie's colour instead of duplicating every bow as its own
+  // entry in the ribbon list. "twine" carries its own art; "none" draws nothing.
+  const ribbonChoice = PRESENTATION.ribbons.find((r) => r.id === presentation.ribbon);
+  const themeChoice =
+    PRESENTATION.themes.find((t) => t.id === presentation.theme) ?? PRESENTATION.themes[0];
+  const ribbonPiece =
+    ribbonChoice?.id === 'ribbon' ? themeChoice.bow : ribbonChoice?.piece;
   const ribbonSvg = ribbonPiece ? ribbonGroup(ribbonPiece) : '';
 
   return { viewBox: layout.viewBox, materialSvg, bloomsSvg, ribbonSvg };

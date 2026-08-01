@@ -64,8 +64,8 @@ export function createInitialState(): BouquetState {
       type: 'vase',
       wrap: null,
       vase: 'vase-glass',
-      ribbon: 'bow-pink',
-      theme: 'lavender-dream',
+      ribbon: 'ribbon',
+      theme: 'blush',
     },
     card: {
       greeting: '',

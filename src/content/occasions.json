@@ -2,55 +2,97 @@
   {
     "id": "birthday",
     "label": "Birthday",
-    "suggestedTheme": "sunset-blush",
+    "suggestedTheme": "peach",
     "suggestedCardMessage": "Happy birthday! Hope your day is as lovely as these blooms.",
     "suggestedBlooms": [
-      { "species": "gerbera-daisy", "qty": 3 },
-      { "species": "tulip", "qty": 3 },
-      { "species": "sunflower", "qty": 2 }
+      {
+        "species": "gerbera-daisy",
+        "qty": 3
+      },
+      {
+        "species": "tulip",
+        "qty": 3
+      },
+      {
+        "species": "sunflower",
+        "qty": 2
+      }
     ]
   },
   {
     "id": "anniversary",
     "label": "Anniversary",
-    "suggestedTheme": "classic-red",
+    "suggestedTheme": "mauve",
     "suggestedCardMessage": "Here's to us, and to many more years like this one.",
     "suggestedBlooms": [
-      { "species": "rose", "qty": 5 },
-      { "species": "peony", "qty": 3 }
+      {
+        "species": "rose",
+        "qty": 5
+      },
+      {
+        "species": "peony",
+        "qty": 3
+      }
     ]
   },
   {
     "id": "sympathy",
     "label": "Sympathy",
-    "suggestedTheme": "ivory-sage",
+    "suggestedTheme": "ivory",
     "suggestedCardMessage": "Thinking of you and holding you close right now.",
     "suggestedBlooms": [
-      { "species": "lily", "qty": 4 },
-      { "species": "orchid", "qty": 2 },
-      { "species": "delphinium", "qty": 2 }
+      {
+        "species": "lily",
+        "qty": 4
+      },
+      {
+        "species": "orchid",
+        "qty": 2
+      },
+      {
+        "species": "delphinium",
+        "qty": 2
+      }
     ]
   },
   {
     "id": "congrats",
     "label": "Congrats",
-    "suggestedTheme": "lavender-dream",
+    "suggestedTheme": "lavender",
     "suggestedCardMessage": "Congratulations — you did it, and these are for you!",
     "suggestedBlooms": [
-      { "species": "orchid", "qty": 3 },
-      { "species": "tulip", "qty": 3 },
-      { "species": "delphinium", "qty": 2 }
+      {
+        "species": "orchid",
+        "qty": 3
+      },
+      {
+        "species": "tulip",
+        "qty": 3
+      },
+      {
+        "species": "delphinium",
+        "qty": 2
+      }
     ]
   },
   {
     "id": "just-because",
     "label": "Just Because",
-    "suggestedTheme": "lavender-dream",
+    "suggestedTheme": "lavender",
     "suggestedCardMessage": "No reason needed — just wanted you to know I'm thinking of you.",
     "suggestedBlooms": [
-      { "species": "peony", "qty": 3 },
-      { "species": "carnation", "qty": 3 },
-      { "species": "tulip", "qty": 2 }
+      {
+        "species": "peony",
+        "qty": 3
+      },
+      {
+        "species": "carnation",
+        "qty": 3
+      },
+      {
+        "species": "tulip",
+        "qty": 2
+      }
     ]
   }
 ]

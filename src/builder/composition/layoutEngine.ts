@@ -2,6 +2,10 @@ import type { BouquetState } from '../state/schema';
 import { mulberry32, pickWeighted, randRange } from './seededRandom';
 import { pickSilhouette, type LayerName } from './silhouettePresets';
 import { FOOTPRINT_TO_RENDER_SIZE } from './renderPlacements';
+import greeneryData from '../../content/greenery.json';
+
+/** First entry in content/greenery.json — the spray a bouquet opens with. */
+const GREENERY_DEFAULT_ID = (greeneryData as { id: string }[])[0].id;
 
 export interface SpeciesMeta {
   footprintRadius: number;
@@ -183,7 +187,14 @@ function placeAtAngle(
    * radius. See depthFloorForCount. */
   depthFloor: number
 ): { x: number; y: number } {
+  // Tracks the roomiest position seen, not merely the last one tried. When no
+  // attempt is collision-free the loop still has to return something, and
+  // returning whatever the final roll happened to produce is how blooms ended
+  // up buried in each other: the fallback was effectively a random position,
+  // frequently far worse than one already rejected. Keeping the best-scoring
+  // candidate turns the give-up case into "the least cramped spot found".
   let best = { x: CENTER.x, y: CENTER.y };
+  let bestClearance = -Infinity;
 
   for (let attempt = 0; attempt < 20; attempt++) {
     // Small nudges around the assigned slot angle (not a full re-roll across
@@ -201,13 +212,20 @@ function placeAtAngle(
     const x = CENTER.x + radius * Math.cos(angleRad);
     const y = CENTER.y + radius * Math.sin(angleRad);
 
-    const collides = placedSoFar.some((p) => {
+    // How much room this spot leaves: the smallest margin over any already
+    // placed bloom's required separation. Negative means it overlaps that one.
+    let clearance = Infinity;
+    for (const p of placedSoFar) {
       const tolerance = p.layer === layer ? overlapTolerance.sameLayer : overlapTolerance.crossLayer;
-      return distance({ x, y }, p) < (p.footprintRadius + footprintRadius) * tolerance;
-    });
+      const required = (p.footprintRadius + footprintRadius) * tolerance;
+      clearance = Math.min(clearance, distance({ x, y }, p) - required);
+    }
 
-    best = { x, y };
-    if (!collides) return best;
+    if (clearance >= 0) return { x, y };
+    if (clearance > bestClearance) {
+      bestClearance = clearance;
+      best = { x, y };
+    }
   }
   return best;
 }
@@ -254,7 +272,7 @@ export function composeLayout(
 
   /** Same-layer blooms must stand clearly apart; blooms on different layers may
    * tuck in behind one another, which is what gives the arrangement depth. */
-  const BLOOM_SPACING = { sameLayer: 0.88, crossLayer: 0.6 };
+  const BLOOM_SPACING = { sameLayer: 0.9, crossLayer: 0.66 };
 
   const overrides = state.arrangementOverrides ?? {};
   const bloomScale = bloomScaleForCount(totalQty);
@@ -301,7 +319,11 @@ export function composeLayout(
   // over it, and carries only a whisper of rotation: the art is already
   // symmetric about its own stem, and tilting a full bouquet's worth of
   // foliage reads as a mistake rather than as looseness.
-  const greeneryAssetId = state.greenery ?? 'eucalyptus';
+  // Falls back to the first entry in greenery.json rather than naming one here,
+  // so "which spray does a fresh bouquet open with" is answered in one place —
+  // the content file's order, which is also the order the Change Greenery
+  // button cycles through.
+  const greeneryAssetId = state.greenery ?? GREENERY_DEFAULT_ID;
   const greeneryBox = GREENERY_BACKDROP_HEIGHT / ART_FILL_RATIO;
   const greenery: Placement[] = [
     {
