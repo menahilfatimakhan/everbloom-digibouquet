@@ -2,72 +2,78 @@
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import PetalField from '../../components/PetalField.astro';
 import '../../styles/components/reveal.css';
-import { getKv } from '../../lib/kv';
-import { hydrateBouquetState, isValidBouquetState, type BouquetState } from '../../builder/state/schema';
-import { PRESENTATION } from '../../builder/assetRegistry';
 
 export const prerender = false;
 
-const { id } = Astro.params;
-const raw = id ? await getKv().get(id) : null;
-
-let state: BouquetState | null = null;
-if (raw) {
-  try {
-    const record = JSON.parse(raw);
-    if (isValidBouquetState(record.state)) state = hydrateBouquetState(record.state);
-  } catch {
-    state = null;
-  }
-}
-
-// "Mood": the sender's own Color Theme choice also sets a subtle background
-// tint on the reveal page specifically — nowhere else in the app. Reuses the
-// `paper` field every theme already declares (previously unused).
-const moodTheme = state
-  ? PRESENTATION.themes.find((t) => t.id === state.presentation.theme) ?? PRESENTATION.themes[0]
-  : null;
+/**
+ * The bouquet is decoded in the browser, not here.
+ *
+ * The share link carries the whole bouquet as a compressed token in its path
+ * (see lib/http.ts), and decoding it server-side is not possible with the
+ * codec this project uses: lz-string 1.5 is a UMD bundle whose only CommonJS
+ * branch is `typeof module !== 'undefined'`. Under Vite's SSR that is false,
+ * so no branch runs and the module exports *nothing* — the import resolves to
+ * an empty namespace and every token silently failed to decode. Marking it
+ * ssr.noExternal does not help; the wrapper simply has no ESM path.
+ *
+ * Decoding on the client sidesteps that, and the page loses nothing by it: the
+ * reveal was already mounted from JavaScript, so the server was only ever
+ * choosing between two blocks of markup. Both are rendered now and the client
+ * picks one. It also means the message never reaches the server at all.
+ */
 ---
 
-<BaseLayout title={state ? 'A Bouquet For You' : 'Bouquet Not Found'}>
-  <section class="reveal-page" style={moodTheme ? `--reveal-mood-paper:${moodTheme.paper}` : undefined}>
+<BaseLayout title="A Bouquet For You">
+  <section class="reveal-page" data-reveal-page>
     <PetalField count={10} />
     <div class="container reveal-page__inner">
-      {
-        state ? (
-          <>
-            {/* No static heading here on purpose — the typed intro inside
-               mountReveal() is meant to be the first thing the recipient
-               reads, not spoiled by a server-rendered heading above it. */}
-            <div data-reveal-mount></div>
-            <script is:inline type="application/json" id="bouquet-state" set:html={JSON.stringify(state)} />
-            <script>
-              import { mountReveal } from '../../builder/reveal/revealAnimation';
-              const dataEl = document.getElementById('bouquet-state');
-              const mount = document.querySelector<HTMLElement>('[data-reveal-mount]');
-              if (dataEl && mount) {
-                const state = JSON.parse(dataEl.textContent ?? 'null');
-                if (state) mountReveal(mount, state);
-              }
-            </script>
-          </>
-        ) : (
-          <div class="reveal-page__missing">
-            <p class="eyebrow" style="text-align:center">Hm — this bouquet couldn't be found</p>
-            <h1 style="text-align:center">This link has wilted.</h1>
-            <p style="text-align:center">
-              The bouquet you're looking for may have an incorrect link. Everbloom bouquets themselves
-              never wilt — but a broken link can't hold one.
-            </p>
-            <p style="text-align:center">
-              <a class="btn btn-primary" href="/build">Build your own bouquet</a>
-            </p>
-          </div>
-        )
-      }
+      {/* No static heading on the reveal branch on purpose — the typed intro
+         inside mountReveal() is meant to be the first thing the recipient
+         reads, not spoiled by a heading above it. */}
+      <div data-reveal-mount hidden></div>
+
+      <div class="reveal-page__missing" data-reveal-missing hidden>
+        <p class="eyebrow" style="text-align:center">Hm — this bouquet couldn't be found</p>
+        <h1 style="text-align:center">This link has wilted.</h1>
+        <p style="text-align:center">
+          The bouquet you're looking for may have an incorrect link. Everbloom bouquets themselves
+          never wilt — but a broken link can't hold one.
+        </p>
+        <p style="text-align:center">
+          <a class="btn btn-primary" href="/build">Build your own bouquet</a>
+        </p>
+      </div>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  import { decodeState } from '../../builder/state/decode';
+  import { mountReveal } from '../../builder/reveal/revealAnimation';
+  import { PRESENTATION } from '../../builder/assetRegistry';
+
+  const page = document.querySelector<HTMLElement>('[data-reveal-page]');
+  const mount = document.querySelector<HTMLElement>('[data-reveal-mount]');
+  const missing = document.querySelector<HTMLElement>('[data-reveal-missing]');
+
+  // Last path segment, decoded — the token is percent-encoded by URL building
+  // on the way out, and browsers hand it back here already decoded.
+  const token = decodeURIComponent(location.pathname.split('/').filter(Boolean).pop() ?? '');
+  const state = token ? decodeState(token) : null;
+
+  if (state && mount) {
+    mount.hidden = false;
+    // "Mood": the sender's Color Theme also tints this page's background, and
+    // nowhere else in the app. Reuses the `paper` field every theme declares.
+    const theme =
+      PRESENTATION.themes.find((t) => t.id === state.presentation.theme) ?? PRESENTATION.themes[0];
+    page?.style.setProperty('--reveal-mood-paper', theme.paper);
+    mountReveal(mount, state);
+  } else if (missing) {
+    missing.hidden = false;
+    document.title = 'Bouquet Not Found';
+  }
+</script>
 
 <style>
   .reveal-page {

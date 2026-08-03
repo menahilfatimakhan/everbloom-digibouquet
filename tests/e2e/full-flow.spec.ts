@@ -31,7 +31,10 @@ test('walks the full builder flow and produces a share link', async ({ page }) =
   await page.locator('[data-create-link]').click();
   await expect(page.locator('[data-send-result]')).toBeVisible();
   const link = await page.locator('[data-send-link]').inputValue();
-  expect(link).toMatch(/\/r\/[a-zA-Z0-9]+$/);
+  // The bouquet rides inside the link as an lz-string token, whose alphabet
+  // includes +, - and $ alongside alphanumerics.
+  expect(link).toMatch(/\/r\/[A-Za-z0-9+\-$]+$/);
+  expect(new URL(link).origin).toBe(new URL(page.url()).origin);
 });
 
 test('an occasion preset pre-fills the card message field, not just the preview', async ({ page }) => {

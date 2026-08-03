@@ -16,15 +16,37 @@ Every `Placement` carries its own `footprintRadius`, and `renderPlacements.ts` s
 `src/builder/composition/composePresentedBouquet.ts` is the single source of truth for "what does this bouquet actually look like" — it layers wrap/vase, blooms, and ribbon into one SVG body. Wrap/vase art is authored on a shared 320x320 viewBox with a known anchor point (a wrap's neck, or a vase's rim) that this module maps onto the layout's `CENTER`; ribbon art anchors at its knot the same way. The Arrange step, Send step, keepsake image export, and the recipient reveal page all render through this (or the closely related `renderPlacements.ts`), so they can't visually drift from each other. There are no drawn stems — flowers only.
 
 ## State portability (the URL-encodable design)
-`BouquetState` is designed to be fully serializable on its own — `src/builder/state/encode.ts`/`decode.ts` compress it into a URL-safe token (`lz-string`), which is what lets an in-progress build restore itself from `/build#state=<token>` alone, no backend involved.
+`BouquetState` is designed to be fully serializable on its own — `src/builder/state/encode.ts`/`decode.ts` compress it into a URL-safe token (`lz-string`), which is what lets an in-progress build restore itself from `/build#state=<token>` alone, and what carries a finished bouquet in its share link.
 
-## The one backend endpoint
-At Send, the *same* `BouquetState` object is POSTed to `src/pages/api/links.ts`, which generates a short id and stores `{ id, state, createdAt }` via `src/lib/kv.ts`. `src/pages/api/links/[id].ts` is the only other endpoint — a plain read. There's no auth, no update, no delete, and no view-tracking, matching the product decision that a sent bouquet is immutable and viewable unlimited times.
+> **Decode only in the browser.** `lz-string` 1.5 is a UMD bundle whose sole
+> CommonJS branch is `typeof module !== 'undefined'`. Under Vite's SSR that is
+> false, so no branch runs and the import resolves to an *empty namespace* —
+> every call silently returns `undefined` and every token appears corrupt.
+> `ssr.noExternal` does not help; the wrapper has no ESM path at all. Any new
+> server-side decode needs a different codec.
 
-**`src/lib/kv.ts` ships with an in-memory store** so the app runs with zero external provisioning locally. This does **not persist across serverless cold starts or dev-server restarts** — before a real launch, swap `getKv()`'s implementation for `@vercel/kv` (if deploying to Vercel) or Netlify Blobs (if deploying to Netlify). Nothing else in the app touches storage directly, so this is a one-file change.
+## No backend for sharing
+A sent bouquet has no server-side record at all. At Send, the same `BouquetState`
+is compressed by `encode.ts` and becomes the path of the share link itself —
+`/r/<token>`. There is nothing to store, so nothing can expire, be evicted, or be
+lost in a redeploy, and the app needs no database to provision.
+
+This replaced a `POST /api/links` endpoint that minted a short id and stored the
+bouquet through an in-memory KV adapter. It could not work in production: every
+serverless invocation got a fresh, empty `Map`, so a link was dead before the
+recipient opened it. The same route also built its URL from `request.url`, which
+the Vercel adapter reports as `https://localhost` — senders were handed links
+pointing at their own machine. Both routes, `src/lib/kv.ts` and
+`src/lib/shortId.ts` have been removed.
+
+The trade-off is URL length: about 570 characters for a typical bouquet and
+~2,100 for the worst case (maximum-length message plus a dense signature
+doodle). If short links are ever wanted, the way back is a *shortener* over this
+token, not a store the reveal depends on — the link must keep working when the
+store does not.
 
 ## Recipient reveal
-`src/pages/r/[id].astro` fetches the stored state server-side, embeds it as a `<script type="application/json" is:inline>` payload, and a client script calls `mountReveal()` (`src/builder/reveal/revealAnimation.ts`). On mount, a typed intro line ("Someone sent you something…") plays automatically before anything else is shown — the page deliberately has no static heading above it that would spoil that beat. Once the intro finishes, the existing single "Tap to Open" gate appears (agency + reduced-motion friendly, not autoplay). On tap: ribbon untie (animates `data-bow-part`-tagged elements in the ribbon SVG, see `docs/flower-art-guide.md`) → wrap settle (the pre-existing whole-SVG wiggle, now timed to play after the untie) → blooms open layer by layer (back → mid → front, via each placement's `data-layer`) → card slides in last. The same `mountReveal` powers the Send step's "Preview the Reveal" button, so the preview can never diverge from the real recipient experience — including the "mood" background (see below), which is applied where `mountReveal` is mounted rather than baked into it.
+`src/pages/r/[id].astro` decodes the token from its own path **in the browser** and calls `mountReveal()` (`src/builder/reveal/revealAnimation.ts`). On mount, a typed intro line ("Someone sent you something…") plays automatically before anything else is shown — the page deliberately has no static heading above it that would spoil that beat. Once the intro finishes, the existing single "Tap to Open" gate appears (agency + reduced-motion friendly, not autoplay). On tap: ribbon untie (animates `data-bow-part`-tagged elements in the ribbon SVG, see `docs/flower-art-guide.md`) → wrap settle (the pre-existing whole-SVG wiggle, now timed to play after the untie) → blooms open layer by layer (back → mid → front, via each placement's `data-layer`) → card slides in last. The same `mountReveal` powers the Send step's "Preview the Reveal" button, so the preview can never diverge from the real recipient experience — including the "mood" background (see below), which is applied where `mountReveal` is mounted rather than baked into it.
 
 **"Mood"**: the sender's Color Theme choice (`presentation.theme`) also sets a subtle background tint on the reveal page specifically, via that theme's `paper` field (declared in `presentation.json`, previously unused). Implemented server-side in `r/[id].astro` as a CSS custom property + radial-gradient rule, scoped to that one page on purpose — it does not affect `/build` or `/`.
 

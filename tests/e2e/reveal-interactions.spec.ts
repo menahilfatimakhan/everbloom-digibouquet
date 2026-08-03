@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+// Default import, not a named one: lz-string is a UMD/CJS bundle, and this file
+// runs in Node where `import { compressToEncodedURIComponent }` throws
+// "does not provide an export named ...". The default resolves to module.exports.
+import lzString from 'lz-string';
 
 const TEST_STATE = {
   v: 1,
@@ -9,7 +13,7 @@ const TEST_STATE = {
   greenery: 'eucalyptus',
   arrangementSeed: 42,
   occasion: null,
-  presentation: { type: 'vase', wrap: null, vase: 'vase-ceramic', ribbon: 'bow-gold', theme: 'classic-red' },
+  presentation: { type: 'vase', wrap: null, vase: 'vase-ceramic', ribbon: 'ribbon', theme: 'gold' },
   card: {
     greeting: 'Friend',
     message: 'Testing the reveal sequence.',
@@ -20,15 +24,15 @@ const TEST_STATE = {
   },
 };
 
-async function createLink(request: import('@playwright/test').APIRequestContext) {
-  const res = await request.post('/api/links', { data: TEST_STATE });
-  expect(res.status()).toBe(201);
-  const { url } = await res.json();
-  return url as string;
+/** Builds the same self-contained link the Send step hands the sender — the
+ * bouquet rides in the path, so there is no endpoint to call and no store to
+ * seed. */
+function revealUrl() {
+  return `/r/${lzString.compressToEncodedURIComponent(JSON.stringify(TEST_STATE))}`;
 }
 
-test('reveal plays a typed intro before the tap-to-open gate appears', async ({ page, request }) => {
-  const url = await createLink(request);
+test('reveal plays a typed intro before the tap-to-open gate appears', async ({ page }) => {
+  const url = revealUrl();
   await page.goto(url);
 
   // The button starts hidden and the intro is mid-typewriter shortly after load.
@@ -41,8 +45,8 @@ test('reveal plays a typed intro before the tap-to-open gate appears', async ({ 
   await expect(page.locator('[data-reveal-intro]')).toHaveText('Someone sent you something…');
 });
 
-test('tapping open unties the ribbon, opens blooms layer by layer, then shows the card', async ({ page, request }) => {
-  const url = await createLink(request);
+test('tapping open unties the ribbon, opens blooms layer by layer, then shows the card', async ({ page }) => {
+  const url = revealUrl();
   await page.goto(url);
   await page.waitForSelector('[data-reveal-open]:not([hidden])');
 
@@ -64,9 +68,9 @@ test('tapping open unties the ribbon, opens blooms layer by layer, then shows th
   await expect(page.locator('.reveal-card__sign em')).toHaveText('Playwright');
 });
 
-test('reduced motion skips straight to the fully-open end state', async ({ page, request }) => {
+test('reduced motion skips straight to the fully-open end state', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  const url = await createLink(request);
+  const url = revealUrl();
   await page.goto(url);
 
   // No typewriter delay — button is available immediately.

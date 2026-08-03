@@ -1,6 +1,6 @@
 # The `BouquetState` schema
 
-Defined in `src/builder/state/schema.ts`. This one object is the entire bouquet + card — it's what gets compressed into a shareable URL token (`encode.ts`/`decode.ts`) and it's the exact payload stored server-side at `POST /api/links`. Both paths use the identical shape on purpose (see `docs/architecture.md`).
+Defined in `src/builder/state/schema.ts`. This one object is the entire bouquet + card — it's what gets compressed into a shareable URL token (`encode.ts`/`decode.ts`), which *is* the share link — nothing is stored server-side (see `docs/architecture.md`).
 
 ```ts
 interface BouquetState {
